@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:id="@+id/clienMsgView"
+
+    >
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/servisMSGview">
+        <View style="@style/UspravnaSivaLinija"></View>
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <View style="@style/Divider2"/>
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="300dp"
+                android:layout_height="40dp"
+                android:gravity="bottom">
+                <TextView
+
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/From"
+                    android:textStyle="bold"
+                    android:textAppearance="?android:attr/textAppearanceLarge"/>
+                <TextView
+
+                    android:id="@+id/servisMsgPosiljaoc"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:lines="1"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="6dp"
+
+
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:textStyle="bold"
+                    android:textColor="@color/LightBlue"/>
+
+
+            </LinearLayout>
+            <View style="@style/Divider1"/>
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="300dp"
+                android:layout_height="40dp"
+                android:gravity="bottom"
+                >
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/Title"
+                    android:layout_marginBottom="2dp"
+
+                    android:textStyle="bold"
+                    android:textAppearance="?android:attr/textAppearanceLarge"/>
+                <TextView
+                    android:id="@+id/servisMsgNaslov"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingRight="6dp"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:textStyle="bold"
+                    android:lines="1"
+                    android:layout_marginBottom="2dp"
+                    />
+            </LinearLayout>
+            <View style="@style/Divider2"/>
+
+            <!--  <TextView
+                  android:id="@+id/clientMsgTekst"
+                  android:layout_width="wrap_content"
+                  android:layout_height="25dp"
+
+                   />  -->
+        </LinearLayout>
+        <View style="@style/UspravnaSivaLinija"></View>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent">
+            <Button
+                android:layout_marginLeft="0dp"
+                android:layout_marginBottom="2dp"
+                android:layout_marginTop="20dp"
+                android:gravity="center"
+                android:layout_width="50dp"
+                android:layout_height="55dp"
+                android:background="@drawable/delete_msg"
+                android:id="@+id/deleteMSGservis"/>
+        </LinearLayout>
+    </LinearLayout>
+    <TextView
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:visibility="invisible"
+        android:id="@+id/nevidljiviIdPorukeServis"
+        android:clickable="false"
+        />
+
+</LinearLayout>

@@ -1,0 +1,220 @@
+<resources>
+    <string name="app_name">Need For Service</string>
+    <string name="googleMapsAPI">AIzaSyBsdCDQ_luX76CgWTDj0O_o2eVgfB__OZk</string>
+
+    <!-- Strings related to login -->
+    <string name="title_activity_login">Registruj se ili prijavi</string>
+    <string name="prompt_email">E-mail</string>
+    <string name="prompt_password">Lozinka</string>
+    <string name="action_login">Prijavi se</string>
+    <string name="register">Registruj se</string>
+    <string name="error_invalid_email">E-mail adresa je nevalidna</string>
+    <string name="error_invalid_password">Lozinka je prekratka</string>
+    <string name="error_incorrect_password">Ova lozinka je netačna</string>
+    <string name="error_field_required">Ovo polje je zahtevano</string>
+
+    <string name="loginFail">Neuspesno logovanje</string>
+    <string name="loading">Učitavanje...</string>
+    <string name="send">Pošalji</string>
+    <!-- Stringovi za forme za registraciju klijenta ili servisa -->
+    <string name="service">Servis</string>
+    <string name="Client">Klijent</string>
+    <string name="ClientDescription">Popunite ovu formu ukoliko želite da se registrujete kao klijent</string>
+    <string name="name">Ime...</string>
+    <string name="email">E-mail...</string>
+    <string name="number">Broj telefona...</string>
+    <string name="surname">Prezime...</string>
+    <string name="PIB">PIB vaše kompanije...</string>
+    <string name="ServiceDescription">Popunite ovu formu ukoliko želite da se registrujete kao servis</string>
+    <string name="nameService">Naziv vaše kompanije...</string>
+    <string name="nameServiceOwner">Ime i prezime vlasnika...</string>
+    <string name="OK">OK</string>
+    <string name="Service">Servis: </string>
+    <string name="password">Lozinka...</string>
+    <string name="submit">Potvrdi</string>
+    <!-- Strigovi za Client main screen -->
+    <string name="Main_menu_header">Dobro došli. Ovde možete videti poslednja obaveštenja.</string>
+    <string name="title_activity_main__screen__client">Main_Screen_Client</string>
+    <string name="title_section1">Section 1</string>
+    <string name="title_section2">Section 2</string>
+    <string name="title_section3">Section 3</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="action_example">Example action</string>
+    <string name="action_settings">Settings</string>
+
+    <!-- NavList stringovi-->
+    <string name="NavListInboxBtn">Sanduče</string>
+
+    <!--Stringovi u zahtev_za_servisisanje_form i dodaj_automobil_form-->
+    <string name="tipUsluge">Tip usluge:</string>
+    <string name="automobil">Automobil:</string>
+    <string name="ponudjeniTermini">Ponudjeni termini:</string>
+    <string name="dodajTermin">Dodaj termin</string>
+    <string name="izabraniTermini">Izabrani termini:</string>
+    <string name="ukloniTermin">Ukloni termin</string>
+    <string name="napomena">Napomena</string>
+    <string name="posalji">Posalji</string>
+
+
+    <string name="unesiPodatke">Unesite podatke o automobilu</string>
+    <string name="proizvodjac">Proizvodjac:</string>
+    <string name="model">Model:</string>
+    <string name="regBroj">Registarski broj:</string>
+    <string name="brSasije">Broj sasije:</string>
+    <string name="tipGoriva">Tip goriva:</string>
+    <string name="godProiz">Godina proizvodnje:</string>
+    <string name="predjeniKm">Predjeni kilometri:</string>
+    <string name="dodaj">Dodaj</string>
+    <string name="poslednjeServisiranje">Poslednji put servisiran:</string>
+
+    <!--Mapa-->
+    <string name="title_activity_maps">Detalji o trenutnom mestu</string>
+    <string name="default_info_title">Podrazumevana lokacija</string>
+    <string name="default_info_snippet">Lokacija nije pronađena jer nema dozvole za lociranje.</string>
+    <string name="option_get_place">Nađi mesto</string>
+    <string name="pick_place">Izaberi mesto</string>
+    <string name="title_activity_info_client">Info_client</string>
+
+    <!--Info-->
+    <string name="list_cars">Vidi listu automobila</string>
+    <string name="registarski_broj">Registarski broj:</string>
+    <string name="proizvodjac_i_model">Proizvodjac i model</string>
+    <string name="predjena_kilometraza">Predjena kilometraza</string>
+
+    <string name="normal">Običan režim</string>
+    <string name="find">Nađi najbliži servis</string>
+    <string name="NightMode">Noćni režim</string>
+    <string name="title_activity_settings">Podešavanja</string>
+
+    <string name="feedback">Ovde možete ostaviti komentar i ocenu za servis</string>
+    <string name="Save">Zapamti promene</string>
+    <string name="listCars">Vidi listu automobila</string>
+    <string name="PorukaReplyBTN"><u>Odgovori</u></string>
+    <string name="deleteCars">Obrisati automobil iz liste?</string>
+
+
+    <!-- Car info strings -->
+
+    <string name="Manufacturer">Proizvođač:</string>
+    <string name="Model">Model:</string>
+    <string name="RegNumber">Registartski broj:</string>
+    <string name="Chassis">Broj šasije:</string>
+    <string name="fuel">Tip goriva:</string>
+    <string name="Production">Godina proizvodnje:</string>
+    <string name="Mileage">Kilometraža:</string>
+    <string name="Serviced">Datum poslednjeg servisiranja:</string>
+
+    <!--Insert Car strings-->
+    <string name="insertInfo">Unesite podatke o automobilu</string>
+    <string name="Manufacture">Proizvođač:</string>
+    <string name="Registry">Registarski broj:</string>
+    <string name="ChassisNum">Broj šasije:</string>
+    <string name="YearOfManu">Godina proizvodnje:</string>
+    <string name="PorukaJePoslata">Poruka je poslata!</string>
+
+    <!-- Client info strings-->
+    <string name="UserName">Korisničko ime:</string>
+    <string name="Email">E-mail:</string>
+    <string name="Password">Lozinka:</string>
+    <string name="Notifications">Obaveštenja?</string>
+    <string name="PhoneNum">Broj telefona:</string>
+    <string name="from">Od  :</string>
+    <string name="type_of_service">Usluga: </string>
+    <string name="suggested_time">Datum: </string>
+    <string name="note">Napomena:</string>
+    <string name="accept">Prihvati</string>
+    <string name="decline">Odbij</string>
+    <string name="comment">Komentar:</string>
+
+
+    <string name="imeHint">ime...</string>
+    <string name="user">Korisnik:</string>
+    <string name="rate_and_comment">Ocena i komentar</string>
+    <string name="request_service">Zahtevaj servisiranje</string>
+    <string name="send_message">Pošalji poruku</string>
+
+    <!--NavList-->
+    <string name="newVehicle">Dodaj novo vozilo</string>
+    <string name="serviceRequest">Zahtevaj servisiranje</string>
+    <string name="map">Mapa</string>
+    <string name="MessageBox">Sanduče</string>
+    <string name="SOS">SOS poziv</string>
+    <string name="SignOut">Odjavi se</string>
+    <string name="ServiceRequest">Zahtevi za servisiranjem</string>
+    <string name="Price">Lista cena</string>
+    <string name="Feedbacks">Recenzije</string>
+    <string name="AddSevice">Dodaj novu uslugu</string>
+
+
+    <string name="WriteMessage">Napišite vašu poruku ovde...</string>
+    <string name="Title">Naslov: </string>
+    <string name="To">Za:  </string>
+    <string name="From">Od: </string>
+
+
+
+    <!-- Nakon magicnog nestanka -->
+    <string name="MarkAsDone">Odrađeno</string>
+    <string name="typeOfService">Tip usluge:</string>
+    <string name="proposedDate">Datum:</string>
+    <string name="Name">Ime:</string>
+    <string name="OwnerName">Ime vlasnika:</string>
+    <string name="Address">Adresa:</string>
+
+    <string name="InsertPrice">Unesi cenu:</string>
+    <string name="InsertDescript">Unesi opis:</string>
+    <string name="brojHint">telefon...</string>
+    <string name="cena">Cena:</string>
+    <string name="action_sign_in_short">Prijavi se</string>
+    <string name="change_price">Promeni cenu</string>
+    <string name="remove_service">izbrisi servis</string>
+    <string name="permission_rationale"></string>
+    <string name="emailHint">email...</string>
+
+
+    <!-- Mapa stringovi -->
+    <string name="navigation">Da li želite navigaciju do ovog mesta?</string>
+    <string name="No">Ne</string>
+    <string name="closestService">Najbliži servis je: </string>
+    <string name="Warning">Upozorenje</string>
+    <string name="EmptyFields">Ostavili ste neka polja nepopunjena. Molimo vas, popunite celu formu da bi ste dodali novi automobil!</string>
+    <string name="Changes">Da li stvarno želite da napravite promene?</string>
+    <string name="ChangesSaved">Promene zapamćene!</string>
+    <string name="Yes">Da</string>
+    <string name="NewService">Nova usluga</string>
+    <string name="AuthSucc">Autentikacija uspešna.</string>
+    <string name="AuthFail">Autentikacija neuspešna.</string>
+    <string name="Requested">Zahtevano.</string>
+    <string name="InvalidMail">Neispravan mejl.</string>
+    <string name="PassLength">Lozinka mora da bude bar 8 karaktera duga.</string>
+    <string name="Signout">Odjavljivanje.</string>
+    <string name="InfoAboutService">Informacije o servisu.</string>
+    <string name="RegSucc">Registracija uspešna. Molimo vas verifikujte nalog.</string>
+    <string name="RegFail">Registracija neuspešna.</string>
+    <string name="ZahtevFail">Nisu ispunjeni svi uslovi!</string>
+    <string name="ZahtevPoslat">Poslat novi zahtev za servisiranje servisu!</string>
+    <string name="NewPrice">Nova cena:</string>
+    <string name="ServiceType">Tip usluge:  </string>
+    <string name="AndPrice">  cena:</string>
+    <string name="Done">Odrađeno!</string>
+    <string name="Question">Pitanje</string>
+    <string name="infoAbout">Informacije o automobilu:</string>
+    <string name="withRegistyNum">sa registarskim brojem: </string>
+    <string name="IsServiceDone">Da li je servisiranje za ovaj automobil gotovo?</string>
+    <string name="empty_inbox">Sanduce je prazno</string>
+    <string name="warrning">Upozorenje</string>
+
+    <string name="Added_new_car">Dodali ste novi automobil!</string>
+    <string name="zauzeti_serveri">Serveri su zauzeti.</string>
+
+
+    <string name="PriceChanged">Cena promenjena!</string>
+    <string name="AreYouSure">Da li ste sigurni?</string>
+    <string name="noMessages">Nema poruka</string>
+    <string name="car">Automobil:</string>
+    <string name="producer">Proizvodjac:</string>
+    <string name="fuel1">Gorivo:</string>
+    <string name="owner">Vlasnik:</string>
+    <string name="usluga">Usluga:</string>
+</resources>

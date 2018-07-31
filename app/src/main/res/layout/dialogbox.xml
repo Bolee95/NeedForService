@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+android:layout_width="match_parent"
+android:layout_height="match_parent"
+android:background="@color/White"
+android:descendantFocusability="beforeDescendants"
+android:focusableInTouchMode="true"
+    >
+
+        <LinearLayout
+            android:id="@+id/linear"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_below="@+id/frameLayout"
+            android:orientation="vertical">
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center">
+
+                <RatingBar
+                    android:numStars="5"
+                    android:id="@+id/ratingBar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"
+                    android:background="#b4c6c1"
+                    android:textAlignment="center"
+                    android:isIndicator="true"/>
+
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+
+                <TextView
+                    android:id="@+id/SeriviceName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="#0000"
+                    android:gravity="left"
+                    android:padding="16dp"
+
+                    android:text="@string/Name"
+                    android:textColor="@color/Black"
+                    android:textSize="16dp" />
+
+
+                <TextView
+                    android:id="@+id/ServiceNameResult"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="#0000"
+                    android:gravity="right"
+                    android:maxLength="30"
+                    android:padding="16dp"
+                    android:textColor="#181737"
+                    android:textColorHint="#181737"
+                    android:textSize="16dp" />
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#dad8d8" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/ServiceEmail"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="#0000"
+                    android:gravity="left"
+                    android:padding="16dp"
+
+                    android:text="@string/Email"
+                    android:textColor="@color/Black"
+                    android:textSize="16dp" />
+
+
+                <TextView
+                    android:id="@+id/ServiceEmailResult"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="#0000"
+                    android:gravity="right"
+                    android:hint="x6"
+                    android:maxLength="30"
+                    android:padding="16dp"
+                    android:textColor="#181737"
+                    android:textColorHint="#1b193b"
+                    android:textSize="16dp" />
+            </LinearLayout>
+
+            />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#dad8d8" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+
+                <TextView
+                    android:id="@+id/ServiceAdress"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="#0000"
+                    android:gravity="left"
+                    android:padding="16dp"
+
+                    android:text="@string/Address"
+                    android:textColor="@color/Black"
+                    android:textSize="16dp" />
+
+                <TextView
+                    android:id="@+id/ServiceAdressResult"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="#0000"
+                    android:gravity="right"
+                    android:hint="123456789"
+                    android:inputType="text"
+                    android:maxLength="40"
+                    android:padding="16dp"
+                    android:textColor="#181737"
+                    android:textColorHint="#1b193b"
+                    android:textSize="16dp" />
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#dad8d8" />
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/ServiceNumber"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="#0000"
+                    android:gravity="left"
+                    android:padding="16dp"
+
+                    android:text="@string/PhoneNum"
+                    android:textColor="@color/Black"
+                    android:textSize="16dp" />
+
+                <TextView
+                    android:id="@+id/ServiceNumberResult"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="#0000"
+                    android:gravity="right"
+                    android:hint="123456789"
+                    android:inputType="text"
+                    android:maxLength="25"
+                    android:padding="16dp"
+                    android:textColor="#181737"
+                    android:textColorHint="#1b193b"
+                    android:textSize="16dp" />
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#dad8d8" />
+
+            <Button
+                android:id="@+id/ButtonServiceMessage"
+                style="?android:textAppearanceSmall"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="3dp"
+                android:background="@color/colorAccent"
+                android:text="@string/send_message"
+                android:textStyle="bold" />
+
+            <Button
+                android:id="@+id/ButtonServiceRequest"
+                style="?android:textAppearanceSmall"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="3dp"
+                android:background="@color/colorAccent"
+                android:text="@string/request_service"
+                android:textStyle="bold" />
+            <Button
+                android:id="@+id/ButtonRateAndComment"
+                style="?android:textAppearanceSmall"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="3dp"
+                android:background="@color/colorAccent"
+                android:text="@string/rate_and_comment"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+</LinearLayout>
+

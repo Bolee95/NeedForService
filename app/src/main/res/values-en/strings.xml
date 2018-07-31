@@ -1,0 +1,218 @@
+<resources>
+    <string name="app_name">Need For Service</string>
+    <string name="googleMapsAPI">AIzaSyBsdCDQ_luX76CgWTDj0O_o2eVgfB__OZk</string>
+
+    <!-- Strings related to login -->
+    <string name="title_activity_login">Sign in or login</string>
+    <string name="prompt_email">Email</string>
+    <string name="prompt_password">Password</string>
+    <string name="action_login">Login</string>
+    <string name="register">Register</string>
+    <string name="action_sign_in_short">Sign in</string>
+    <string name="error_invalid_email">This email address is invalid</string>
+    <string name="error_invalid_password">This password is too short</string>
+    <string name="error_incorrect_password">This password is incorrect</string>
+    <string name="error_field_required">This field is required</string>
+    <string name="permission_rationale">"Contacts permissions are needed for providing email
+        completions."
+    </string>
+    <string name="loginFail">Failed to log in</string>
+    <string name="loading">Loading...</string>
+    <string name="send">Send</string>
+    <!-- Stringovi za forme za registraciju klijenta ili servisa -->
+    <string name="service">Service</string>
+    <string name="Client">Client</string>
+    <string name="ClientDescription">Fill this form if you want to register as Client</string>
+    <string name="name">Name...</string>
+    <string name="email">Email...</string>
+    <string name="number">Number...</string>
+    <string name="surname">Surname...</string>
+    <string name="PIB">PIB of your company...</string>
+    <string name="ServiceDescription">Fill this form if you want to register as Service</string>
+    <string name="nameService">Name of your company...</string>
+    <string name="nameServiceOwner">Name and surname of owner...</string>
+    <string name="OK">OK</string>
+    <string name="Service">Service: </string>
+    <string name="password">Password...</string>
+    <string name="submit">Submit</string>
+    <!-- Strigovi za Client main screen -->
+    <string name="Main_menu_header">Welcome. Here you will see latest notifications.</string>
+    <string name="title_activity_main__screen__client">Main_Screen_Client</string>
+    <string name="title_section1">Section 1</string>
+    <string name="title_section2">Section 2</string>
+    <string name="title_section3">Section 3</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="action_example">Example action</string>
+    <string name="action_settings">Settings</string>
+
+    <!-- NavList stringovi-->
+    <string name="NavListInboxBtn">Message Box</string>
+
+    <!--Stringovi u zahtev_za_servisisanje_form i dodaj_automobil_form-->
+    <string name="tipUsluge">Tip usluge:</string>
+    <string name="automobil">Automobil:</string>
+    <string name="ponudjeniTermini">Ponudjeni termini:</string>
+    <string name="dodajTermin">Dodaj termin</string>
+    <string name="izabraniTermini">Izabrani termini:</string>
+    <string name="ukloniTermin">Ukloni termin</string>
+    <string name="napomena">Napomena</string>
+    <string name="posalji">Posalji</string>
+
+
+    <string name="unesiPodatke">Unesite podatke o automobilu</string>
+    <string name="proizvodjac">Proizvodjac:</string>
+    <string name="model">Model:</string>
+    <string name="regBroj">Registarski broj:</string>
+    <string name="brSasije">Broj sasije:</string>
+    <string name="tipGoriva">Tip goriva:</string>
+    <string name="godProiz">Godina proizvodnje:</string>
+    <string name="predjeniKm">Predjeni kilometri:</string>
+    <string name="dodaj">Dodaj</string>
+    <string name="poslednjeServisiranje">Poslednji put servisiran:</string>
+
+    <!--Mapa-->
+    <string name="title_activity_maps">Current Place Details</string>
+    <string name="default_info_title">Default Location</string>
+    <string name="default_info_snippet">No places found, because location permission is disabled.</string>
+    <string name="option_get_place">Get place</string>
+    <string name="pick_place">Choose a place</string>
+    <string name="title_activity_info_client">Info_client</string>
+
+    <!--Info-->
+    <string name="list_cars">See list of cars</string>
+    <string name="registarski_broj">Registarski broj:</string>
+    <string name="proizvodjac_i_model">Proizvodjac i model</string>
+    <string name="predjena_kilometraza">Predjena kilometraza</string>
+
+    <string name="normal">Normal</string>
+    <string name="find">Find closest service</string>
+    <string name="NightMode">NIGHT MODE</string>
+    <string name="title_activity_settings">Settings</string>
+
+    <string name="feedback">Here you can leave your feedback and rating of service</string>
+    <string name="Save">Save changes</string>
+    <string name="listCars">See list of cars</string>
+    <string name="PorukaReplyBTN"><u>REPLY</u></string>
+    <string name="deleteCars">Delete car from list?</string>
+
+
+    <!-- Car info strings -->
+
+    <string name="Manufacturer">Manufacturer:</string>
+    <string name="Model">Model:</string>
+    <string name="RegNumber">Registry number:</string>
+    <string name="Chassis">Chassis number:</string>
+    <string name="fuel">Fuel type:</string>
+    <string name="Production">Production year:</string>
+    <string name="Mileage">Mileage:</string>
+    <string name="Serviced">Date of last service:</string>
+
+    <!--Insert Car strings-->
+    <string name="insertInfo">Insert data about car</string>
+    <string name="Manufacture">Manufacturer:</string>
+    <string name="Registry">Registry number:</string>
+    <string name="ChassisNum">Chassis nubmer:</string>
+    <string name="YearOfManu">Year of manufacturing:</string>
+    <string name="PorukaJePoslata">Message has been sent!</string>
+
+    <!-- Client info strings-->
+    <string name="UserName">Username:</string>
+    <string name="Email">E-mail:</string>
+    <string name="Password">Password:</string>
+    <string name="Notifications">Notifications?</string>
+    <string name="PhoneNum">Phone number:</string>
+    <string name="from">From: </string>
+    <string name="type_of_service">Service: </string>
+    <string name="suggested_time">Date: </string>
+    <string name="note">Note:</string>
+    <string name="accept">Accept</string>
+    <string name="decline">Decline</string>
+    <string name="comment">Comment:</string>
+
+
+    <string name="imeHint">name...</string>
+    <string name="user">User:</string>
+    <string name="rate_and_comment">Rate and comment</string>
+    <string name="request_service">Request service</string>
+    <string name="send_message">Send message</string>
+
+    <!--NavList-->
+    <string name="newVehicle">Add new vehicle</string>
+    <string name="serviceRequest">Request service</string>
+    <string name="map">Go to map</string>
+    <string name="MessageBox">Message box</string>
+    <string name="SOS">SOS call</string>
+    <string name="SignOut">Sign out</string>
+    <string name="ServiceRequest">Service requests</string>
+    <string name="Price">Price list</string>
+    <string name="Feedbacks">Feedbacks</string>
+    <string name="AddSevice">Add new service</string>
+
+
+    <string name="WriteMessage">Write your message here...</string>
+    <string name="Title">Title:&#160; </string>
+    <string name="To">To:&#160; </string>
+    <string name="From">From:&#160; </string>
+    <string name="change_price">Change price</string>
+    <string name="cena">Price:</string>
+    <string name="remove_service">remove service</string>
+
+
+
+    <!-- Nakon magicnog nestanka -->
+    <string name="MarkAsDone">Mark as done</string>
+    <string name="typeOfService">Type of service:</string>
+    <string name="proposedDate">Proposed date:</string>
+    <string name="Name">Name:</string>
+    <string name="OwnerName">Owner name:</string>
+    <string name="Address">Address:</string>
+
+    <string name="InsertPrice">Insert price:</string>
+    <string name="InsertDescript">Insert description:</string>
+    <string name="brojHint">phone...</string>
+    <string name="emailHint">email...</string>
+
+    <!-- Mapa stringovi -->
+    <string name="navigation">Do you want navigation to this place?</string>
+    <string name="No">No</string>
+    <string name="closestService">Closest service:</string>
+    <string name="Warning">Warning</string>
+    <string name="EmptyFields">You left some fields empty. Please fill up whole form so you can add new car!</string>
+    <string name="Changes">Do you realy want to make changes?</string>
+    <string name="ChangesSaved">Changes saved!</string>
+    <string name="Yes">Yes</string>
+    <string name="NewService">New service</string>
+    <string name="AuthSucc">Authentication successful.</string>
+    <string name="AuthFail">Authentication failed.</string>
+    <string name="Requested">Required.</string>
+    <string name="InvalidMail">Invalid email.</string>
+    <string name="PassLength">Password must be at least 8 char long.</string>
+    <string name="Signout">Signed Out.</string>
+    <string name="InfoAboutService">Info about service.</string>
+    <string name="RegSucc">Registration successful. Please verify your email.</string>
+    <string name="RegFail">Registration failed.</string>
+    <string name="ZahtevFail">Not all requirements selected!</string>
+    <string name="ZahtevPoslat">You have send new request for service!</string>
+    <string name="NewPrice">New price:</string>
+    <string name="ServiceType">Type of service:  </string>
+    <string name="AndPrice">  price:</string>
+    <string name="Done">Done!</string>
+    <string name="Question">Question</string>
+    <string name="infoAbout">Info about car:</string>
+    <string name="withRegistyNum">with registry number: </string>
+    <string name="IsServiceDone">Is service for this car done?</string>
+    <string name="empty_inbox">There is no messages</string>
+    <string name="Added_new_car">You have added new car!</string>
+    <string name="zauzeti_serveri">Servers are busy.</string>
+
+    <string name="PriceChanged">Price changed!</string>
+    <string name="AreYouSure">Are you sure?</string>
+    <string name="noMessages">There is not any messages</string>
+
+    <string name="car">Car:</string>
+    <string name="fuel1">Fuel:</string>
+    <string name="producer">Producer:</string>
+    <string name="owner">Owner:</string>
+    <string name="usluga">Service:</string>
+</resources>

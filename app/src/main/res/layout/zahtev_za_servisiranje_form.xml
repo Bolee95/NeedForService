@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/Zahtev_Servisiranja_Layout"
+    tools:context="ynca.nfs.Activities.ZahtevServisiranja"
+   >
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:descendantFocusability="beforeDescendants"
+            android:focusableInTouchMode="true">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/insertInfo"
+                android:background="@color/colorAccent"
+
+                android:textAlignment="center"
+                android:textSize="20sp"/>
+
+
+            <TextView
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
+                android:text="@string/usluga"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+
+            
+            <Spinner
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:id="@+id/servisi_dostupni_klijentu_spinner"/>
+            <TextView
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
+                android:text="@string/car"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+            <Spinner
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:id="@+id/automobili_klijenta_id"/>
+            <TextView
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
+                android:text="@string/typeOfService"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+            <Spinner
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:id="@+id/usluge_servis_spinner"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/proposedDate"
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
+                />
+
+            <EditText
+                android:id="@+id/proposed_dates_id"
+                android:inputType="datetime"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
+                />
+
+
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/note"
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"/>
+
+            <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+            <EditText
+                android:id="@+id/note_id"
+                android:inputType="text"
+                android:layout_width="match_parent"
+                android:minHeight="100dp"
+                android:layout_height="100dp"
+
+                />
+
+            </ScrollView>
+
+
+            <Button
+                android:id="@+id/posalji_zahtev_btn_id"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/colorAccent"
+                android:layout_gravity="center_horizontal"
+                android:text="@string/send"/>
+
+
+
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>

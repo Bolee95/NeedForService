@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    style="@android:style/Widget.Holo.Light.ScrollView"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+
+    tools:context="ynca.nfs.Activities.Feedback_activity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:background="@color/colorAccent"
+            android:text="@string/feedback"
+            android:textAlignment="center"
+            android:textColor="@color/Black"
+            android:textSize="25sp" />
+
+        <EditText
+            android:gravity="top|left"
+            android:layout_width="355dp"
+            android:layout_height="224dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="10dp"
+            android:id="@+id/recenzijaEDIT"
+
+            android:background="#2a6051">
+
+
+        </EditText>
+
+        <RatingBar
+            android:id="@+id/ratingBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:textAlignment="center"
+            android:layout_gravity="center"
+            />
+
+        <Button
+            android:layout_gravity="center"
+            android:layout_marginTop="15dp"
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:textSize="25sp"
+            android:text="@string/submit"
+            android:textAlignment="center"
+            android:id="@+id/recenzijaSUBMIT"
+            android:background="@color/colorAccent"
+            />
+    </LinearLayout>
+</ScrollView>

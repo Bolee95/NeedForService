@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="wrap_content"
+    android:padding="16dp"
+
+    android:orientation="vertical">
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        >
+        <View style="@style/UspravnaSivaLinija"></View>
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <View style="@style/Divider2"></View>
+<LinearLayout
+    android:layout_width="320dp"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal">
+
+<LinearLayout
+    android:layout_width="180dp"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+<TextView
+    android:textSize="20sp"
+    android:text="@string/Service"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content" />
+
+    <TextView
+        android:layout_width="180dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/lista_cenovnik_usluga_item_id"
+        android:textSize="20sp"/>
+    </LinearLayout>
+    <Button
+        android:id="@+id/DugmeCena"
+        android:layout_width="130dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|right"
+        android:text="@string/change_price"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:background="@color/colorAccent"/>
+
+</LinearLayout>
+        <View style="@style/Divider1"></View>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingRight="2dp">
+        <LinearLayout
+            android:layout_width="180dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+        <TextView
+            android:textSize="20sp"
+            android:text="@string/cena"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            />
+        <TextView
+            android:layout_width="180dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/cenaUsluga"
+            android:textSize="20sp"/>
+        </LinearLayout>
+
+
+                <Button
+            android:id="@+id/ukloniUsluguBTN"
+            android:layout_width="130dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|right"
+            android:text="@string/remove_service"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:paddingRight="10dp"
+            android:paddingLeft="10dp"
+                    android:background="@color/colorAccent"/>
+    </LinearLayout>
+        <View style="@style/Divider2"></View>
+
+    </LinearLayout>
+        <View style="@style/UspravnaSivaLinija"></View>
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:visibility="invisible"
+            android:id="@+id/nevidljiviIdUsluge"
+            android:clickable="false"
+            />
+    </LinearLayout>
+</FrameLayout>

@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="ynca.nfs.Activities.DodajAutomobilForm"
+    >
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:descendantFocusability="beforeDescendants"
+            android:focusableInTouchMode="true">
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/insertInfo"
+        android:background="@color/colorAccent"
+        android:textAlignment="center"
+        android:textSize="20sp"/>
+
+<TextView
+    android:layout_marginTop="5dp"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:text="@string/Manufacture"
+    android:textSize="15sp"/>
+    <EditText
+        android:inputType="textPersonName"
+        android:id="@+id/proizvodjacEDIT"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/Model"
+        android:textSize="15sp"
+        />
+
+    <EditText
+        android:id="@+id/modelEDIT"
+        android:inputType="textPersonName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/Registry"
+        android:textSize="15sp"/>
+    <EditText
+        android:id="@+id/regBrEDIT"
+        android:inputType="number"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/ChassisNum"
+        android:textSize="15sp"/>
+    <EditText
+        android:inputType="number"
+        android:id="@+id/BrSasijeEDIT"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/fuel"
+        android:textSize="15sp"/>
+    <EditText
+        android:inputType="text"
+        android:id="@+id/tipGorivaEDIT"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/YearOfManu"
+        android:textSize="15sp"/>
+    <EditText
+        android:inputType="date"
+        android:id="@+id/godinaProizvodnjeEDIT"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/Mileage"
+        android:textSize="15sp"/>
+    <EditText
+        android:inputType="number"
+        android:id="@+id/predjeniKmEDIT"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/Serviced"
+                android:textSize="15sp"/>
+            <EditText
+                android:inputType="date"
+                android:id="@+id/servisiranEDIT"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <Button
+                android:id="@+id/DodajAutomobilBTN"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/colorAccent"
+                android:layout_gravity="center_horizontal"
+                android:text="@string/submit"/>
+
+    </LinearLayout>
+    </ScrollView>
+</LinearLayout>
+

@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="ynca.nfs"
+    android:versionCode="1"
+    android:versionName="init">
+
+    <uses-sdk android:minSdkVersion="16" />
+    <!-- To auto-complete the email text field in the login form with the user's emails -->
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+    <uses-permission android:name="android.permission.READ_PROFILE" />
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.CALL_PHONE" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/launcher_icon"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="@string/googleMapsAPI" />
+
+        <activity
+            android:name=".Activities.StartActivities.LoginActivity"
+            android:label="@string/app_name">
+            <!--android:theme="@style/AppTheme"> -->
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".Activities.StartActivities.RegisterActivity"
+                  android:screenOrientation="portrait"
+            android:theme="@style/AppTheme" />
+
+        <activity android:name=".Activities.Main_screen_client" />
+        <activity android:name=".Activities.DodajAutomobilForm"
+            android:theme="@style/AppTheme">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".Activities.Main_screen_client" />
+        </activity>
+        <activity android:name=".Activities.ZahtevServisiranja">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".Activities.Main_screen_client" />
+        </activity>
+        <activity android:name=".Activities.Map_activity" />
+        <activity
+            android:name=".Activities.Info_client"
+            android:label="@string/title_activity_info_client">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".Activities.Main_screen_client" />
+        </activity>
+        <activity android:name=".Activities.ListaVozilaActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".Activities.Info_client" />
+        </activity>
+        <activity android:name=".Activities.Client_Inbox_Activity"
+                  android:screenOrientation="portrait"
+            android:theme="@style/AppTheme">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".Activities.Main_screen_client" />
+        </activity>
+        <activity android:name=".Activities.Car_info"
+            android:theme="@style/AppTheme" />
+
+        <service android:name=".ConectionService" />
+        <activity android:name=".Activities.VoziloInfo" />
+
+        <receiver android:name=".CheckConnectivity">
+            <intent-filter>
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+            </intent-filter>
+        </receiver>
+
+        <activity android:name=".Activities.MainScreenServisActivity" />
+        <activity android:name=".Activities.Poruka_tekst_activity" />
+        <activity android:name=".Activities.Servis_Inbox_Activity" android:screenOrientation="portrait"/>
+        <activity android:name=".Activities.ListaCenovnikUslugaActivity" />
+        <activity android:name=".Activities.ListaVozilaNaServisuActivity" />
+        <activity android:name=".Activities.ListaZahtevaActivity" />
+        <activity android:name=".Activities.Feedback_activity" />
+        <activity android:name=".Activities.Message_activity" />
+        <activity android:name=".Activities.Lista_Recenzija_Activity" />
+        <activity android:name=".Activities.Info_Servis" />
+        <activity android:name=".Activities.NovaUslugaActivity"></activity>
+    </application>
+
+</manifest>

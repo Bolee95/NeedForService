@@ -1,0 +1,245 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:descendantFocusability="beforeDescendants"
+    android:focusableInTouchMode="true">
+    <!--android:background="@color/White"-->
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="bottom"
+        android:descendantFocusability="beforeDescendants"
+        android:focusableInTouchMode="true"
+        >
+        <!--android:background="@color/White"-->
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@color/Black"
+            android:descendantFocusability="beforeDescendants"
+            android:weightSum="1">
+            <!--android:background="@color/Black"-->
+
+
+            <ImageView
+                android:id="@+id/imageInfoClient"
+                android:layout_width="220dp"
+                android:layout_height="200dp"
+                android:layout_gravity="center_horizontal"
+                android:background="@drawable/sport_car_logos"
+                android:gravity="bottom"
+                android:layout_weight="0.07" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/linear"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_below="@+id/frameLayout"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true">
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                >
+
+
+                <TextView
+                    android:layout_weight="1"
+                    android:id="@+id/usernameClient"
+                    android:textSize="16sp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/Name"
+                    android:textColor="@color/White"
+                    android:maxLength="30"
+                    android:background="#0000"
+                    android:padding="16dp"
+                    android:gravity="left"
+                    />
+
+
+                <EditText
+                    android:layout_weight="1"
+                    android:id="@+id/userName"
+                    android:textSize="16sp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="text"
+                    android:textColorHint="@color/White"
+                    android:hint="@string/imeHint"
+                    android:textColor="@color/White"
+                    android:maxLength="30"
+                    android:background="#0000"
+                    android:padding="16dp"
+                    android:gravity="right"
+                    />
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#dad8d8"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                >
+
+                <TextView
+                    android:layout_weight="1"
+                    android:id="@+id/NumberClientInfo"
+                    android:textSize="16sp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/PhoneNum"
+                    android:textColor="@color/White"
+                    android:background="#0000"
+                    android:padding="16dp"
+                    android:gravity="left"
+                    />
+
+                <EditText
+                    android:layout_weight="1"
+                    android:id="@+id/NumberETClient"
+                    android:textSize="16sp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="number"
+                    android:textColorHint="@color/White"
+                    android:hint="@string/brojHint"
+                    android:maxLength="30"
+                    android:textColor="@color/White"
+                    android:background="#0000"
+                    android:padding="16dp"
+                    android:gravity="right"
+                    />
+            </LinearLayout>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#dad8d8" />
+
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                >
+
+
+
+                <TextView
+                    android:layout_weight="1"
+                    android:id="@+id/emailClientInfo"
+                    android:textSize="16sp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/Email"
+                    android:textColor="@color/White"
+                    android:maxLength="30"
+                    android:background="#0000"
+                    android:padding="16dp"
+                    android:gravity="left"/>
+
+
+                <EditText
+                    android:id="@+id/EmailClientET"
+                    android:textSize="16sp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColorHint="@color/White"
+                    android:textColor="@color/White"
+                    android:hint="@string/emailHint"
+                    android:inputType="textEmailAddress"
+                    android:background="#0000"
+                    android:padding="16dp"
+                    android:gravity="right"
+                    />
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#dad8d8"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                >
+
+
+                <TextView
+                    android:layout_weight="1"
+                    android:id="@+id/passwordClientInfo"
+                    android:textSize="16sp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/Password"
+                    android:textColor="@color/White"
+                    android:maxLength="15"
+                    android:background="#0000"
+                    android:padding="16dp"
+                    android:gravity="left"
+                    />
+
+                <EditText
+                    android:layout_weight="1"
+                    android:id="@+id/passwordET"
+                    android:textSize="16sp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColorHint="@color/White"
+                    android:inputType="textPassword"
+                    android:hint="@string/passHint"
+                    android:textColor="@color/White"
+                    android:maxLength="15"
+                    android:background="#0000"
+                    android:padding="16dp"
+                    android:gravity="right"
+                    />
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#dad8d8" />
+
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/ButtonListCars"
+                style="?android:textAppearanceSmall"
+                android:layout_marginTop="16dp"
+                android:text="@string/listCars"
+                android:background="@color/colorAccent"
+                android:textStyle="bold" />
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/SaveButtonClient"
+                style="?android:textAppearanceSmall"
+                android:layout_marginTop="2dp"
+                android:text="@string/Save"
+                android:background="@color/colorAccent"
+                android:textStyle="bold" />
+
+        </LinearLayout>
+    </LinearLayout>
+</ScrollView>

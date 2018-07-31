@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#1e4b50</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+
+    <color name="backgroundLogin">#330f9f</color>
+    <color name="White">#fff8e7</color>
+    <color name="LightBlue">#add0cd</color>
+    <color name="Black">#111111</color>
+    <color name="Red">#FF0000</color>
+    <color name="green_temp">#23A96E</color>
+    <color name="green_dark">#159204</color>
+    <color name="bright_green">#02D8B0</color>
+    <color name="button_green">#10a54a</color>
+    <color name="procitana_poruka">#1A237E</color>
+    <color name="neprocitana_poruka">#10a54a</color>
+    <color name="Grey">#d3d3d3</color>
+    <color name="GoodGreen">#19d6a5</color>
+    <color name="holo_primary">#092631</color>
+    <color name="accent_material_dark">#23d6a5</color>
+    <color name="primary_material_dark">#092631</color>
+    <color name="background_material_dark">#213c46</color>
+
+
+    <!-- Nove boje -->
+    <color name="colorAccent">#23d6a5</color>
+    <color name="background">#092631</color>
+    <color name="backgroundLight">#213c46</color>
+    <color name="secondary_text_material_light">#8a5d4646</color>
+</resources>

@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="25dp">
+
+    <View style="@style/Divider2"></View>
+
+    <View style="@style/Divider2"></View>
+
+    <View style="@style/Divider2"></View>
+
+    <View style="@style/Divider2"></View>
+
+    <View style="@style/Divider2"></View>
+
+
+    <TextView
+        android:layout_width="wrap_content"
+
+        android:layout_height="wrap_content"
+        android:text="@string/owner"
+        android:textSize="20sp"
+        />
+
+
+
+
+    <TextView
+        android:layout_width="match_parent"
+
+        android:layout_height="wrap_content"
+
+        android:id="@+id/lista_vozila_na_servisu_vlas_id"
+
+        android:textSize="20sp"
+
+        />
+
+    <View style="@style/Divider2"></View>
+
+    <TextView
+        android:layout_width="wrap_content"
+
+        android:layout_height="wrap_content"
+        android:text="@string/RegNumber"
+        android:textSize="20sp"
+        />
+
+
+
+
+    <TextView
+        android:layout_width="match_parent"
+
+        android:layout_height="wrap_content"
+
+        android:id="@+id/lista_vozila_na_servisu_item_id"
+
+        android:textSize="20sp"
+
+        />
+
+    <View style="@style/Divider2"></View>
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/producer"
+        android:textSize="20sp"
+        />
+
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/lista_vozila_na_servisu_proizvodjac_id"
+        android:textSize="20sp"
+        />
+    <View style="@style/Divider2"></View>
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/Model"
+        android:textSize="20sp"
+        />
+
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/lista_vozila_na_servisu_model_id"
+        android:textSize="20sp"
+        />
+    <View style="@style/Divider2"></View>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/Production"
+        android:textSize="20sp"
+        />
+
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/lista_vozila_na_servisu_godina_id"
+        android:textSize="20sp"
+        />
+    <View style="@style/Divider2"></View>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/fuel1"
+        android:textSize="20sp"
+        />
+
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/lista_vozila_na_servisu_tipgoriva_id"
+        android:textSize="20sp"
+        />
+    <View style="@style/Divider2"></View>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/usluga"
+        android:textSize="20sp"
+        />
+
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/lista_vozila_na_servisu_usluga_id"
+        android:textSize="20sp"
+        />
+    <View style="@style/Divider2"></View>
+
+
+
+
+    <Button
+        android:id="@+id/DugmeListaServisiranih"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="@string/MarkAsDone"
+        android:background="@color/colorAccent"
+        />
+    <View style="@style/Divider2"></View>
+
+    <View style="@style/Divider2"></View>
+
+    <View style="@style/Divider2">
+
+    </View><View style="@style/Divider2"></View>
+
+    <View style="@style/Divider2"></View>
+
+
+</LinearLayout>
