@@ -19,7 +19,7 @@ import com.google.firebase.storage.StorageReference;
 import java.util.ArrayList;
 
 import ynca.nfs.R;
-import ynca.nfs.Servis;
+import ynca.nfs.Models.Servis;
 
 /**
  * Created by bolee on 21.5.17..

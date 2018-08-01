@@ -24,7 +24,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import ynca.nfs.Activities.MainScreenServisActivity;
-import ynca.nfs.Activities.Main_screen_client;
+import ynca.nfs.Activities.mainScreenClientActivity;
 import ynca.nfs.R;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
@@ -152,7 +152,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                         startActivity(new Intent(getBaseContext(), MainScreenServisActivity.class));
                     } else {
                         hideProgressDialog();
-                        startActivity(new Intent(getBaseContext(), Main_screen_client.class));
+                        startActivity(new Intent(getBaseContext(), mainScreenClientActivity.class));
                     }
                 }
 

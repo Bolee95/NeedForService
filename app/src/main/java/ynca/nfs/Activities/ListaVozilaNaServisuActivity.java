@@ -17,7 +17,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import ynca.nfs.Adapter.ListaVozilaNaServisuAdapter;
-import ynca.nfs.Automobil;
+import ynca.nfs.Models.Automobil;
 import ynca.nfs.R;
 
 public class ListaVozilaNaServisuActivity extends AppCompatActivity {

@@ -16,12 +16,10 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-import org.w3c.dom.Text;
-
 import java.util.ArrayList;
 
-import ynca.nfs.Automobil;
-import ynca.nfs.Poruka;
+import ynca.nfs.Models.Automobil;
+import ynca.nfs.Models.Poruka;
 import ynca.nfs.R;
 
 /**

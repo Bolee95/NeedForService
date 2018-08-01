@@ -59,7 +59,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ynca.nfs.R;
-import ynca.nfs.Servis;
+import ynca.nfs.Models.Servis;
 
 /**
  * An activity that displays a map showing the place at the device's current location.

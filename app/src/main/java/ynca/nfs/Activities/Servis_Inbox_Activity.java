@@ -22,13 +22,10 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.gson.Gson;
 
-import ynca.nfs.Adapter.CustomPorukeAdapter;
 import ynca.nfs.Adapter.CustomPorukeServisAdapter;
-import ynca.nfs.Automobil;
-import ynca.nfs.Klijent;
-import ynca.nfs.Poruka;
+import ynca.nfs.Models.Klijent;
+import ynca.nfs.Models.Poruka;
 import ynca.nfs.R;
-import ynca.nfs.Servis;
 
 /**
  * Created by Nikola on 5/29/2017.

@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
-import android.sax.StartElementListener;
 import android.support.annotation.RequiresApi;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
@@ -23,13 +22,11 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.gson.Gson;
 
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Map;
 
-import ynca.nfs.Automobil;
-import ynca.nfs.Klijent;
-import ynca.nfs.Poruka;
+import ynca.nfs.Models.Automobil;
+import ynca.nfs.Models.Klijent;
 import ynca.nfs.R;
 
 public class Car_info extends AppCompatActivity {

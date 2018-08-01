@@ -22,7 +22,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import java.util.ArrayList;
 
 import ynca.nfs.Adapter.ListaVozilaAdapter;
-import ynca.nfs.Automobil;
+import ynca.nfs.Models.Automobil;
 import ynca.nfs.R;
 
 public class ListaVozilaActivity extends AppCompatActivity {

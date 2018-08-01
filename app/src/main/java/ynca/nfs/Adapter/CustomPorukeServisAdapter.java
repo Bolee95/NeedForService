@@ -23,7 +23,7 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 
-import ynca.nfs.Poruka;
+import ynca.nfs.Models.Poruka;
 import ynca.nfs.R;
 
 public class CustomPorukeServisAdapter extends RecyclerView.Adapter<CustomPorukeServisAdapter.CustomPorukeServisViewHolder> {

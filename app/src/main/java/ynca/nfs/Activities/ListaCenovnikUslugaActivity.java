@@ -28,7 +28,7 @@ import java.util.ArrayList;
 import ynca.nfs.Adapter.ListaCenovnikUslugaAdapter;
 import ynca.nfs.Adapter.ListaVozilaAdapter;
 import ynca.nfs.R;
-import ynca.nfs.Usluga;
+import ynca.nfs.Models.Usluga;
 
 public class ListaCenovnikUslugaActivity extends AppCompatActivity {
 

@@ -4,12 +4,10 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
-import android.provider.ContactsContract;
 import android.support.annotation.RequiresApi;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -28,12 +26,10 @@ import com.google.gson.Gson;
 
 import java.util.ArrayList;
 
-import ynca.nfs.Automobil;
-import ynca.nfs.Klijent;
-import ynca.nfs.Poruka;
-import ynca.nfs.Poruka;
+import ynca.nfs.Models.Klijent;
+import ynca.nfs.Models.Poruka;
 import ynca.nfs.R;
-import ynca.nfs.Servis;
+import ynca.nfs.Models.Servis;
 
 public class Message_activity extends AppCompatActivity {
 

@@ -38,10 +38,10 @@ import java.util.ArrayList;
 
 import ynca.nfs.Activities.StartActivities.LoginActivity;
 import ynca.nfs.Adapter.ListaVozilaNaServisuAdapter;
-import ynca.nfs.Automobil;
-import ynca.nfs.Poruka;
+import ynca.nfs.Models.Automobil;
+import ynca.nfs.Models.Poruka;
 import ynca.nfs.R;
-import ynca.nfs.Servis;
+import ynca.nfs.Models.Servis;
 
 public class MainScreenServisActivity extends AppCompatActivity {
 

@@ -9,7 +9,7 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
-import ynca.nfs.Automobil;
+import ynca.nfs.Models.Automobil;
 import ynca.nfs.R;
 
 /**

@@ -28,10 +28,10 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import ynca.nfs.Activities.MainScreenServisActivity;
-import ynca.nfs.Activities.Main_screen_client;
-import ynca.nfs.Klijent;
+import ynca.nfs.Activities.mainScreenClientActivity;
+import ynca.nfs.Models.Klijent;
 import ynca.nfs.R;
-import ynca.nfs.Servis;
+import ynca.nfs.Models.Servis;
 
 public class RegisterActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -59,7 +59,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_register_activity);
+        setContentView(R.layout.activity_register);
 
         Window window = this.getWindow();
         window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
@@ -261,7 +261,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                         user.getUid());
                 mDatabase.child("Korisnik").child("Klijent").child(user.getUid()).setValue(klijent);
                 hideProgressDialog();
-                startActivity(new Intent(getBaseContext(), Main_screen_client.class));
+                startActivity(new Intent(getBaseContext(), mainScreenClientActivity.class));
             }
         } else if(host.getCurrentTabTag().equals("Service")){
             if(user != null){

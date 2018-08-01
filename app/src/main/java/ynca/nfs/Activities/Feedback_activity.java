@@ -22,8 +22,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import ynca.nfs.R;
-import ynca.nfs.Recenzija;
-import ynca.nfs.Servis;
+import ynca.nfs.Models.Recenzija;
+import ynca.nfs.Models.Servis;
 
 public class Feedback_activity extends AppCompatActivity {
 

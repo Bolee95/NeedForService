@@ -26,11 +26,11 @@ import com.google.firebase.database.FirebaseDatabase;
 import java.util.ArrayList;
 import java.util.List;
 
-import ynca.nfs.Automobil;
+import ynca.nfs.Models.Automobil;
 import ynca.nfs.R;
-import ynca.nfs.Servis;
-import ynca.nfs.Usluga;
-import ynca.nfs.Zahtev;
+import ynca.nfs.Models.Servis;
+import ynca.nfs.Models.Usluga;
+import ynca.nfs.Models.Zahtev;
 
 
 /**

@@ -11,7 +11,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 import ynca.nfs.R;
-import ynca.nfs.Recenzija;
+import ynca.nfs.Models.Recenzija;
 
 /**
  * Created by Nikola on 6/2/2017.

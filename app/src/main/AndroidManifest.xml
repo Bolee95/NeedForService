@@ -45,17 +45,17 @@
                   android:screenOrientation="portrait"
             android:theme="@style/AppTheme" />
 
-        <activity android:name=".Activities.Main_screen_client" />
+        <activity android:name=".Activities.mainScreenClientActivity" />
         <activity android:name=".Activities.DodajAutomobilForm"
             android:theme="@style/AppTheme">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".Activities.Main_screen_client" />
+                android:value=".Activities.mainScreenClientActivity" />
         </activity>
         <activity android:name=".Activities.ZahtevServisiranja">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".Activities.Main_screen_client" />
+                android:value=".Activities.mainScreenClientActivity" />
         </activity>
         <activity android:name=".Activities.Map_activity" />
         <activity
@@ -63,7 +63,7 @@
             android:label="@string/title_activity_info_client">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".Activities.Main_screen_client" />
+                android:value=".Activities.mainScreenClientActivity" />
         </activity>
         <activity android:name=".Activities.ListaVozilaActivity">
             <meta-data
@@ -75,7 +75,7 @@
             android:theme="@style/AppTheme">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".Activities.Main_screen_client" />
+                android:value=".Activities.mainScreenClientActivity" />
         </activity>
         <activity android:name=".Activities.Car_info"
             android:theme="@style/AppTheme" />

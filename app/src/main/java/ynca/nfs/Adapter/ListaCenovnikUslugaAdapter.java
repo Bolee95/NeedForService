@@ -22,7 +22,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import java.util.ArrayList;
 
 import ynca.nfs.R;
-import ynca.nfs.Usluga;
+import ynca.nfs.Models.Usluga;
 
 /**
  * Created by Nemanja Djordjevic on 5/29/2017.

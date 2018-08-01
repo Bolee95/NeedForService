@@ -11,22 +11,9 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.TextView;
 
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.ChildEventListener;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
-
-import java.util.ArrayList;
-
-import ynca.nfs.Klijent;
-import ynca.nfs.Poruka;
+import ynca.nfs.Models.Klijent;
+import ynca.nfs.Models.Poruka;
 import ynca.nfs.R;
-import ynca.nfs.Servis;
-import ynca.nfs.Zahtev;
 
 /**
  * Created by Nikola on 5/30/2017.
@@ -63,7 +50,7 @@ public class Poruka_tekst_activity extends AppCompatActivity {
         Intent i = getIntent();
         boolean bilaProcitana = i.getBooleanExtra("porukaBilaProcitana", true);
         if (bilaProcitana)
-            Main_screen_client.dekrementirajBrojNeprocitanihPoruka();
+            mainScreenClientActivity.dekrementirajBrojNeprocitanihPoruka();
         final Poruka poruka = (Poruka) i.getSerializableExtra("PorukaZaCitanje");
         BROJ_PORUKA = (int) i.getIntExtra("BROJ_PORUKA",-1);
         posiljaocTV = (TextView) findViewById(R.id.PosiljaocPorukeTV);

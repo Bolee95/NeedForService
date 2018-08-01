@@ -38,7 +38,7 @@ import com.google.gson.Gson;
 import java.util.regex.Pattern;
 
 import ynca.nfs.Activities.StartActivities.LoginActivity;
-import ynca.nfs.Klijent;
+import ynca.nfs.Models.Klijent;
 import ynca.nfs.R;
 
 public class Info_client extends Activity {
@@ -261,7 +261,7 @@ public class Info_client extends Activity {
     public void onBackPressed() {
         super.onBackPressed();
 
-        startActivity(new Intent(Info_client.this, Main_screen_client.class));
+        startActivity(new Intent(Info_client.this, mainScreenClientActivity.class));
     }
 
     public void ChangeSaveButtonState() {

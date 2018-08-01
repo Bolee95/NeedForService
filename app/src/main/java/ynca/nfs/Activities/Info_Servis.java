@@ -37,7 +37,7 @@ import com.google.gson.Gson;
 
 import ynca.nfs.Activities.StartActivities.LoginActivity;
 import ynca.nfs.R;
-import ynca.nfs.Servis;
+import ynca.nfs.Models.Servis;
 
 public class Info_Servis extends AppCompatActivity {
 

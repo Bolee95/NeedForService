@@ -22,7 +22,7 @@
         android:textSize="20dp"
         android:textStyle="bold"
         android:layout_marginTop="10dp"
-        android:background="@color/colorAccent"
+        android:background="@drawable/rounded_button"
         />
 
 
@@ -34,7 +34,7 @@
         android:textSize="20dp"
         android:textStyle="bold"
         android:layout_marginTop="10dp"
-        android:background="@color/colorAccent"
+        android:background="@drawable/rounded_button"
 
         />
     <Button
@@ -45,7 +45,7 @@
         android:textSize="20dp"
         android:textStyle="bold"
         android:layout_marginTop="10dp"
-        android:background="@color/colorAccent"
+        android:background="@drawable/rounded_button"
         />
     <Button
         android:id="@+id/NavListInboxBTN"
@@ -55,14 +55,14 @@
         android:textSize="20dp"
         android:textStyle="bold"
         android:layout_marginTop="10dp"
-        android:background="@color/colorAccent"/>
+        android:background="@drawable/rounded_button"/>
 
         <Button
             android:id="@+id/SignOutBtn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="50dp"
-            android:background="@color/Red"
+            android:background="@drawable/rounded_transparent"
             android:text="@string/SignOut"
             android:textSize="20dp"
             android:textStyle="bold" />

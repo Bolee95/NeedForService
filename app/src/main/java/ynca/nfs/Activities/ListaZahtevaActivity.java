@@ -8,7 +8,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
@@ -25,9 +24,8 @@ import java.util.ArrayList;
 
 import ynca.nfs.Adapter.ListaVozilaAdapter;
 import ynca.nfs.Adapter.ListaZahtevaAdapter;
-import ynca.nfs.Automobil;
 import ynca.nfs.R;
-import ynca.nfs.Zahtev;
+import ynca.nfs.Models.Zahtev;
 
 public class ListaZahtevaActivity extends AppCompatActivity {
 

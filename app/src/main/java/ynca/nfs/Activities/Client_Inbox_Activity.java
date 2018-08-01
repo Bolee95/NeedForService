@@ -24,7 +24,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import java.util.HashMap;
 
 import ynca.nfs.Adapter.CustomPorukeAdapter;
-import ynca.nfs.Poruka;
+import ynca.nfs.Models.Poruka;
 import ynca.nfs.R;
 
 /**
@@ -173,7 +173,7 @@ public class Client_Inbox_Activity  extends AppCompatActivity {
     }
     @Override
     public void onBackPressed() {
-        startActivity(new Intent(getBaseContext(),Main_screen_client.class));
+        startActivity(new Intent(getBaseContext(),mainScreenClientActivity.class));
     }
 
 
