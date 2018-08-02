@@ -25,14 +25,14 @@
     <string name="number">Broj telefona...</string>
     <string name="surname">Prezime...</string>
     <string name="PIB">PIB vaše kompanije...</string>
-    <string name="ServiceDescription">Popunite ovu formu ukoliko želite da se registrujete kao servis</string>
+    <string name="ServiceDescription">Popunite ovu formu ukoliko želite da se registrujete kao service</string>
     <string name="nameService">Naziv vaše kompanije...</string>
     <string name="nameServiceOwner">Ime i prezime vlasnika...</string>
     <string name="OK">OK</string>
     <string name="Service">Servis: </string>
     <string name="password">Lozinka...</string>
     <string name="submit">Potvrdi</string>
-    <!-- Strigovi za Client main screen -->
+    <!-- Strigovi za Klijent main screen -->
     <string name="Main_menu_header">Dobro došli. Ovde možete videti poslednja obaveštenja.</string>
     <string name="title_activity_main__screen__client">Main_Screen_Client</string>
     <string name="title_section1">Section 1</string>
@@ -83,11 +83,11 @@
     <string name="predjena_kilometraza">Predjena kilometraza</string>
 
     <string name="normal">Običan režim</string>
-    <string name="find">Nađi najbliži servis</string>
+    <string name="find">Nađi najbliži service</string>
     <string name="NightMode">Noćni režim</string>
     <string name="title_activity_settings">Podešavanja</string>
 
-    <string name="feedback">Ovde možete ostaviti komentar i ocenu za servis</string>
+    <string name="feedback">Ovde možete ostaviti komentar i ocenu za service</string>
     <string name="Save">Zapamti promene</string>
     <string name="listCars">Vidi listu automobila</string>
     <string name="PorukaReplyBTN"><u>Odgovori</u></string>
@@ -113,7 +113,7 @@
     <string name="YearOfManu">Godina proizvodnje:</string>
     <string name="PorukaJePoslata">Poruka je poslata!</string>
 
-    <!-- Client info strings-->
+    <!-- Klijent info strings-->
     <string name="UserName">Korisničko ime:</string>
     <string name="Email">E-mail:</string>
     <string name="Password">Lozinka:</string>
@@ -168,7 +168,7 @@
     <string name="cena">Cena:</string>
     <string name="action_sign_in_short">Prijavi se</string>
     <string name="change_price">Promeni cenu</string>
-    <string name="remove_service">izbrisi servis</string>
+    <string name="remove_service">izbrisi service</string>
     <string name="permission_rationale"></string>
     <string name="emailHint">email...</string>
 
@@ -176,7 +176,7 @@
     <!-- Mapa stringovi -->
     <string name="navigation">Da li želite navigaciju do ovog mesta?</string>
     <string name="No">Ne</string>
-    <string name="closestService">Najbliži servis je: </string>
+    <string name="closestService">Najbliži service je: </string>
     <string name="Warning">Upozorenje</string>
     <string name="EmptyFields">Ostavili ste neka polja nepopunjena. Molimo vas, popunite celu formu da bi ste dodali novi automobil!</string>
     <string name="Changes">Da li stvarno želite da napravite promene?</string>

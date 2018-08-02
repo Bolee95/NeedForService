@@ -1,4 +1,4 @@
-package ynca.nfs.Activities.StartActivities;
+package ynca.nfs.Activities.startActivities;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -27,11 +27,11 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-import ynca.nfs.Activities.MainScreenServisActivity;
-import ynca.nfs.Activities.mainScreenClientActivity;
+import ynca.nfs.Activities.mainScreensActivities.MainScreenServisActivity;
+import ynca.nfs.Activities.mainScreensActivities.mainScreenClientActivity;
 import ynca.nfs.Models.Klijent;
-import ynca.nfs.R;
 import ynca.nfs.Models.Servis;
+import ynca.nfs.R;
 
 public class RegisterActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -74,7 +74,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         host = (TabHost) findViewById(R.id.TabRegistration);
 
         host.setup();
-        TabSpec ClientTab = host.newTabSpec("Client");
+        TabSpec ClientTab = host.newTabSpec("Klijent");
         ClientTab.setIndicator(getResources().getString(R.string.Client), getResources().getDrawable(android.R.drawable.star_on));
         ClientTab.setContent(R.id.Client);
         host.addTab(ClientTab);
@@ -84,7 +84,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         ServiceTab.setContent(R.id.Service);
         host.addTab(ServiceTab);
 
-        host.setCurrentTabByTag("Client");
+        host.setCurrentTabByTag("Klijent");
 
         //views
         mEmailViewClient = (EditText) findViewById(R.id.EditTextClientEmail);
@@ -251,7 +251,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     }
 
     private void updateUI(FirebaseUser user) {
-        if(host.getCurrentTabTag().equals("Client")){
+        if(host.getCurrentTabTag().equals("Klijent")){
             if(user != null){
                 mDatabase = FirebaseDatabase.getInstance().getReference();
                 Klijent klijent = new Klijent(mNameClient.getText().toString(),
@@ -266,13 +266,13 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         } else if(host.getCurrentTabTag().equals("Service")){
             if(user != null){
                 mDatabase = FirebaseDatabase.getInstance().getReference();
-                Servis servis = new Servis(mNameService.getText().toString(),
+                Servis service = new Servis(mNameService.getText().toString(),
                         mNameOwnerService.getText().toString(),
                         mAddressService.getText().toString(),
                         mNumberService.getText().toString(),
                         mEmailViewService.getText().toString(),
                         user.getUid());
-                mDatabase.child("Korisnik").child("Servis").child(user.getUid()).setValue(servis);
+                mDatabase.child("Korisnik").child("Service").child(user.getUid()).setValue(service);
                 hideProgressDialog();
                 startActivity(new Intent(getBaseContext(), MainScreenServisActivity.class));
             }

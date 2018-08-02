@@ -18,8 +18,8 @@ import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 
-import ynca.nfs.R;
 import ynca.nfs.Models.Servis;
+import ynca.nfs.R;
 
 /**
  * Created by bolee on 21.5.17..
@@ -98,10 +98,10 @@ public class ItemListClientAdapter extends RecyclerView.Adapter<ItemListClientAd
         }
 
 
-        void bind(Servis servis){
+        void bind(Servis service){
 
             mStorageReference = FirebaseStorage.getInstance().getReference();
-            StorageReference photoRef = mStorageReference.child("photos").child(servis.getUID());
+            StorageReference photoRef = mStorageReference.child("photos").child(service.getUID());
             photoRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                 @Override
                 public void onSuccess(Uri uri) {
@@ -119,8 +119,8 @@ public class ItemListClientAdapter extends RecyclerView.Adapter<ItemListClientAd
                 }
             });
 
-            itemText.setText(servis.getNaziv()); //
-            email.setText(servis.getAdresa()); //bio je email, promeni sam na adresu, Aleksa
+            itemText.setText(service.getNaziv()); //
+            email.setText(service.getAdresa()); //bio je email, promeni sam na adresu, Aleksa
         }
 
         @Override

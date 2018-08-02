@@ -22,6 +22,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.gson.Gson;
 
+import ynca.nfs.Activities.mainScreensActivities.MainScreenServisActivity;
 import ynca.nfs.Adapter.CustomPorukeServisAdapter;
 import ynca.nfs.Models.Klijent;
 import ynca.nfs.Models.Poruka;
@@ -75,7 +76,7 @@ public class Servis_Inbox_Activity  extends AppCompatActivity {
 
         mFirebaseDatabase = FirebaseDatabase.getInstance();
         mDatabaseReference = mFirebaseDatabase.getReference().child("Korisnik")
-                .child("Servis").child(mUser.getUid()).child("primljenePoruke");
+                .child("Service").child(mUser.getUid()).child("primljenePoruke");
 
 
         recyclerView = (RecyclerView) findViewById(R.id.inbox_servis_rv);

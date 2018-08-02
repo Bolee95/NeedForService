@@ -26,6 +26,8 @@ import java.util.ArrayList;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
+import ynca.nfs.Activities.clientActivities.Map_activity;
+
 //Morao sam da dodam JAR biblioteke za ovo....
 
 public class GMapV2Direction {

@@ -22,6 +22,7 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 
+import ynca.nfs.Activities.clientActivities.carInfoActivity;
 import ynca.nfs.Adapter.ListaVozilaAdapter;
 import ynca.nfs.Adapter.ListaZahtevaAdapter;
 import ynca.nfs.R;
@@ -88,7 +89,7 @@ public class ListaZahtevaActivity extends AppCompatActivity {
         adapter = new ListaZahtevaAdapter(new ListaVozilaAdapter.OnListItemClickListener() {
             @Override
             public void OnItemClick(int clickItemIndex) {
-                startActivity(new Intent(getBaseContext(),Car_info.class));
+                startActivity(new Intent(getBaseContext(),carInfoActivity.class));
             }
         });
 

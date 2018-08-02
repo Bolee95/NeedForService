@@ -24,7 +24,7 @@
         android:textAlignment="center"
 
         android:weightSum="1"
-        tools:context="ynca.nfs.Activities.StartActivities.LoginActivity">
+        tools:context="ynca.nfs.Activities.startActivities.LoginActivity">
 
         <ImageView
             android:id="@+id/imageView"

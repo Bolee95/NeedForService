@@ -66,7 +66,7 @@ public class Lista_Recenzija_Activity extends AppCompatActivity {
         recenzije = new ArrayList<>();
 
         mFirebaseDatabase = FirebaseDatabase.getInstance();
-        mDatabaseReference = mFirebaseDatabase.getReference().child("Korisnik").child("Servis")
+        mDatabaseReference = mFirebaseDatabase.getReference().child("Korisnik").child("Service")
                 .child(mUser.getUid()).child("recenzije");
 
         recyclerView.setLayoutManager(layoutManager);

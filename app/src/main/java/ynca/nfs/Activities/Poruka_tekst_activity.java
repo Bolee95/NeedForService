@@ -11,6 +11,8 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.TextView;
 
+import ynca.nfs.Activities.clientActivities.Message_activity;
+import ynca.nfs.Activities.mainScreensActivities.mainScreenClientActivity;
 import ynca.nfs.Models.Klijent;
 import ynca.nfs.Models.Poruka;
 import ynca.nfs.R;
@@ -108,10 +110,10 @@ public class Poruka_tekst_activity extends AppCompatActivity {
 
 //    public void imeServisa(FirebaseUser user, DatabaseReference database){
 //        String email = user.getEmail();
-//        database.child("Korisnik").child("Servis").orderByChild("email").equalTo(email).addListenerForSingleValueEvent(new ValueEventListener() {
+//        database.child("Korisnik").child("Service").orderByChild("email").equalTo(email).addListenerForSingleValueEvent(new ValueEventListener() {
 //            @Override
 //            public void onDataChange(DataSnapshot dataSnapshot) {
-//                Servis servis = dataSnapshot.getValue(Servis.class);
+//                Service servis = dataSnapshot.getValue(Service.class);
 //                String ovdeNekiStringKojiCesVanDaDeklarises = servis.getNaziv();
 //            }
 //

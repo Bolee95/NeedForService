@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="ynca.nfs.Activities.StartActivities.RegisterActivity"
+    tools:context="ynca.nfs.Activities.startActivities.RegisterActivity"
     android:descendantFocusability="beforeDescendants"
     android:focusableInTouchMode="true"
     android:background="@color/background">

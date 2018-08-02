@@ -5,7 +5,7 @@
     style="@android:style/Widget.Holo.Light.ScrollView"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="ynca.nfs.Activities.Feedback_activity">
+    tools:context="ynca.nfs.Activities.clientActivities.Feedback_activity">
 
     <LinearLayout
         android:layout_width="match_parent"

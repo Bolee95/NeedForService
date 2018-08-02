@@ -28,7 +28,6 @@ dependencies {
         exclude group: 'com.android.support'
     })
 
-
     compile 'com.android.support:recyclerview-v7:25.3.0'
     compile 'com.android.support:appcompat-v7:25.3.0'
     compile 'com.android.support.constraint:constraint-layout:1.0.1'
