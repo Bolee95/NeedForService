@@ -25,7 +25,6 @@ import com.google.firebase.database.ValueEventListener;
 
 import ynca.nfs.Activities.mainScreensActivities.MainScreenServisActivity;
 import ynca.nfs.Activities.mainScreensActivities.mainScreenClientActivity;
-import ynca.nfs.CheckConnectivity;
 import ynca.nfs.R;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
@@ -42,7 +41,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private DatabaseReference mDatabase;
     FirebaseUser currentUser;
     private FirebaseDatabase mFirebaseDatabase;
-    //CheckConnectivity connectivity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,8 +64,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         mAuth = FirebaseAuth.getInstance();
         mFirebaseDatabase = FirebaseDatabase.getInstance();
         mDatabase = mFirebaseDatabase.getReference();
-
-        //connectivity.onReceive(this, null);
 
 
     }
@@ -148,7 +144,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private void updateUI(FirebaseUser user) {
         if (user != null) {
             String email = user.getEmail();
-            mDatabase.child("Korisnik").child("Service").orderByChild("email").equalTo(email).addListenerForSingleValueEvent(new ValueEventListener() {
+            mDatabase.child("Korisnik").child("Servis").orderByChild("email").equalTo(email).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     if(dataSnapshot.exists()){

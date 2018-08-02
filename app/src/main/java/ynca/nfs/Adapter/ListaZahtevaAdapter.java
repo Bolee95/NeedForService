@@ -134,7 +134,7 @@ public class ListaZahtevaAdapter extends RecyclerView.Adapter<ListaZahtevaAdapte
                                     Automobil a = z.getAutomobil();
                                     a.setTipUsluge(z.getTipUsluge());
 
-                                    mDatabaseReference.child("Korisnik").child("Service").child(mUser.getUid())
+                                    mDatabaseReference.child("Korisnik").child("Servis").child(mUser.getUid())
                                             .child("automobili").push().setValue(a);
                                     Poruka p = new Poruka(false, mUser.getEmail(), "", "Obavestenje",
                                             "Postovani, \n Obavestavamo Vas da je Vas zahtev prihvacen", "");
@@ -167,7 +167,7 @@ public class ListaZahtevaAdapter extends RecyclerView.Adapter<ListaZahtevaAdapte
 //                    Zahtev z = vratiZahtev(tag);
 //                    Automobil a = z.getAutomobil();
 //
-//                    mDatabaseReference.child("Korisnik").child("Service").child(mUser.getUid())
+//                    mDatabaseReference.child("Korisnik").child("Servis").child(mUser.getUid())
 //                            .child("automobili").push().setValue(a);
 //                    Poruka p = new Poruka(false, mUser.getEmail(), "", "Obavestenje",
 //                            "Postovani, \n Obavestavamo Vas da je Vas zahtev prihvacen", "");

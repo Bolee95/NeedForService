@@ -94,7 +94,7 @@ public class Servis {
 
 
 
-    public Servis(String _ime, String _prezime, String _adresa, String _brojTelefona, String _email, double longi, double lat)
+    public Servis(String _ime,String _prezime, String _adresa,String _brojTelefona,String _email, double longi, double lat)
     {
         naziv=_ime;
         imeVlasnika=_prezime;
@@ -110,7 +110,7 @@ public class Servis {
         automobili = new HashMap<>();
     }
 
-    public Servis(String _ime, String _prezime, String _adresa, String _brojTelefona, String _email, String uid)
+    public Servis(String _ime,String _prezime, String _adresa,String _brojTelefona,String _email, String uid)
     {
         naziv=_ime;
         imeVlasnika=_prezime;

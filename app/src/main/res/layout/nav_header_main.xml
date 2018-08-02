@@ -18,7 +18,6 @@
             android:paddingLeft="10dp"
             android:src="@android:drawable/sym_def_app_icon"
             />
-
         <TextView
             android:id="@+id/NameAndSurnameNavBarClient."
             android:layout_width="match_parent"

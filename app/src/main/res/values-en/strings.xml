@@ -35,7 +35,7 @@
     <string name="Service">Service: </string>
     <string name="password">Password...</string>
     <string name="submit">Submit</string>
-    <!-- Strigovi za Klijent main screen -->
+    <!-- Strigovi za Client main screen -->
     <string name="Main_menu_header">Welcome. Here you will see latest notifications.</string>
     <string name="title_activity_main__screen__client">Main_Screen_Client</string>
     <string name="title_section1">Section 1</string>
@@ -116,7 +116,7 @@
     <string name="YearOfManu">Year of manufacturing:</string>
     <string name="PorukaJePoslata">Message has been sent!</string>
 
-    <!-- Klijent info strings-->
+    <!-- Client info strings-->
     <string name="UserName">Username:</string>
     <string name="Email">E-mail:</string>
     <string name="Password">Password:</string>

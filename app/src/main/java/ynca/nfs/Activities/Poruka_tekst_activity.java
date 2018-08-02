@@ -110,10 +110,10 @@ public class Poruka_tekst_activity extends AppCompatActivity {
 
 //    public void imeServisa(FirebaseUser user, DatabaseReference database){
 //        String email = user.getEmail();
-//        database.child("Korisnik").child("Service").orderByChild("email").equalTo(email).addListenerForSingleValueEvent(new ValueEventListener() {
+//        database.child("Korisnik").child("Servis").orderByChild("email").equalTo(email).addListenerForSingleValueEvent(new ValueEventListener() {
 //            @Override
 //            public void onDataChange(DataSnapshot dataSnapshot) {
-//                Service servis = dataSnapshot.getValue(Service.class);
+//                Servis servis = dataSnapshot.getValue(Servis.class);
 //                String ovdeNekiStringKojiCesVanDaDeklarises = servis.getNaziv();
 //            }
 //

@@ -30,8 +30,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import ynca.nfs.Activities.mainScreensActivities.MainScreenServisActivity;
 import ynca.nfs.Activities.mainScreensActivities.mainScreenClientActivity;
 import ynca.nfs.Models.Klijent;
-import ynca.nfs.Models.Servis;
 import ynca.nfs.R;
+import ynca.nfs.Models.Servis;
 
 public class RegisterActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -74,7 +74,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         host = (TabHost) findViewById(R.id.TabRegistration);
 
         host.setup();
-        TabSpec ClientTab = host.newTabSpec("Klijent");
+        TabSpec ClientTab = host.newTabSpec("Client");
         ClientTab.setIndicator(getResources().getString(R.string.Client), getResources().getDrawable(android.R.drawable.star_on));
         ClientTab.setContent(R.id.Client);
         host.addTab(ClientTab);
@@ -84,7 +84,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         ServiceTab.setContent(R.id.Service);
         host.addTab(ServiceTab);
 
-        host.setCurrentTabByTag("Klijent");
+        host.setCurrentTabByTag("Client");
 
         //views
         mEmailViewClient = (EditText) findViewById(R.id.EditTextClientEmail);
@@ -251,7 +251,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     }
 
     private void updateUI(FirebaseUser user) {
-        if(host.getCurrentTabTag().equals("Klijent")){
+        if(host.getCurrentTabTag().equals("Client")){
             if(user != null){
                 mDatabase = FirebaseDatabase.getInstance().getReference();
                 Klijent klijent = new Klijent(mNameClient.getText().toString(),
@@ -266,13 +266,13 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         } else if(host.getCurrentTabTag().equals("Service")){
             if(user != null){
                 mDatabase = FirebaseDatabase.getInstance().getReference();
-                Servis service = new Servis(mNameService.getText().toString(),
+                Servis servis = new Servis(mNameService.getText().toString(),
                         mNameOwnerService.getText().toString(),
                         mAddressService.getText().toString(),
                         mNumberService.getText().toString(),
                         mEmailViewService.getText().toString(),
                         user.getUid());
-                mDatabase.child("Korisnik").child("Service").child(user.getUid()).setValue(service);
+                mDatabase.child("Korisnik").child("Servis").child(user.getUid()).setValue(servis);
                 hideProgressDialog();
                 startActivity(new Intent(getBaseContext(), MainScreenServisActivity.class));
             }

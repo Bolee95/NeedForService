@@ -62,7 +62,7 @@ public class ListaCenovnikUslugaAdapter extends RecyclerView.Adapter<ListaCenovn
         mUser = mAuth.getCurrentUser();
 
         mFirebaseDatabase = FirebaseDatabase.getInstance();
-        mDatabaseReference = mFirebaseDatabase.getReference().child("Korisnik").child("Service")
+        mDatabaseReference = mFirebaseDatabase.getReference().child("Korisnik").child("Servis")
                 .child(mUser.getUid()).child("usluge");
 
     }

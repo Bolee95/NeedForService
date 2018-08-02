@@ -58,7 +58,7 @@ public class CustomPorukeServisAdapter extends RecyclerView.Adapter<CustomPoruke
         mAuth = FirebaseAuth.getInstance();
         mUser = mAuth.getCurrentUser();
         mFireBaseDatabase = FirebaseDatabase.getInstance();
-        mDatabaseReference = mFireBaseDatabase.getReference().child("Korisnik").child("Service")
+        mDatabaseReference = mFireBaseDatabase.getReference().child("Korisnik").child("Servis")
                 .child(mUser.getUid()).child("primljenePoruke");
     }
 

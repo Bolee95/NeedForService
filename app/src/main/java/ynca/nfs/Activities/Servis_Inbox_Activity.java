@@ -76,7 +76,7 @@ public class Servis_Inbox_Activity  extends AppCompatActivity {
 
         mFirebaseDatabase = FirebaseDatabase.getInstance();
         mDatabaseReference = mFirebaseDatabase.getReference().child("Korisnik")
-                .child("Service").child(mUser.getUid()).child("primljenePoruke");
+                .child("Servis").child(mUser.getUid()).child("primljenePoruke");
 
 
         recyclerView = (RecyclerView) findViewById(R.id.inbox_servis_rv);

@@ -8,7 +8,7 @@ import java.util.HashMap;
 
 public class Klijent {
 
-    private HashMap<String, Automobil> listOfCars;
+    private HashMap<String, Automobil> listaVozila;
     private HashMap<String, Zahtev> zahtevi;
 
 
@@ -50,12 +50,12 @@ public class Klijent {
         this.primljenePoruke = primljenePoruke;
     }
 
-    public HashMap<String, Automobil> getListOfCars() {
-        return listOfCars;
+    public HashMap<String, Automobil> getListaVozila() {
+        return listaVozila;
     }
 
-    public void setListOfCars(HashMap<String, Automobil> listOfCars) {
-        this.listOfCars = listOfCars;
+    public void setListaVozila(HashMap<String, Automobil> listaVozila) {
+        this.listaVozila = listaVozila;
     }
 
     public String getIme() {
@@ -100,7 +100,7 @@ public class Klijent {
 
 
 
-    public Klijent(String _ime, String _prezime, String _brojTelefona, String _email, String uid)
+    public Klijent(String _ime,String _prezime, String _brojTelefona, String _email, String uid)
     {
 
         ime=_ime;
@@ -108,7 +108,7 @@ public class Klijent {
         //id=_id;
         brojTelefona=_brojTelefona;
         email=_email;
-        listOfCars = new HashMap<String, Automobil>();
+        listaVozila = new HashMap<String, Automobil>();
         UID = uid;
         zahtevi = new HashMap<>();
         primljenePoruke = new HashMap<>();
@@ -118,12 +118,12 @@ public class Klijent {
 
     public void dodajVozilo(String key, Automobil temp)
     {
-        listOfCars.put(key, temp);
+        listaVozila.put(key, temp);
     }
 
     public void ukloniVozilo(Automobil temp)
     {
-        listOfCars.remove(temp);
+        listaVozila.remove(temp);
     }
 
     private void zakaziServis()

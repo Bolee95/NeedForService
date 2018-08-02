@@ -74,12 +74,12 @@ public class ListaCenovnikUslugaActivity extends AppCompatActivity {
         mUser = mAuth.getCurrentUser();
 
         mFirebaseDatabase = FirebaseDatabase.getInstance();
-        mDatabaseReference = mFirebaseDatabase.getReference().child("Korisnik").child("Service")
+        mDatabaseReference = mFirebaseDatabase.getReference().child("Korisnik").child("Servis")
                 .child(mUser.getUid()).child("usluge");
 
 
         mFirebaseDatabase2 = FirebaseDatabase.getInstance();
-        mDatabaseReference2 = mFirebaseDatabase2.getReference().child("Korisnik").child("Service")
+        mDatabaseReference2 = mFirebaseDatabase2.getReference().child("Korisnik").child("Servis")
                 .child(mUser.getUid()).child("usluge");
 
 

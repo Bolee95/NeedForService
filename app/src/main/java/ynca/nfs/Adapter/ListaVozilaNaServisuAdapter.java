@@ -128,7 +128,7 @@ public class ListaVozilaNaServisuAdapter extends  RecyclerView.Adapter<ListaVozi
                                     mDatabaseReference.child("Korisnik").child("Klijent").child(temp1.getVlasnikID())
                                             .child("primljenePoruke").push().setValue(p);
 
-                                    mDatabaseReference.child("Korisnik").child("Service").child(mUser.getUid())
+                                    mDatabaseReference.child("Korisnik").child("Servis").child(mUser.getUid())
                                             .child("automobili").child(temp1.getVoziloID()).removeValue();
 
                                     automobili.remove(temp1);
