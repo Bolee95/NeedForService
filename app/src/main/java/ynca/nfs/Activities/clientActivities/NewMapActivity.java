@@ -7,10 +7,12 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
 import com.google.android.gms.maps.CameraUpdate;
@@ -30,14 +32,20 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.gson.Gson;
+import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import ynca.nfs.Models.Client;
 import ynca.nfs.Models.VehicleService;
 import ynca.nfs.R;
 
-public class NewMapActivity extends FragmentActivity implements OnMapReadyCallback {
+public class NewMapActivity extends AppCompatActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
     private FirebaseDatabase mFirebaseDatabase;
@@ -47,9 +55,11 @@ public class NewMapActivity extends FragmentActivity implements OnMapReadyCallba
     public static ArrayList<VehicleService> services;
     private ArrayList<LatLng> servicesCoords;
     private CameraPosition mCameraPosition;
+    private HashMap<String,Client> listOfFriends; //postavi se listener na referencu na prijatelje trenutno ulogovanog korisnika
+    // i onda se dodaju na mapu i osluskuju se sa listenerom za promene
 
     private Location mLastKnownLocation;
-    private final LatLng mDefaultLocation = new LatLng(43.331310, 21.892481);
+    private LatLng mDefaultLocation;
     private static final int DEFAULT_ZOOM = 15;
     private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
     private static final String TAG = Map_activity.class.getSimpleName();
@@ -73,11 +83,27 @@ public class NewMapActivity extends FragmentActivity implements OnMapReadyCallba
         mDatabaseReference1 = mFirebaseDatabase.getReference().child("Korisnik").child("Client");
         services = new ArrayList<VehicleService>();
 
+        //Uzimanje uloovanog korisnika
         SharedPreferences shared = getSharedPreferences("SharedData",MODE_PRIVATE);
         SharedPreferences.Editor editor = shared.edit();
         Gson gson = new Gson();
         String json = shared.getString("TrenutniKlijent","");
         currentClient = gson.fromJson(json, Client.class);
+        mDefaultLocation = new LatLng(currentClient.getLastKnownLat(),currentClient.getLastKnownlongi());
+
+        //Toolbar podesavanja
+        Toolbar toolbar = (Toolbar) findViewById(R.id.mapToolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //Ovo dugme ce da vodi na augmented reality mod
+            }
+        });
 
 
         mChildEventListener = new ChildEventListener() {
@@ -117,6 +143,49 @@ public class NewMapActivity extends FragmentActivity implements OnMapReadyCallba
         mDatabaseReference.addChildEventListener(mChildEventListener);
 
     }
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu)
+    {
+        getMenuInflater().inflate(R.menu.map_menu, menu);
+        return true;
+    }
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item)
+    {
+        int id = item.getItemId();
+
+        if(id == R.id.newServiceItem)
+        {
+            //Pokrece se intent sa opcijama za dodavanje novog servisa na trenutnoj lokaciji
+        }
+        else if (id == R.id.switchNightMode)
+        {
+            //Night mode switch
+        }
+        else if (id == R.id.switchFriendsView)
+        {
+            //dodaje markere sa prijateljima i njihove thumbnaile
+        }
+        else if (id == R.id.mapSearch)
+        {
+
+           //otvara formu za pretrazivanje po odredjenom atributu i onda pozicionira kameru u zavisnosti od izabranog
+            // ili na osnovu unetog radiusa
+        }
+        else
+        {
+            finish();
+        }
+
+        return super.onOptionsItemSelected(item);
+
+    }
+
+
 
 
     /**

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/newServiceItem"
+        android:orderInCategory="100"
+        android:title="New marker"
+        app:showAsAction="always"
+        android:icon="@drawable/baseline_add_white_18dp">
+    </item>
+    <item
+        android:id="@+id/switchNightMode"
+        android:title="Turn on night mode"
+        android:orderInCategory="100"
+        app:showAsAction="ifRoom"
+        android:icon="@drawable/baseline_brightness_4_white_18dp">
+
+    </item>
+    <item
+        android:id="@+id/mapSearch"
+        android:icon="@drawable/baseline_search_white_18dp"
+        android:title="Search"
+        app:showAsAction="always"
+        app:actionViewClass="android.widget.SearchView" />
+    <item
+        android:id="@+id/switchFriendsView"
+        android:title="Show friends"
+        app:showAsAction="ifRoom"
+        android:icon="@drawable/baseline_supervised_user_circle_white_18dp">
+    </item>
+    <item
+        android:id="@+id/radiusSearch"
+        android:title="Services in radius"
+        app:showAsAction="always"
+        android:icon="@drawable/baseline_track_changes_white_18dp">
+    </item>
+
+    <!--Radius search and atribute search-->
+
+</menu>

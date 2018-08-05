@@ -6,7 +6,7 @@ android {
     buildToolsVersion '27.0.3'
     defaultConfig {
         applicationId "ynca.nfs"
-        minSdkVersion 16
+        minSdkVersion 21
         targetSdkVersion 25
         versionCode 1
         versionName "1.0"
@@ -47,6 +47,7 @@ dependencies {
     compile 'com.google.android.gms:play-services-location:15.0.1'
     compile 'com.google.android.gms:play-services-places:15.0.1'
 
+    compile 'uk.co.chrisjenx:calligraphy:2.3.0'
     compile 'com.squareup.okhttp:okhttp:2.0.0'
     compile 'com.google.firebase:firebase-database:16.0.1'
     compile 'com.google.firebase:firebase-storage:16.0.1'
@@ -59,6 +60,17 @@ dependencies {
     annotationProcessor 'com.github.bumptech.glide:compiler:4.0.0-RC0'
 }
 
+
+configurations.all {
+    resolutionStrategy.eachDependency { DependencyResolveDetails details ->
+        def requested = details.requested
+        if (requested.group == 'com.android.support') {
+            if (!requested.name.startsWith("multidex")) {
+                details.useVersion '25.3.0'
+            }
+        }
+    }
+}
 
 
 

@@ -19,8 +19,8 @@
         android:layout_height="wrap_content"
         android:id="@+id/NavListButton1"
         android:text="@string/newVehicle"
-        android:textSize="20dp"
-        android:textStyle="bold"
+        android:textSize="18dp"
+
         android:layout_marginTop="10dp"
         android:background="@drawable/rounded_button"
         />
@@ -31,8 +31,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/NavListButton2"
         android:text="@string/serviceRequest"
-        android:textSize="20dp"
-        android:textStyle="bold"
+        android:textSize="18dp"
         android:layout_marginTop="10dp"
         android:background="@drawable/rounded_button"
 
@@ -42,8 +41,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/NavListButton3"
         android:text="@string/map"
-        android:textSize="20dp"
-        android:textStyle="bold"
+        android:textSize="18dp"
         android:layout_marginTop="10dp"
         android:background="@drawable/rounded_button"
         />
@@ -52,8 +50,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:text="@string/MessageBox"
-        android:textSize="20dp"
-        android:textStyle="bold"
+        android:textSize="18dp"
         android:layout_marginTop="10dp"
         android:background="@drawable/rounded_button"/>
 
@@ -64,8 +61,7 @@
             android:layout_marginTop="50dp"
             android:background="@drawable/rounded_transparent"
             android:text="@string/SignOut"
-            android:textSize="20dp"
-            android:textStyle="bold" />
+            android:textSize="18dp" />
     </LinearLayout>
 
 </ScrollView>
