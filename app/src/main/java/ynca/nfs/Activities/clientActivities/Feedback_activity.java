@@ -21,9 +21,9 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import ynca.nfs.Models.VehicleService;
 import ynca.nfs.R;
-import ynca.nfs.Models.Recenzija;
-import ynca.nfs.Models.Servis;
+import ynca.nfs.Models.Review;
 
 public class Feedback_activity extends AppCompatActivity {
 
@@ -39,7 +39,7 @@ public class Feedback_activity extends AppCompatActivity {
     RatingBar rejt;
     Button submit;
 
-    Servis servisZaSlanje;
+    VehicleService vehicleServiceZaSlanje;
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
@@ -64,7 +64,7 @@ public class Feedback_activity extends AppCompatActivity {
 
         mFirebaseDatabase = FirebaseDatabase.getInstance();
         mDatabaseReference = mFirebaseDatabase.getReference().child("Korisnik")
-            .child("Servis");
+            .child("VehicleService");
 
         mejlServisaKojiSeOcenjuje = getIntent().getStringExtra("ServisKojiSeOcenjuje");
 
@@ -78,10 +78,10 @@ public class Feedback_activity extends AppCompatActivity {
 
                 String  komentar = kom.getText().toString();
                 float ocena = rejt.getRating();
-                 // TODO Rexenzija = new Recenzija(...) pa u bazu
-                Recenzija recenzijaZaPamcenje = new Recenzija(mUser.getEmail(), komentar, ocena);
-                mDatabaseReference.child(servisZaSlanje.getUID()).child("recenzije")
-                        .push().setValue(recenzijaZaPamcenje);
+                 // TODO Rexenzija = new Review(...) pa u bazu
+                Review reviewZaPamcenje = new Review(mUser.getEmail(), komentar, ocena);
+                mDatabaseReference.child(vehicleServiceZaSlanje.getUID()).child("reviews")
+                        .push().setValue(reviewZaPamcenje);
                 Toast.makeText(Feedback_activity.this, "Succeed!", Toast.LENGTH_SHORT);
                 finish();
             }
@@ -91,10 +91,10 @@ public class Feedback_activity extends AppCompatActivity {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
 
-                Servis ser = dataSnapshot.getValue(Servis.class);
+                VehicleService ser = dataSnapshot.getValue(VehicleService.class);
                 if(ser.getEmail().equals(mejlServisaKojiSeOcenjuje))
                 {
-                    servisZaSlanje = ser;
+                    vehicleServiceZaSlanje = ser;
 
 
                 }

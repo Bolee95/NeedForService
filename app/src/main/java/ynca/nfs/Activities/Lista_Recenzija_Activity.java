@@ -21,8 +21,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import java.util.ArrayList;
 
 import ynca.nfs.Adapter.ListaRecenzijaAdapter;
+import ynca.nfs.Models.Review;
 import ynca.nfs.R;
-import ynca.nfs.Models.Recenzija;
 
 public class Lista_Recenzija_Activity extends AppCompatActivity {
     ListaRecenzijaAdapter adapter;
@@ -36,7 +36,7 @@ public class Lista_Recenzija_Activity extends AppCompatActivity {
     private FirebaseUser mUser;
 
 
-    ArrayList<Recenzija> recenzije;
+    ArrayList<Review> recenzije;
 
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
@@ -66,8 +66,8 @@ public class Lista_Recenzija_Activity extends AppCompatActivity {
         recenzije = new ArrayList<>();
 
         mFirebaseDatabase = FirebaseDatabase.getInstance();
-        mDatabaseReference = mFirebaseDatabase.getReference().child("Korisnik").child("Servis")
-                .child(mUser.getUid()).child("recenzije");
+        mDatabaseReference = mFirebaseDatabase.getReference().child("Korisnik").child("VehicleService")
+                .child(mUser.getUid()).child("reviews");
 
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setHasFixedSize(true);
@@ -84,7 +84,7 @@ public class Lista_Recenzija_Activity extends AppCompatActivity {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
 
-                Recenzija r = dataSnapshot.getValue(Recenzija.class);
+                Review r = dataSnapshot.getValue(Review.class);
                 adapter.add(r);
                 recyclerView.setAdapter(adapter);
             }

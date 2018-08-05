@@ -25,7 +25,7 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 
-import ynca.nfs.Models.Servis;
+import ynca.nfs.Models.VehicleService;
 import ynca.nfs.R;
 
 public class NewMapActivity extends FragmentActivity implements OnMapReadyCallback {
@@ -34,7 +34,7 @@ public class NewMapActivity extends FragmentActivity implements OnMapReadyCallba
     private FirebaseDatabase mFirebaseDatabase;
     private DatabaseReference mDatabaseReference;
     private ChildEventListener mChildEventListener;
-    public static ArrayList<Servis> services;
+    public static ArrayList<VehicleService> services;
     private ArrayList<LatLng> servicesCoords;
     private CameraPosition mCameraPosition;
 
@@ -56,8 +56,8 @@ public class NewMapActivity extends FragmentActivity implements OnMapReadyCallba
 
 
         mFirebaseDatabase = FirebaseDatabase.getInstance();
-        mDatabaseReference = mFirebaseDatabase.getReference().child("Korisnik").child("Servis");
-        services = new ArrayList<Servis>();
+        mDatabaseReference = mFirebaseDatabase.getReference().child("Korisnik").child("VehicleService");
+        services = new ArrayList<VehicleService>();
         servicesCoords = new ArrayList<LatLng>();
 
 
@@ -65,7 +65,7 @@ public class NewMapActivity extends FragmentActivity implements OnMapReadyCallba
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 Marker marker;
-                Servis temp = dataSnapshot.getValue(Servis.class);
+                VehicleService temp = dataSnapshot.getValue(VehicleService.class);
                 services.add(temp);
 
                     marker = mMap.addMarker(new MarkerOptions()

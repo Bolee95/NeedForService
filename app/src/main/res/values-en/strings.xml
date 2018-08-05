@@ -60,7 +60,7 @@
     <string name="posalji">Posalji</string>
 
 
-    <string name="unesiPodatke">Unesite podatke o automobilu</string>
+    <string name="unesiPodatke">Unesite podatke o vozilu</string>
     <string name="proizvodjac">Proizvodjac:</string>
     <string name="model">Model:</string>
     <string name="regBroj">Registarski broj:</string>
@@ -114,7 +114,7 @@
     <string name="Registry">Registry number:</string>
     <string name="ChassisNum">Chassis nubmer:</string>
     <string name="YearOfManu">Year of manufacturing:</string>
-    <string name="PorukaJePoslata">Message has been sent!</string>
+    <string name="PorukaJePoslata">Message has been sent</string>
 
     <!-- Client info strings-->
     <string name="UserName">Username:</string>
@@ -131,6 +131,9 @@
     <string name="comment">Comment:</string>
 
 
+    <string name="passHint">********</string>
+    <string name="emailHint">email...</string>
+    <string name="brojHint">phone...</string>
     <string name="imeHint">name...</string>
     <string name="user">User:</string>
     <string name="rate_and_comment">Rate and comment</string>
@@ -158,8 +161,6 @@
     <string name="cena">Price:</string>
     <string name="remove_service">remove service</string>
 
-
-
     <!-- Nakon magicnog nestanka -->
     <string name="MarkAsDone">Mark as done</string>
     <string name="typeOfService">Type of service:</string>
@@ -170,8 +171,6 @@
 
     <string name="InsertPrice">Insert price:</string>
     <string name="InsertDescript">Insert description:</string>
-    <string name="brojHint">phone...</string>
-    <string name="emailHint">email...</string>
 
     <!-- Mapa stringovi -->
     <string name="navigation">Do you want navigation to this place?</string>
@@ -202,7 +201,11 @@
     <string name="infoAbout">Info about car:</string>
     <string name="withRegistyNum">with registry number: </string>
     <string name="IsServiceDone">Is service for this car done?</string>
-    <string name="empty_inbox">There is no messages</string>
+    <string name="succeed">Succeed!</string>
+    <string name="empty_inbox">Sanduce je prazno</string>
+    <string name="warrning">Warning!</string>
+    <string name="areYouSure">Are you sure?</string>
+    <string name="areYouSure2">Are you sure?</string>
     <string name="Added_new_car">You have added new car!</string>
     <string name="zauzeti_serveri">Servers are busy.</string>
 
@@ -215,4 +218,5 @@
     <string name="producer">Producer:</string>
     <string name="owner">Owner:</string>
     <string name="usluga">Service:</string>
+    <string name="title_activity_new_map">Map</string>
 </resources>

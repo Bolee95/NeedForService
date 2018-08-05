@@ -10,8 +10,8 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
+import ynca.nfs.Models.Review;
 import ynca.nfs.R;
-import ynca.nfs.Models.Recenzija;
 
 /**
  * Created by Nikola on 6/2/2017.
@@ -21,7 +21,7 @@ public class ListaRecenzijaAdapter extends RecyclerView.Adapter<ListaRecenzijaAd
 
 final  private ListaRecenzijaAdapter.OnListItemClickListener onItemsClickListen;
 
-public void add(Recenzija r) {
+public void add(Review r) {
         recenzije.add(r);
         }
 
@@ -29,11 +29,11 @@ public interface OnListItemClickListener{
     void OnItemClick(int clickItemIndex);
 }
 
-    private ArrayList<Recenzija> recenzije;
+    private ArrayList<Review> recenzije;
 
     public ListaRecenzijaAdapter(ListaRecenzijaAdapter.OnListItemClickListener listener){
         this.onItemsClickListen = listener;
-        recenzije = new ArrayList<Recenzija>();
+        recenzije = new ArrayList<Review>();
     }
 
 
@@ -79,12 +79,12 @@ public interface OnListItemClickListener{
     }
 
 
-    public void postaviVrednost(Recenzija r) {
-        user.setText( r.getKorisnik());
-        komentar.setText(r.getKomentar());
-        user.setText( r.getKorisnik());
-        komentar.setText( r.getKomentar());
-        zvezdice.setRating(r.getOcena());
+    public void postaviVrednost(Review r) {
+        user.setText( r.getUser());
+        komentar.setText(r.getComment());
+        user.setText( r.getUser());
+        komentar.setText( r.getComment());
+        zvezdice.setRating(r.getRate());
     }
 
     @Override

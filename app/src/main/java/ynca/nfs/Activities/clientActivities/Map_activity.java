@@ -59,8 +59,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ynca.nfs.Activities.GMapV2Direction;
+import ynca.nfs.Models.VehicleService;
 import ynca.nfs.R;
-import ynca.nfs.Models.Servis;
 
 /**
  * An activity that displays a map showing the place at the device's current location.
@@ -73,7 +73,7 @@ public class Map_activity extends AppCompatActivity
     private FirebaseDatabase mFirebaseDatabase;
     private DatabaseReference mDatabaseReference;
     private ChildEventListener mChildEventListener;
-    public static ArrayList<Servis> servisi;
+    public static ArrayList<VehicleService> servisi;
     private ArrayList<LatLng> coorServisi;
 
     private static final String TAG = Map_activity.class.getSimpleName();
@@ -123,8 +123,8 @@ public class Map_activity extends AppCompatActivity
 
 
         mFirebaseDatabase = FirebaseDatabase.getInstance();
-        mDatabaseReference = mFirebaseDatabase.getReference().child("Korisnik").child("Servis");
-        servisi = new ArrayList<Servis>();
+        mDatabaseReference = mFirebaseDatabase.getReference().child("Korisnik").child("VehicleService");
+        servisi = new ArrayList<VehicleService>();
         coorServisi = new ArrayList<LatLng>();
 
         setContentView(R.layout.activity_map_activity);
@@ -190,7 +190,7 @@ public class Map_activity extends AppCompatActivity
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
 
-                servisi.add(dataSnapshot.getValue(Servis.class));
+                servisi.add(dataSnapshot.getValue(VehicleService.class));
             }
 
             @Override
@@ -400,7 +400,7 @@ public class Map_activity extends AppCompatActivity
     {
     for (int i = 0; i < servisi.size(); i++) {
         try {
-            LatLng temp = vratiKoordinate(getBaseContext(), servisi.get(i).getAdresa());
+            LatLng temp = vratiKoordinate(getBaseContext(), servisi.get(i).getAddress());
             if (temp != null) {
                 servisi.get(i).setLongi(temp.longitude);
                 servisi.get(i).setLat(temp.latitude);
@@ -432,7 +432,7 @@ public class Map_activity extends AppCompatActivity
                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        Servis Temp = new Servis();
+                        VehicleService Temp = new VehicleService();
                         for (int i=0;i<servisi.size();i++)
                         {
                             if(servisi.get(i).getLongi() == marker.getPosition().longitude)
@@ -440,14 +440,14 @@ public class Map_activity extends AppCompatActivity
                         }
                         if (Temp == null)
                         {
-                            Temp.setNaziv("");
+                            Temp.getName();
                         }
                         dialog.dismiss();
                        // mMap.clear();
                         mMap.addMarker(new MarkerOptions()
                                 .position(x)
                                 .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED))
-                                .title(Temp.getNaziv())).showInfoWindow();
+                                .title(Temp.getName())).showInfoWindow();
                         GMapV2Direction md = new GMapV2Direction();
 
 
@@ -532,7 +532,7 @@ public class Map_activity extends AppCompatActivity
                             new LatLng(coorServisi.get(inx).latitude,coorServisi.get(inx).longitude), DEFAULT_ZOOM));
                     marker = mMap.addMarker(new MarkerOptions()
                             .position(new LatLng(servisi.get(j).getLat(),servisi.get(j).getLongi()))
-                            .title(getResources().getString(R.string.closestService)+"\n" + servisi.get(j).getNaziv())
+                            .title(getResources().getString(R.string.closestService)+"\n" + servisi.get(j).getName())
                             .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED)));
                     marker.showInfoWindow();
                 }

@@ -25,8 +25,8 @@ import com.google.gson.Gson;
 import java.util.Iterator;
 import java.util.Map;
 
-import ynca.nfs.Models.Automobil;
-import ynca.nfs.Models.Klijent;
+import ynca.nfs.Models.Client;
+import ynca.nfs.Models.Vehicle;
 import ynca.nfs.R;
 
 public class carInfoActivity extends AppCompatActivity {
@@ -39,7 +39,7 @@ public class carInfoActivity extends AppCompatActivity {
     private TextView Milage;
     private TextView LastService;
     private Button Delete;
-    Automobil automobil;
+    Vehicle automobil;
 
     FirebaseDatabase mFirebaseDatabase;
     DatabaseReference mDatabaseReference;
@@ -78,13 +78,13 @@ public class carInfoActivity extends AppCompatActivity {
         mFirebaseDatabase = FirebaseDatabase.getInstance();
         mDatabaseReference = mFirebaseDatabase.getReference();
 
-        automobil = (Automobil) getIntent().getSerializableExtra("vozilo");
+        automobil = (Vehicle) getIntent().getSerializableExtra("vozilo");
 
         SharedPreferences settings = getSharedPreferences("SharedData", MODE_PRIVATE);
 
         Gson gson = new Gson();
         String json = settings.getString("TrenutniKlijent","");
-        Klijent obj = gson.fromJson(json, Klijent.class);
+        Client obj = gson.fromJson(json, Client.class);
         if (obj == null)
         {Delete.setVisibility(View.INVISIBLE);}
 
@@ -99,8 +99,8 @@ public class carInfoActivity extends AppCompatActivity {
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
                                 //TODO ODRADI LOGIKU DA IZBRISE IZ LISTE I DA POSALJE PORUKU KORISNIKU
-                                    mDatabaseReference.child("Korisnik").child("Klijent").child(mUser.getUid())
-                                            .child("listaVozila").child(automobil.getVoziloID()).removeValue();
+                                    mDatabaseReference.child("Korisnik").child("Client").child(mUser.getUid())
+                                            .child("listaVozila").child(automobil.getVehicleID()).removeValue();
                                     Toast.makeText(carInfoActivity.this, R.string.succeed, Toast.LENGTH_LONG).show();
                                     startActivity(new Intent(carInfoActivity.this, ListaVozilaActivity.class));
 
@@ -115,7 +115,7 @@ public class carInfoActivity extends AppCompatActivity {
 
                 alertDialog.show();
 
-//                mDatabaseReference.child("Korisnik").child("Klijent").child(mUser.getUid())
+//                mDatabaseReference.child("Korisnik").child("Client").child(mUser.getUid())
 //                        .child("listaVozila").child(automobil.getVoziloID()).removeValue();
 //                Toast.makeText(carInfoActivity.this, R.string.succeed, Toast.LENGTH_LONG).show();
 //                startActivity(new Intent(carInfoActivity.this, ListaVozilaActivity.class));
@@ -124,21 +124,21 @@ public class carInfoActivity extends AppCompatActivity {
 
         if(temp != null)
         {
-            Iterator it = obj.getListaVozila().entrySet().iterator();
+            Iterator it = obj.getListOfCars().entrySet().iterator();
             while (it.hasNext()) {
                 Map.Entry pair = (Map.Entry)it.next();
                 Object t =  pair.getKey();
-                Automobil x = obj.getListaVozila().get(t);
-                if (x.getRegBroj().equals(temp))
+                Vehicle x = obj.getListOfCars().get(t);
+                if (x.getRegistyNumber().equals(temp))
                 {
-                    Manufact.setText(x.getProizvodjac());
+                    Manufact.setText(x.getManufacturer());
                     Model.setText(x.getModel());
-                    Reg.setText(String.valueOf(x.getRegBroj()));
-                    Chass.setText(String.valueOf(x.getBrojSasije()));
-                    Fuel.setText(x.getTipGoriva());
-                    ProdYear.setText(String.valueOf(x.getGodinaProizvodnje()));
-                    Milage.setText(String.valueOf(x.getPredjeniPut()));
-                    LastService.setText(String.valueOf(x.getPoslednjiServisDatum()));
+                    Reg.setText(String.valueOf(x.getRegistyNumber()));
+                    Chass.setText(String.valueOf(x.getChassisNumber()));
+                    Fuel.setText(x.getFuelType());
+                    ProdYear.setText(String.valueOf(x.getYearOfProduction()));
+                    Milage.setText(String.valueOf(x.getMileage()));
+                    LastService.setText(String.valueOf(x.getDateOfLastService()));
                     continue;
 
                 }

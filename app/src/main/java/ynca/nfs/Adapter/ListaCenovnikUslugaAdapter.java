@@ -22,7 +22,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import java.util.ArrayList;
 
 import ynca.nfs.R;
-import ynca.nfs.Models.Usluga;
+import ynca.nfs.Models.Job;
 
 /**
  * Created by Nemanja Djordjevic on 5/29/2017.
@@ -30,7 +30,7 @@ import ynca.nfs.Models.Usluga;
 
 public class ListaCenovnikUslugaAdapter extends RecyclerView.Adapter<ListaCenovnikUslugaAdapter.ListaCenovnikUslugaViewHolder>{
 
-    ArrayList<Usluga> nizUsluga;
+    ArrayList<Job> nizUsluga;
 
     private FirebaseDatabase mFirebaseDatabase;
     private DatabaseReference mDatabaseReference;
@@ -40,7 +40,7 @@ public class ListaCenovnikUslugaAdapter extends RecyclerView.Adapter<ListaCenovn
     private FirebaseUser mUser;
 
 
-    public void add(Usluga u){
+    public void add(Job u){
         nizUsluga.add(u);
     }
 
@@ -62,7 +62,7 @@ public class ListaCenovnikUslugaAdapter extends RecyclerView.Adapter<ListaCenovn
         mUser = mAuth.getCurrentUser();
 
         mFirebaseDatabase = FirebaseDatabase.getInstance();
-        mDatabaseReference = mFirebaseDatabase.getReference().child("Korisnik").child("Servis")
+        mDatabaseReference = mFirebaseDatabase.getReference().child("Korisnik").child("VehicleService")
                 .child(mUser.getUid()).child("usluge");
 
     }
@@ -117,15 +117,15 @@ public class ListaCenovnikUslugaAdapter extends RecyclerView.Adapter<ListaCenovn
                 public void onClick(View v) {
                     String temp = String.valueOf(ButtPrice.getTag());
                     int i = 0;
-                    while (!nizUsluga.get(i).getUsluga().equals(ButtPrice.getTag()))
+                    while (!nizUsluga.get(i).getJob().equals(ButtPrice.getTag()))
                     { i++;}
-                    final Usluga temp1 = nizUsluga.get(i);
+                    final Job temp1 = nizUsluga.get(i);
 
                     final Dialog d = new Dialog(itemView.getContext());
                     d.setContentView(R.layout.izmena_cene);
                     cena = (EditText) d.findViewById(R.id.CenaIzmena);
                     cenaSubmit = (Button) d.findViewById(R.id.SubmitCena);
-                    cena.setText(String.valueOf((temp1.getCena())));
+                    cena.setText(String.valueOf((temp1.getPrice())));
                     d.setTitle(itemView.getResources().getString(R.string.NewPrice));
                     d.show();
                     cenaSubmit.setOnClickListener(new View.OnClickListener() {
@@ -133,14 +133,14 @@ public class ListaCenovnikUslugaAdapter extends RecyclerView.Adapter<ListaCenovn
                         public void onClick(View v) {
                             //TODO U BAZU DA SE UBACI I DA SE SREDI
                             int i =0;
-                            while (!nizUsluga.get(i).getUsluga().equals(ButtPrice.getTag()))
+                            while (!nizUsluga.get(i).getJob().equals(ButtPrice.getTag()))
                             {i++;}
                             int newCena = Integer.valueOf(String.valueOf(cena.getText()));
-                            Usluga uslugaZaUpdate = nizUsluga.get(i);
+                            Job uslugaZaUpdate = nizUsluga.get(i);
                             Toast.makeText(itemView.getContext(), itemView.getResources().getString(R.string.PriceChanged), Toast.LENGTH_LONG).show();
-                            uslugaZaUpdate.setCena(newCena);
-                            mDatabaseReference.child(uslugaZaUpdate.getIdUsluge()).setValue(uslugaZaUpdate);
-                            cenaU.setText(Integer.toString(uslugaZaUpdate.getCena()));
+                            uslugaZaUpdate.setPrice(newCena);
+                            mDatabaseReference.child(uslugaZaUpdate.getJobID()).setValue(uslugaZaUpdate);
+                            cenaU.setText(Integer.toString(uslugaZaUpdate.getPrice()));
                             d.dismiss();
 
                         }
@@ -166,9 +166,9 @@ public class ListaCenovnikUslugaAdapter extends RecyclerView.Adapter<ListaCenovn
 
                                     mDatabaseReference.child(tag).removeValue();
 
-                                    Usluga toRemove = null;
-                                    for(Usluga u: nizUsluga){
-                                        if(u.getIdUsluge() == tag)
+                                    Job toRemove = null;
+                                    for(Job u: nizUsluga){
+                                        if(u.getJobID() == tag)
                                             toRemove = u;
                                     }
                                     if(toRemove!=null)
@@ -191,11 +191,11 @@ public class ListaCenovnikUslugaAdapter extends RecyclerView.Adapter<ListaCenovn
             });
         }
 
-        void bind (Usluga u){
-            mlistItem.setText(u.getUsluga());
-            cenaU.setText(Integer.toString(u.getCena()));
-            ButtPrice.setTag(u.getUsluga());
-            ukloniUslugu.setTag(u.getIdUsluge());
+        void bind (Job u){
+            mlistItem.setText(u.getJob());
+            cenaU.setText(Integer.toString(u.getPrice()));
+            ButtPrice.setTag(u.getJob());
+            ukloniUslugu.setTag(u.getJobID());
         }
 
 

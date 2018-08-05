@@ -43,10 +43,10 @@ import ynca.nfs.Activities.Lista_Recenzija_Activity;
 import ynca.nfs.Activities.Servis_Inbox_Activity;
 import ynca.nfs.Activities.startActivities.LoginActivity;
 import ynca.nfs.Adapter.ListaVozilaNaServisuAdapter;
-import ynca.nfs.Models.Automobil;
+import ynca.nfs.Models.Vehicle;
 import ynca.nfs.Models.Poruka;
 import ynca.nfs.R;
-import ynca.nfs.Models.Servis;
+import ynca.nfs.Models.VehicleService;
 
 public class MainScreenServisActivity extends AppCompatActivity {
 
@@ -59,11 +59,11 @@ public class MainScreenServisActivity extends AppCompatActivity {
     private FirebaseUser user;
     private FirebaseAuth auth;
     private StorageReference mStorageReference;
-    private static Servis trenutniServis;
+    private static VehicleService trenutniVehicleService;
 
     private ListaVozilaNaServisuAdapter theAdapter;
     private RecyclerView theRecyclerView;
-    private ArrayList<Automobil> lista;
+    private ArrayList<Vehicle> lista;
 
 
 
@@ -150,11 +150,11 @@ public class MainScreenServisActivity extends AppCompatActivity {
 
 
                 //brise podatke o trenutno ulogovanom servisu prilikom logout-a
-                trenutniServis = null;
+                trenutniVehicleService = null;
                 SharedPreferences settings = getSharedPreferences("SharedData", MODE_PRIVATE);
                 SharedPreferences.Editor prefEditor = settings.edit();
                 Gson gson = new Gson();
-                String json = gson.toJson(trenutniServis);
+                String json = gson.toJson(trenutniVehicleService);
                 prefEditor.putString("TrenutniServis", json);
                 prefEditor.commit();
 
@@ -189,11 +189,11 @@ public class MainScreenServisActivity extends AppCompatActivity {
 //                        Toast.LENGTH_SHORT).show();
 //
 //                //brise podatke o trenutno ulogovanom servisu prilikom logout-a
-//                trenutniServis = null;
+//                trenutniVehicleService = null;
 //                SharedPreferences settings = getSharedPreferences("SharedData", MODE_PRIVATE);
 //                SharedPreferences.Editor prefEditor = settings.edit();
 //                Gson gson = new Gson();
-//                String json = gson.toJson(trenutniServis);
+//                String json = gson.toJson(trenutniVehicleService);
 //                prefEditor.putString("TrenutniServis", json);
 //                prefEditor.commit();
 
@@ -221,11 +221,11 @@ public class MainScreenServisActivity extends AppCompatActivity {
         });
 
         mFirebaseDatabase = FirebaseDatabase.getInstance();
-        mDatabaseReference = mFirebaseDatabase.getReference().child("Korisnik").child("Servis");
+        mDatabaseReference = mFirebaseDatabase.getReference().child("Korisnik").child("VehicleService");
 
         mFirebaseDatabase2 = FirebaseDatabase.getInstance();
-        mDatabaseReference2 = mFirebaseDatabase2.getReference().child("Korisnik").child("Servis")
-                .child(user.getUid()).child("automobili");
+        mDatabaseReference2 = mFirebaseDatabase2.getReference().child("Korisnik").child("VehicleService")
+                .child(user.getUid()).child("acceptedServices");
 
 
         theRecyclerView = (RecyclerView) findViewById(R.id.lista_vozila_na_servisu_recycle_view_id2);
@@ -240,9 +240,9 @@ public class MainScreenServisActivity extends AppCompatActivity {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
 
-                Automobil a2 = dataSnapshot.getValue(Automobil.class);
-                a2.setVoziloID(dataSnapshot.getKey());
-                mDatabaseReference2.child(a2.getVoziloID()).setValue(a2);
+                Vehicle a2 = dataSnapshot.getValue(Vehicle.class);
+                a2.setVehicleID(dataSnapshot.getKey());
+                mDatabaseReference2.child(a2.getVehicleID()).setValue(a2);
                 theAdapter.add(a2);
                 theRecyclerView.setAdapter(theAdapter);
             }
@@ -325,16 +325,16 @@ public class MainScreenServisActivity extends AppCompatActivity {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
 
-                Servis ser = dataSnapshot.getValue(Servis.class);
+                VehicleService ser = dataSnapshot.getValue(VehicleService.class);
                 if(ser.getEmail() == null) return;
                 if(ser.getEmail().equals(user.getEmail()))
                 {
-                    trenutniServis = ser;
+                    trenutniVehicleService = ser;
 
                     int broj = 0;
 
                     if(ser.getPrimljenePoruke() != null) {
-                        ArrayList<Poruka> li = new ArrayList<Poruka>(trenutniServis.getPrimljenePoruke().values());
+                        ArrayList<Poruka> li = new ArrayList<Poruka>(trenutniVehicleService.getPrimljenePoruke().values());
                         for (Poruka p : li) {
                             if (!p.isProcitana())
                                 broj++;
@@ -350,22 +350,22 @@ public class MainScreenServisActivity extends AppCompatActivity {
                     }
 
                     int br;
-                    if(trenutniServis.getPrimljenePoruke() == null){
+                    if(trenutniVehicleService.getPrimljenePoruke() == null){
                         br =0;
                     }
                     else{
-                        br = trenutniServis.getPrimljenePoruke().size();
+                        br = trenutniVehicleService.getPrimljenePoruke().size();
                     }
 
                     SharedPreferences settings = getSharedPreferences("SharedData", MODE_PRIVATE);
                     SharedPreferences.Editor prefEditor = settings.edit();
                     Gson gson = new Gson();
-                    String json = gson.toJson(trenutniServis);
+                    String json = gson.toJson(trenutniVehicleService);
                     prefEditor.putInt("brojPoruka", br);
                     prefEditor.putString("TrenutniServis", json);
                     prefEditor.commit();
-                    NameOfService.setText(trenutniServis.getNaziv() );
-                    Descript.setText(trenutniServis.getEmail());
+                    NameOfService.setText(trenutniVehicleService.getName() );
+                    Descript.setText(trenutniVehicleService.getEmail());
 
                 }
 //                Automobil a2 = dataSnapshot.getValue(Automobil.class);

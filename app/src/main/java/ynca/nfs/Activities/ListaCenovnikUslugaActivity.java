@@ -28,7 +28,7 @@ import java.util.ArrayList;
 import ynca.nfs.Adapter.ListaCenovnikUslugaAdapter;
 import ynca.nfs.Adapter.ListaVozilaAdapter;
 import ynca.nfs.R;
-import ynca.nfs.Models.Usluga;
+import ynca.nfs.Models.Job;
 
 public class ListaCenovnikUslugaActivity extends AppCompatActivity {
 
@@ -41,7 +41,7 @@ public class ListaCenovnikUslugaActivity extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
     private FirebaseUser mUser;
-    private ArrayList<Usluga> usluge;
+    private ArrayList<Job> usluge;
     private EditText cena;
     private Button cenaSubmit;
     private Button dodajBtn;
@@ -74,13 +74,13 @@ public class ListaCenovnikUslugaActivity extends AppCompatActivity {
         mUser = mAuth.getCurrentUser();
 
         mFirebaseDatabase = FirebaseDatabase.getInstance();
-        mDatabaseReference = mFirebaseDatabase.getReference().child("Korisnik").child("Servis")
-                .child(mUser.getUid()).child("usluge");
+        mDatabaseReference = mFirebaseDatabase.getReference().child("Korisnik").child("VehicleService")
+                .child(mUser.getUid()).child("services");
 
 
         mFirebaseDatabase2 = FirebaseDatabase.getInstance();
-        mDatabaseReference2 = mFirebaseDatabase2.getReference().child("Korisnik").child("Servis")
-                .child(mUser.getUid()).child("usluge");
+        mDatabaseReference2 = mFirebaseDatabase2.getReference().child("Korisnik").child("VehicleService")
+                .child(mUser.getUid()).child("services");
 
 
 //        vrstaUsuge = (EditText) findViewById(R.id.opis_text_edit);
@@ -127,7 +127,7 @@ public class ListaCenovnikUslugaActivity extends AppCompatActivity {
                             String vrstaToSave = vrstaUsuge.getText().toString();
                             int cenaToSave = Integer.valueOf(cenaUsluge.getText().toString());
 
-                            Usluga u = new Usluga(vrstaToSave, cenaToSave, "");
+                            Job u = new Job(vrstaToSave, cenaToSave, "");
                             mDatabaseReference2.push().setValue(u);
 
                         }
@@ -144,9 +144,9 @@ public class ListaCenovnikUslugaActivity extends AppCompatActivity {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
 
-                Usluga u = dataSnapshot.getValue(Usluga.class);
-                u.setIdUsluge(dataSnapshot.getKey());
-                mDatabaseReference2.child(u.getIdUsluge()).setValue(u);
+                Job u = dataSnapshot.getValue(Job.class);
+                u.setJobID(dataSnapshot.getKey());
+                mDatabaseReference2.child(u.getJobID()).setValue(u);
                 adapter.add(u);
                 recyclerView.setAdapter(adapter);
                 usluge.add(u);
@@ -159,7 +159,7 @@ public class ListaCenovnikUslugaActivity extends AppCompatActivity {
 
             @Override
             public void onChildRemoved(DataSnapshot dataSnapshot) {
-                Usluga u = dataSnapshot.getValue(Usluga.class);
+                Job u = dataSnapshot.getValue(Job.class);
                 recyclerView.setAdapter(adapter);
             }
 

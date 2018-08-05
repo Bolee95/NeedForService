@@ -18,7 +18,7 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 
-import ynca.nfs.Models.Automobil;
+import ynca.nfs.Models.*;
 import ynca.nfs.Models.Poruka;
 import ynca.nfs.R;
 
@@ -30,13 +30,14 @@ public class ListaVozilaNaServisuAdapter extends  RecyclerView.Adapter<ListaVozi
 
     private FirebaseDatabase mFirebaseDatabase;
     private DatabaseReference mDatabaseReference;
+    private DatabaseReference mDatabaseReference1;
     private FirebaseAuth mAuth;
     private FirebaseUser mUser;
 
-    private ArrayList<Automobil> automobili;
+    private ArrayList<Vehicle> automobili;
     final  private ListaVozilaNaServisuAdapter.OnListItemClickListener onItemsClickListen;
 
-    public void add(Automobil a) {
+    public void add(Vehicle a) {
 
         automobili.add(a);
 
@@ -52,6 +53,7 @@ public class ListaVozilaNaServisuAdapter extends  RecyclerView.Adapter<ListaVozi
         automobili = new ArrayList<>();
         mFirebaseDatabase = FirebaseDatabase.getInstance();
         mDatabaseReference = mFirebaseDatabase.getReference();
+        mDatabaseReference1 = mFirebaseDatabase.getReference().child("Korisnik").child("VehicleService");
 
         mAuth = FirebaseAuth.getInstance();
         mUser = mAuth.getCurrentUser();
@@ -108,15 +110,15 @@ public class ListaVozilaNaServisuAdapter extends  RecyclerView.Adapter<ListaVozi
                 @Override
                 public void onClick(View v) {
 
-                    String temp = String.valueOf(markAsDone.getTag());
+                    final String temp = String.valueOf(markAsDone.getTag());
                     int i=0;
-                    while(!automobili.get(i).getVoziloID().equals(temp))
+                    while(!automobili.get(i).getVehicleID().equals(temp))
                     {i++;}
-                    final Automobil temp1 = automobili.get(i);
+                    final Vehicle temp1 = automobili.get(i);
 
                     final AlertDialog alertDialog = new AlertDialog.Builder(itemView.getContext()).create();
                     alertDialog.setTitle(itemView.getResources().getString(R.string.Question));
-                    alertDialog.setMessage(itemView.getResources().getString(R.string.infoAbout)+"\n" + temp1.getProizvodjac() + " " + temp1.getModel()  + itemView.getResources().getString(R.string.withRegistyNum) + temp1.getRegBroj() +"\n" + itemView.getResources().getString(R.string.IsServiceDone));
+                    alertDialog.setMessage(itemView.getResources().getString(R.string.infoAbout)+"\n" + temp1.getManufacturer() + " " + temp1.getModel()  + itemView.getResources().getString(R.string.withRegistyNum) + temp1.getRegistyNumber() +"\n" + itemView.getResources().getString(R.string.IsServiceDone));
                     alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, itemView.getResources().getString(R.string.Yes),
                             new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int which) {
@@ -125,11 +127,11 @@ public class ListaVozilaNaServisuAdapter extends  RecyclerView.Adapter<ListaVozi
                                     Poruka p = new Poruka(false, mUser.getEmail(), "", "Obavestenje",
                                             "Postovani, \n Obavestavamo Vas da je servisiranje Vaseg vozila zavrseno.", "");
 
-                                    mDatabaseReference.child("Korisnik").child("Klijent").child(temp1.getVlasnikID())
+                                    mDatabaseReference.child("Korisnik").child("Client").child(temp1.getOwnerID())
                                             .child("primljenePoruke").push().setValue(p);
 
-                                    mDatabaseReference.child("Korisnik").child("Servis").child(mUser.getUid())
-                                            .child("automobili").child(temp1.getVoziloID()).removeValue();
+                                    mDatabaseReference1.child(mUser.getUid())
+                                            .child("acceptedServices").child(temp1.getVehicleID()).removeValue();
 
                                     automobili.remove(temp1);
                                     notifyDataSetChanged();
@@ -152,15 +154,15 @@ public class ListaVozilaNaServisuAdapter extends  RecyclerView.Adapter<ListaVozi
         }
 
 
-        public void postaviVrednost(Automobil a) {
-            listItem.setText( a.getRegBroj());
-            markAsDone.setTag(a.getVoziloID());
-            proizvodjacTV.setText(a.getProizvodjac());
+        public void postaviVrednost(Vehicle a) {
+            listItem.setText( a.getRegistyNumber());
+            markAsDone.setTag(a.getVehicleID());
+            proizvodjacTV.setText(a.getManufacturer());
             modelTV.setText(a.getModel());
-            godinaaTV.setText(Integer.toString(a.getGodinaProizvodnje()));
-            tipGorivaTV.setText(a.getTipGoriva());
-            vlasnikTV.setText(a.getVlasnikMail());
-            uslugaTV.setText(a.getTipUsluge());
+            godinaaTV.setText(Integer.toString(a.getYearOfProduction()));
+            tipGorivaTV.setText(a.getFuelType());
+            vlasnikTV.setText(a.getOwnersMail());
+            uslugaTV.setText(a.getTypeOfService());
 
 
         }

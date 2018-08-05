@@ -39,7 +39,7 @@ import java.util.regex.Pattern;
 
 import ynca.nfs.Activities.startActivities.LoginActivity;
 import ynca.nfs.Activities.mainScreensActivities.mainScreenClientActivity;
-import ynca.nfs.Models.Klijent;
+import ynca.nfs.Models.Client;
 import ynca.nfs.R;
 
 public class Info_client extends Activity {
@@ -111,7 +111,7 @@ public class Info_client extends Activity {
 
         mAuth = FirebaseAuth.getInstance();
         mDatabaseReference = FirebaseDatabase.getInstance().getReference()
-                .child("Korisnik").child("Klijent");
+                .child("Korisnik").child("Client");
 
         mProfilePicture.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -128,11 +128,11 @@ public class Info_client extends Activity {
         SharedPreferences.Editor editor = shared.edit();
         Gson gson = new Gson();
         String json = shared.getString("TrenutniKlijent","");
-        Klijent trenutniKlijent = gson.fromJson(json, Klijent.class);
+        Client trenutniKlijent = gson.fromJson(json, Client.class);
 
-        User.setText(trenutniKlijent.getIme() + " " + trenutniKlijent.getPrezime());
+        User.setText(trenutniKlijent.getFirstName() + " " + trenutniKlijent.getFirstName());
         EmailClientET.setText(trenutniKlijent.getEmail());
-        PhoneNum.setText(trenutniKlijent.getBrojTelefona());
+        PhoneNum.setText(trenutniKlijent.getFirstName());
 
         listCars.setOnClickListener(new View.OnClickListener() {
             @Override

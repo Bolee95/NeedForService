@@ -19,14 +19,14 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-import ynca.nfs.Models.Automobil;
+import ynca.nfs.Models.Vehicle;
 import ynca.nfs.R;
 
 /**
  * Created by Nikola on 5/22/2017.
  */
 
-public class DodajAutomobilForm extends AppCompatActivity {
+public class addVehicleFormActivity extends AppCompatActivity {
 
     EditText proizvodjacET;
     EditText modelET;
@@ -83,7 +83,7 @@ public class DodajAutomobilForm extends AppCompatActivity {
                 if (modelET.getText().toString().equals("") || proizvodjacET.getText().toString().equals(" ") || kilometrET.getText().toString().equals(" ")
                         || brojSasijeET.getText().toString().equals(" ") || tipGorivaET.getText().toString().equals(" ") || godinaProizvodnjeET.getText().toString().equals(" ") || poslednjiServisET.getText().toString().equals(" ")) {
 
-                    AlertDialog alertDialog = new AlertDialog.Builder(DodajAutomobilForm.this).create();
+                    AlertDialog alertDialog = new AlertDialog.Builder(addVehicleFormActivity.this).create();
                     alertDialog.setTitle(getResources().getString(R.string.Warning));
                     alertDialog.setMessage(getResources().getString(R.string.EmptyFields));
                     alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
@@ -100,7 +100,7 @@ public class DodajAutomobilForm extends AppCompatActivity {
 
                 }
                 else {
-                    Automobil a = new Automobil(registarskiBrojET.getText().toString(),
+                    Vehicle a = new Vehicle(registarskiBrojET.getText().toString(),
                             modelET.getText().toString(),
                             proizvodjacET.getText().toString(),
                             Integer.valueOf(kilometrET.getText().toString()),
@@ -112,7 +112,7 @@ public class DodajAutomobilForm extends AppCompatActivity {
                             mUser.getEmail(),
                             "");
 
-                    mDatabaseReference.child("Korisnik").child("Klijent").child(mUser.getUid()).child("listaVozila").push().setValue(a);
+                    mDatabaseReference.child("Korisnik").child("Client").child(mUser.getUid()).child("listOfCars").push().setValue(a);
                     Toast.makeText(getApplicationContext(), R.string.Added_new_car, Toast.LENGTH_LONG).show();
                     finish();
                 }

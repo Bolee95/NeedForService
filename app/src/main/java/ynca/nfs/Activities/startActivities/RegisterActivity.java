@@ -29,9 +29,9 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import ynca.nfs.Activities.mainScreensActivities.MainScreenServisActivity;
 import ynca.nfs.Activities.mainScreensActivities.mainScreenClientActivity;
-import ynca.nfs.Models.Klijent;
+import ynca.nfs.Models.Client;
 import ynca.nfs.R;
-import ynca.nfs.Models.Servis;
+import ynca.nfs.Models.VehicleService;
 
 public class RegisterActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -254,25 +254,25 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         if(host.getCurrentTabTag().equals("Client")){
             if(user != null){
                 mDatabase = FirebaseDatabase.getInstance().getReference();
-                Klijent klijent = new Klijent(mNameClient.getText().toString(),
+                Client client = new Client(mNameClient.getText().toString(),
                         mSurnameClient.getText().toString(),
                         mNumberClient.getText().toString(),
                         mEmailViewClient.getText().toString(),
                         user.getUid());
-                mDatabase.child("Korisnik").child("Klijent").child(user.getUid()).setValue(klijent);
+                mDatabase.child("Korisnik").child("Client").child(user.getUid()).setValue(client);
                 hideProgressDialog();
                 startActivity(new Intent(getBaseContext(), mainScreenClientActivity.class));
             }
         } else if(host.getCurrentTabTag().equals("Service")){
             if(user != null){
                 mDatabase = FirebaseDatabase.getInstance().getReference();
-                Servis servis = new Servis(mNameService.getText().toString(),
+                VehicleService vehicleService = new VehicleService(mNameService.getText().toString(),
                         mNameOwnerService.getText().toString(),
                         mAddressService.getText().toString(),
                         mNumberService.getText().toString(),
                         mEmailViewService.getText().toString(),
                         user.getUid());
-                mDatabase.child("Korisnik").child("Servis").child(user.getUid()).setValue(servis);
+                mDatabase.child("Korisnik").child("VehicleService").child(user.getUid()).setValue(vehicleService);
                 hideProgressDialog();
                 startActivity(new Intent(getBaseContext(), MainScreenServisActivity.class));
             }

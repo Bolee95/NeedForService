@@ -82,7 +82,7 @@ public class Client_Inbox_Activity  extends AppCompatActivity {
 
         mFirebaseDatabase = FirebaseDatabase.getInstance();
         mDatabaseReference = mFirebaseDatabase.getReference().child("Korisnik")
-                .child("Klijent").child(mUser.getUid()).child("primljenePoruke");
+                .child("Client").child(mUser.getUid()).child("primljenePoruke");
 
         SharedPreferences sp1 = getSharedPreferences("SharedData", MODE_PRIVATE);
 
@@ -96,7 +96,7 @@ public class Client_Inbox_Activity  extends AppCompatActivity {
 
         mFirebaseDatabase2 = FirebaseDatabase.getInstance();
         mDatabaseReference2 = mFirebaseDatabase2.getReference().child("Korisnik")
-                .child("Klijent").child(mUser.getUid()).child("primljenePoruke");
+                .child("Client").child(mUser.getUid()).child("primljenePoruke");
         recyclerView = (RecyclerView) findViewById(R.id.inbox_clinet_rv);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
 

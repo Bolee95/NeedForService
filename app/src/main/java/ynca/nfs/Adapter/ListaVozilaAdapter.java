@@ -9,7 +9,7 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
-import ynca.nfs.Models.Automobil;
+import ynca.nfs.Models.Vehicle;
 import ynca.nfs.R;
 
 /**
@@ -20,7 +20,7 @@ public class ListaVozilaAdapter extends  RecyclerView.Adapter<ListaVozilaAdapter
 
     final  private OnListItemClickListener onItemsClickListen;
 
-    public void add(Automobil a) {
+    public void add(Vehicle a) {
         automobili.add(a);
     }
 
@@ -28,11 +28,11 @@ public class ListaVozilaAdapter extends  RecyclerView.Adapter<ListaVozilaAdapter
         void OnItemClick(int clickItemIndex);
     }
 
-    private ArrayList<Automobil> automobili;
+    private ArrayList<Vehicle> automobili;
 
     public ListaVozilaAdapter(OnListItemClickListener listener){
         this.onItemsClickListen = listener;
-        automobili = new ArrayList<Automobil>();
+        automobili = new ArrayList<Vehicle>();
     }
 
 
@@ -77,10 +77,10 @@ public class ListaVozilaAdapter extends  RecyclerView.Adapter<ListaVozilaAdapter
         }
 
 
-        public void postaviVrednost(Automobil vozilo) {
-            listItemProiz.setText(itemView.getResources().getString(R.string.Manufacturer)  + vozilo.getProizvodjac());
+        public void postaviVrednost(Vehicle vozilo) {
+            listItemProiz.setText(itemView.getResources().getString(R.string.Manufacturer)  + vozilo.getManufacturer());
             model.setText(itemView.getResources().getString(R.string.Model)  + vozilo.getModel());
-            regBroj.setText(itemView.getResources().getString(R.string.RegNumber)  + vozilo.getRegBroj());
+            regBroj.setText(itemView.getResources().getString(R.string.RegNumber)  + vozilo.getRegistyNumber());
         }
 
         @Override

@@ -24,7 +24,7 @@ import com.google.gson.Gson;
 
 import ynca.nfs.Activities.mainScreensActivities.MainScreenServisActivity;
 import ynca.nfs.Adapter.CustomPorukeServisAdapter;
-import ynca.nfs.Models.Klijent;
+import ynca.nfs.Models.Client;
 import ynca.nfs.Models.Poruka;
 import ynca.nfs.R;
 
@@ -76,7 +76,7 @@ public class Servis_Inbox_Activity  extends AppCompatActivity {
 
         mFirebaseDatabase = FirebaseDatabase.getInstance();
         mDatabaseReference = mFirebaseDatabase.getReference().child("Korisnik")
-                .child("Servis").child(mUser.getUid()).child("primljenePoruke");
+                .child("VehicleService").child(mUser.getUid()).child("primljenePoruke");
 
 
         recyclerView = (RecyclerView) findViewById(R.id.inbox_servis_rv);
@@ -96,7 +96,7 @@ public class Servis_Inbox_Activity  extends AppCompatActivity {
 
                 Gson gson = new Gson();
                 String json = sp.getString("TrenutniKlijent", "");
-                Klijent k = gson.fromJson(json, Klijent.class);
+                Client k = gson.fromJson(json, Client.class);
 
                 //// TODO: 6/1/2017  k je klijent kod koga poruka por treba da se update-uje
 

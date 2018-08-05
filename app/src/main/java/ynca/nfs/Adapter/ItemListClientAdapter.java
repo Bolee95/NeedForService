@@ -18,8 +18,8 @@ import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 
+import ynca.nfs.Models.VehicleService;
 import ynca.nfs.R;
-import ynca.nfs.Models.Servis;
 
 /**
  * Created by bolee on 21.5.17..
@@ -37,9 +37,9 @@ public class ItemListClientAdapter extends RecyclerView.Adapter<ItemListClientAd
     }
 
 
-    private  ArrayList<Servis> servisi;
+    private  ArrayList<VehicleService> servisi;
 
-    public void add(Servis s){
+    public void add(VehicleService s){
         servisi.add(s);
     }
 
@@ -98,10 +98,10 @@ public class ItemListClientAdapter extends RecyclerView.Adapter<ItemListClientAd
         }
 
 
-        void bind(Servis servis){
+        void bind(VehicleService vehicleService){
 
             mStorageReference = FirebaseStorage.getInstance().getReference();
-            StorageReference photoRef = mStorageReference.child("photos").child(servis.getUID());
+            StorageReference photoRef = mStorageReference.child("photos").child(vehicleService.getUID());
             photoRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                 @Override
                 public void onSuccess(Uri uri) {
@@ -119,8 +119,8 @@ public class ItemListClientAdapter extends RecyclerView.Adapter<ItemListClientAd
                 }
             });
 
-            itemText.setText(servis.getNaziv()); //
-            email.setText(servis.getAdresa()); //bio je email, promeni sam na adresu, Aleksa
+            itemText.setText(vehicleService.getName()); //
+            email.setText(vehicleService.getAddress()); //bio je email, promeni sam na adresu, Aleksa
         }
 
         @Override

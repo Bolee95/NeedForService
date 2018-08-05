@@ -22,7 +22,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import java.util.ArrayList;
 
 import ynca.nfs.Adapter.ListaVozilaAdapter;
-import ynca.nfs.Models.Automobil;
+import ynca.nfs.Models.Vehicle;
 import ynca.nfs.R;
 
 public class ListaVozilaActivity extends AppCompatActivity {
@@ -36,7 +36,7 @@ public class ListaVozilaActivity extends AppCompatActivity {
 
     private ListaVozilaAdapter theAdapter;
     private RecyclerView theRecyclerView;
-    private ArrayList<Automobil> lista;
+    private ArrayList<Vehicle> lista;
 
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
@@ -64,8 +64,8 @@ public class ListaVozilaActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         mUser = mAuth.getCurrentUser();
         mFirebaseDatabase = FirebaseDatabase.getInstance();
-        mDatabaseReference = mFirebaseDatabase.getReference().child("Korisnik").child("Klijent")
-                .child(mUser.getUid()).child("listaVozila");
+        mDatabaseReference = mFirebaseDatabase.getReference().child("Korisnik").child("Client")
+                .child(mUser.getUid()).child("listOfCars");
 
 
 
@@ -74,9 +74,9 @@ public class ListaVozilaActivity extends AppCompatActivity {
         theAdapter = new ListaVozilaAdapter(new ListaVozilaAdapter.OnListItemClickListener() {
             @Override
             public void OnItemClick(int clickItemIndex) {
-                Automobil temp = lista.get(clickItemIndex);
+                Vehicle temp = lista.get(clickItemIndex);
                 Intent intent = new Intent(getBaseContext(),carInfoActivity.class);
-                intent.putExtra("Registarski",temp.getRegBroj());
+                intent.putExtra("Registarski",temp.getRegistyNumber());
                 intent.putExtra("vozilo", lista.get(clickItemIndex));
                 startActivity(intent);
             }
@@ -86,9 +86,9 @@ public class ListaVozilaActivity extends AppCompatActivity {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
 
-                Automobil a = dataSnapshot.getValue(Automobil.class);
-                a.setVoziloID(dataSnapshot.getKey());
-                mDatabaseReference.child(a.getVoziloID()).setValue(a);
+                Vehicle a = dataSnapshot.getValue(Vehicle.class);
+                a.setVehicleID(dataSnapshot.getKey());
+                mDatabaseReference.child(a.getVehicleID()).setValue(a);
                 theAdapter.add(a);
                 theRecyclerView.setAdapter(theAdapter);
 

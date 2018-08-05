@@ -49,7 +49,7 @@
             android:theme="@style/AppTheme" />
         <activity android:name=".Activities.mainScreensActivities.mainScreenClientActivity" />
         <activity
-            android:name=".Activities.clientActivities.DodajAutomobilForm"
+            android:name=".Activities.clientActivities.addVehicleFormActivity"
             android:theme="@style/AppTheme">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

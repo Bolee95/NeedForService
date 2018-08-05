@@ -26,11 +26,11 @@ import com.google.firebase.database.FirebaseDatabase;
 import java.util.ArrayList;
 import java.util.List;
 
-import ynca.nfs.Models.Automobil;
+import ynca.nfs.Models.Request;
+import ynca.nfs.Models.Vehicle;
 import ynca.nfs.R;
-import ynca.nfs.Models.Servis;
-import ynca.nfs.Models.Usluga;
-import ynca.nfs.Models.Zahtev;
+import ynca.nfs.Models.VehicleService;
+import ynca.nfs.Models.Job;
 
 
 /**
@@ -49,16 +49,16 @@ public class ZahtevServisiranja extends AppCompatActivity {
     Spinner mAutomobili;
     Spinner mServisi;
 
-    ArrayList<Automobil> mAutomobiliLista;
-    ArrayList<Servis> mServisiLista;
-    ArrayList<Usluga> usluge;
+    ArrayList<Vehicle> mAutomobiliLista;
+    ArrayList<VehicleService> mServisiLista;
+    ArrayList<Job> usluge;
     List<String> imenaUsluga;
     List<String> listServisa;
     List<String> listAutomobila;
 
-    static Automobil selectedAuto = null;
-    static Servis selectedServis = null;
-    static Usluga selectedUsluga = null;
+    static Vehicle selectedAuto = null;
+    static VehicleService selectedVehicleService = null;
+    static Job selectedUsluga = null;
 
     ArrayAdapter<String> adapterUsluga;
 
@@ -111,10 +111,10 @@ public class ZahtevServisiranja extends AppCompatActivity {
 
         mFirebaseDatabase1 = FirebaseDatabase.getInstance();
         mDatabaseReference1 = mFirebaseDatabase1.getReference().child("Korisnik")
-                .child("Klijent").child(mUser.getUid())
-                .child("listaVozila");
+                .child("Client").child(mUser.getUid())
+                .child("listOfCars");
         mFirebaseDatabase2 = FirebaseDatabase.getInstance();
-        mDatabaseReference2 = mFirebaseDatabase2.getReference().child("Korisnik").child("Servis");
+        mDatabaseReference2 = mFirebaseDatabase2.getReference().child("Korisnik").child("VehicleService");
 
         mServisiLista = new ArrayList<>();
         mAutomobiliLista = new ArrayList<>();
@@ -137,7 +137,7 @@ public class ZahtevServisiranja extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                if(selectedServis == null || selectedUsluga == null || selectedAuto == null)
+                if(selectedVehicleService == null || selectedUsluga == null || selectedAuto == null)
                 {
                     Toast.makeText(getApplicationContext(),getResources().getString(R.string.ZahtevFail) , Toast.LENGTH_LONG).show();
                     return;
@@ -145,14 +145,16 @@ public class ZahtevServisiranja extends AppCompatActivity {
                 }
                 String date = mProposedDates.getText().toString();
                 String note = mNote.getText().toString();
-                Zahtev z = new Zahtev(selectedUsluga.getUsluga(), date, note, selectedAuto, selectedServis.getUID() , mUser.getUid(), mUser.getEmail());
-                //mDatabaseReference.child("Korisnik").child("Klijent").child(mUser.getUid()).child("zahtevi").push().setValue(z);
-                //mDatabaseReference.child("Korisnik").child("Servis").child(z.getServis().getUID()).child("zahtevi").push().setValue(z);
-                mDatabaseReference.child("ZahteviServis").child(selectedServis.getUID()).push().setValue(z);
+                Request z = new Request(selectedUsluga.getJob(), date, note, selectedAuto, selectedVehicleService.getUID() , mUser.getUid(), mUser.getEmail());
+                //mDatabaseReference.child("Korisnik").child("Client").child(mUser.getUid()).child("zahtevi").push().setValue(z);
+                //mDatabaseReference.child("Korisnik").child("VehicleService").child(z.getServis().getUID()).child("zahtevi").push().setValue(z);
+                mDatabaseReference.child("ServiceRequests").child(selectedVehicleService.getUID()).push().setValue(z);
                 //mDatabaseReference.child("ZahteviKlijent").child(mUser.getUid()).push().setValue(z);
         //        mDatabaseReference.push().setValue(z);
                 Toast.makeText(getApplicationContext(), getResources().getString(R.string.ZahtevPoslat), Toast.LENGTH_LONG).show();
                 finish();
+
+
             }
         });
 
@@ -184,16 +186,17 @@ public class ZahtevServisiranja extends AppCompatActivity {
         mServisi.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                selectedServis = mServisiLista.get(position);
+                selectedVehicleService = mServisiLista.get(position);
                 int i = 0;
-                if(selectedServis.getUsluge() == null) {
+                if(selectedVehicleService.getServices() == null) {
                     imenaUsluga.clear();
+                    adapterUsluga.notifyDataSetChanged();
                     return;
                 }
-                usluge = new ArrayList<Usluga>(selectedServis.getUsluge().values());
+                usluge = new ArrayList<Job>(selectedVehicleService.getServices().values());
                 imenaUsluga.clear();
-                for(Usluga u: usluge){
-                    imenaUsluga.add(u.getUsluga() + " " + u.getCena() + " RSD");
+                for(Job u: usluge){
+                    imenaUsluga.add(u.getJob() + " " + u.getPrice() + " RSD");
                 }
                 adapterUsluga.notifyDataSetChanged();
                 mUsluge.setAdapter(adapterUsluga);
@@ -212,9 +215,9 @@ public class ZahtevServisiranja extends AppCompatActivity {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
 
-                Automobil a = dataSnapshot.getValue(Automobil.class);
+                Vehicle a = dataSnapshot.getValue(Vehicle.class);
                 mAutomobiliLista.add(a);
-                listAutomobila.add(a.getProizvodjac() + " " +a.getModel());
+                listAutomobila.add(a.getManufacturer() + " " +a.getModel());
                 adapterAuto.notifyDataSetChanged();
             }
 
@@ -248,12 +251,12 @@ public class ZahtevServisiranja extends AppCompatActivity {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
 
-                Servis servis =dataSnapshot.getValue(Servis.class);
-                mServisiLista.add(servis);
-                //if(servis.getListaUsluga()!=null){
-                //usluge = servis.getListaUsluga();
+                VehicleService vehicleService =dataSnapshot.getValue(VehicleService.class);
+                mServisiLista.add(vehicleService);
+                //if(vehicleService.getListaUsluga()!=null){
+                //usluge = vehicleService.getListaUsluga();
                 //Collection<Usluga> str  = usluge.values();}
-                listServisa.add(servis.getNaziv());
+                listServisa.add(vehicleService.getName());
                 adapterServis.notifyDataSetChanged();
             }
 

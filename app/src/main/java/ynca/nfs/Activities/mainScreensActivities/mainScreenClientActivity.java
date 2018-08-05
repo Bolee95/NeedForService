@@ -43,7 +43,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import ynca.nfs.Activities.clientActivities.Client_Inbox_Activity;
-import ynca.nfs.Activities.clientActivities.DodajAutomobilForm;
+import ynca.nfs.Activities.clientActivities.addVehicleFormActivity;
 import ynca.nfs.Activities.clientActivities.Feedback_activity;
 import ynca.nfs.Activities.clientActivities.Info_client;
 import ynca.nfs.Activities.clientActivities.Message_activity;
@@ -51,11 +51,11 @@ import ynca.nfs.Activities.clientActivities.NewMapActivity;
 import ynca.nfs.Activities.startActivities.LoginActivity;
 import ynca.nfs.Activities.ZahtevServisiranja;
 import ynca.nfs.Adapter.ItemListClientAdapter;
-import ynca.nfs.Models.Klijent;
+import ynca.nfs.Models.Client;
 import ynca.nfs.Models.Poruka;
+import ynca.nfs.Models.Review;
 import ynca.nfs.R;
-import ynca.nfs.Models.Recenzija;
-import ynca.nfs.Models.Servis;
+import ynca.nfs.Models.VehicleService;
 
 public class mainScreenClientActivity extends AppCompatActivity implements ItemListClientAdapter.OnItemsClickListener {
 
@@ -77,8 +77,8 @@ public class mainScreenClientActivity extends AppCompatActivity implements ItemL
 
     private FirebaseUser user;
     private FirebaseAuth auth;
-    private static Klijent trenutniKlijent;
-    private ArrayList<Servis> servisi;
+    private static Client trenutniKlijent;
+    private ArrayList<VehicleService> servisi;
 
     private static HashMap<String, Poruka> poruke;
     private static int BROJ_NEPROCITANIH_PORUKA = 0;
@@ -215,11 +215,11 @@ public class mainScreenClientActivity extends AppCompatActivity implements ItemL
         user = auth.getCurrentUser();
 
         mFirebaseDatabase = FirebaseDatabase.getInstance();
-        mDatabaseReference = mFirebaseDatabase.getReference().child("Korisnik").child("Klijent");
+        mDatabaseReference = mFirebaseDatabase.getReference().child("Korisnik").child("Client");
         mFirebaseDatabase2 = FirebaseDatabase.getInstance();
-        mDatabaseReference2 = mFirebaseDatabase2.getReference().child("Korisnik").child("Servis");
+        mDatabaseReference2 = mFirebaseDatabase2.getReference().child("Korisnik").child("VehicleService");
         mFirebaseDatabase3 = FirebaseDatabase.getInstance();
-        mDatabaseReference3 = mFirebaseDatabase3.getReference().child("Korisnik").child("Klijent")
+        mDatabaseReference3 = mFirebaseDatabase3.getReference().child("Korisnik").child("Client")
                 .child(user.getUid()).child("primljenePoruke");
 
         NovoVozilo = (Button) findViewById(R.id.NavListButton1);
@@ -227,7 +227,7 @@ public class mainScreenClientActivity extends AppCompatActivity implements ItemL
         NovoVozilo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(getBaseContext(), DodajAutomobilForm.class));
+                startActivity(new Intent(getBaseContext(), addVehicleFormActivity.class));
             }
         });
         testDugme.setOnClickListener(new View.OnClickListener() {
@@ -239,7 +239,7 @@ public class mainScreenClientActivity extends AppCompatActivity implements ItemL
         NovoVozilo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(getBaseContext(),DodajAutomobilForm.class));
+                startActivity(new Intent(getBaseContext(),addVehicleFormActivity.class));
             }
         });
         testMapa = (Button) findViewById(R.id.NavListButton3);
@@ -262,20 +262,20 @@ public class mainScreenClientActivity extends AppCompatActivity implements ItemL
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
 
-                Servis servis = dataSnapshot.getValue(Servis.class);
+                VehicleService vehicleService = dataSnapshot.getValue(VehicleService.class);
 
-                adapter.add(servis);
+                adapter.add(vehicleService);
                 recycler.setAdapter(adapter);
-                servisi.add(servis);
+                servisi.add(vehicleService);
 
-                if(servis.getRecenzije() == null){
+                if(vehicleService.getReviews() == null){
                     listaProsecnihOcena.add((float)0);
                     return;
                 }
-                ArrayList<Recenzija> rec = new ArrayList<>(servis.getRecenzije().values());
+                ArrayList<Review> rec = new ArrayList<>(vehicleService.getReviews().values());
                 float fl = 0;
-                for(Recenzija r: rec)
-                    fl+= r.getOcena();
+                for(Review r: rec)
+                    fl+= r.getRate();
 
                 listaProsecnihOcena.add(fl/((float)rec.size()));
 
@@ -312,7 +312,7 @@ public class mainScreenClientActivity extends AppCompatActivity implements ItemL
         //Onclick event za klik na neki od servisa onosno neke od slika na ekranu
         @Override
         public void OnItemClick(int clickItemIndex) {
-            final Servis temp1 = servisi.get(clickItemIndex);
+            final VehicleService temp1 = servisi.get(clickItemIndex);
             final float prosecnaOcena = listaProsecnihOcena.get(clickItemIndex);
            Dialog d=new Dialog(mainScreenClientActivity.this);
             d.setContentView(R.layout.dialogbox);
@@ -346,10 +346,10 @@ public class mainScreenClientActivity extends AppCompatActivity implements ItemL
             DialogNumber = (TextView) d.findViewById(R.id.ServiceNumberResult);
 
 
-            DialogAdress.setText(String.valueOf(temp1.getAdresa()));
-            DialogNumber.setText(String.valueOf(temp1.getBrojTelefona()));
+            DialogAdress.setText(String.valueOf(temp1.getAddress()));
+            DialogNumber.setText(String.valueOf(temp1.getPhoneNumber()));
             DialogEmail.setText(String.valueOf(temp1.getEmail()));
-            DialogServiceName.setText(String.valueOf(temp1.getNaziv()));
+            DialogServiceName.setText(String.valueOf(temp1.getName()));
             rating.setRating(prosecnaOcena);
             d.setTitle(getResources().getString(R.string.InfoAboutService));
             d.show();
@@ -454,7 +454,7 @@ public class mainScreenClientActivity extends AppCompatActivity implements ItemL
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
 
 
-                Klijent k = dataSnapshot.getValue(Klijent.class);
+                Client k = dataSnapshot.getValue(Client.class);
                 if(k.getEmail() == null) return;
                 if(k.getEmail().equals(user.getEmail())) {
                     trenutniKlijent = k;
@@ -492,7 +492,7 @@ public class mainScreenClientActivity extends AppCompatActivity implements ItemL
                     prefEditor.putString("TrenutniKlijent", json);
                     //prefEditor.putInt("brojNeprocitanih", BROJ_NEPROCITANIH_PORUKA);
                     prefEditor.commit();
-                    NameAndSurr.setText(trenutniKlijent.getIme() + " " + trenutniKlijent.getPrezime());
+                    NameAndSurr.setText(trenutniKlijent.getFirstName() + " " + trenutniKlijent.getLastName());
                     Descript.setText(trenutniKlijent.getEmail());
                 }
 

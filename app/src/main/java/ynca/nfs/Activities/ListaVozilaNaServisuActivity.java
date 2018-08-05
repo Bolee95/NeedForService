@@ -17,7 +17,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import ynca.nfs.Adapter.ListaVozilaNaServisuAdapter;
-import ynca.nfs.Models.Automobil;
+import ynca.nfs.Models.Vehicle;
 import ynca.nfs.R;
 
 public class ListaVozilaNaServisuActivity extends AppCompatActivity {
@@ -47,7 +47,7 @@ public class ListaVozilaNaServisuActivity extends AppCompatActivity {
         window.setStatusBarColor(ContextCompat.getColor(this,R.color.Black));
 
         mFirebaseDatabase = FirebaseDatabase.getInstance();
-        mDatabaseReference = mFirebaseDatabase.getReference().child("Vozilo").child("Automobil");
+        mDatabaseReference = mFirebaseDatabase.getReference().child("Vozilo").child("listOfCars");
 
         theRecyclerView = (RecyclerView) findViewById(R.id.lista_vozila_na_servisu_recycle_view_id);
         LinearLayoutManager llm = new LinearLayoutManager(this);
@@ -75,9 +75,9 @@ public class ListaVozilaNaServisuActivity extends AppCompatActivity {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
 
-                Automobil a2 = dataSnapshot.getValue(Automobil.class);
-                a2.setVoziloID(dataSnapshot.getKey());
-                mDatabaseReference.child(a2.getVoziloID()).setValue(a2);
+                Vehicle a2 = dataSnapshot.getValue(Vehicle.class);
+                a2.setVehicleID(dataSnapshot.getKey());
+                mDatabaseReference.child(a2.getVehicleID()).setValue(a2);
                 theAdapter.add(a2);
                 theRecyclerView.setAdapter(theAdapter);
             }

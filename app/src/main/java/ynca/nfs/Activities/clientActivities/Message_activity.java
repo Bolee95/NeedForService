@@ -28,10 +28,10 @@ import java.util.ArrayList;
 
 import ynca.nfs.Activities.Poruka_tekst_activity;
 import ynca.nfs.Activities.Servis_Inbox_Activity;
-import ynca.nfs.Models.Klijent;
+import ynca.nfs.Models.Client;
 import ynca.nfs.Models.Poruka;
+import ynca.nfs.Models.VehicleService;
 import ynca.nfs.R;
-import ynca.nfs.Models.Servis;
 
 public class Message_activity extends AppCompatActivity {
 
@@ -49,8 +49,8 @@ public class Message_activity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private FirebaseUser mUser;
 
-    ArrayList<Servis> servisi;
-    ArrayList<Klijent> klijenti;
+    ArrayList<VehicleService> servisi;
+    ArrayList<Client> klijenti;
 
 
     Intent i;
@@ -103,9 +103,9 @@ public class Message_activity extends AppCompatActivity {
 
         mFirebaseDatabase2 = FirebaseDatabase.getInstance();
         mDatabaseReference2 = mFirebaseDatabase2.getReference().child("Korisnik")
-                .child("Klijent");
+                .child("Client");
         mFirebaseDatabase1 = FirebaseDatabase.getInstance();
-        mDatabaseReference1 = mFirebaseDatabase1.getReference().child("Korisnik").child("Servis");
+        mDatabaseReference1 = mFirebaseDatabase1.getReference().child("Korisnik").child("VehicleService");
 
 
         servisi = new ArrayList<>();
@@ -119,9 +119,9 @@ public class Message_activity extends AppCompatActivity {
 
                 Gson gson = new Gson();
                 String json = sp.getString("TrenutniKlijent", "");
-                Klijent k = gson.fromJson(json, Klijent.class);
+                Client k = gson.fromJson(json, Client.class);
                 json = sp.getString("TrenutniServis", "");
-                Servis s  = gson.fromJson(json, Servis.class );
+                VehicleService s  = gson.fromJson(json, VehicleService.class );
 
                 String email = destTV.getText().toString();
                 String title = naslovTV.getText().toString();
@@ -131,7 +131,7 @@ public class Message_activity extends AppCompatActivity {
                 if (k!=null) {
 
                     zaSlanje = new Poruka(false, k.getEmail(), email, title, tekst,"");
-                    mDatabaseReference.child("Korisnik").child("Servis").child(getUIDservisa(email)).child("primljenePoruke").push().setValue(zaSlanje);
+                    mDatabaseReference.child("Korisnik").child("VehicleService").child(getUIDservisa(email)).child("primljenePoruke").push().setValue(zaSlanje);
                     startActivity(new Intent(getBaseContext(),Client_Inbox_Activity.class));
                     String PorukaJePoslata = getString(R.string.PorukaJePoslata);
                     Toast.makeText(getApplicationContext(), PorukaJePoslata , Toast.LENGTH_LONG).show();
@@ -139,7 +139,7 @@ public class Message_activity extends AppCompatActivity {
                 else {
 
                     zaSlanje = new Poruka(false, s.getEmail(), email, title, tekst, "");
-                    mDatabaseReference.child("Korisnik").child("Klijent").child(getUIDklijenta(email)).child("primljenePoruke").push().setValue(zaSlanje);
+                    mDatabaseReference.child("Korisnik").child("Client").child(getUIDklijenta(email)).child("primljenePoruke").push().setValue(zaSlanje);
                     startActivity(new Intent(getBaseContext(),Servis_Inbox_Activity.class));
                     String PorukaJePoslata = getString(R.string.PorukaJePoslata);
                     Toast.makeText(getApplicationContext(), PorukaJePoslata , Toast.LENGTH_LONG).show();
@@ -167,8 +167,8 @@ public class Message_activity extends AppCompatActivity {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
 
-                Servis servis = dataSnapshot.getValue(Servis.class);
-                servisi.add(servis);
+                VehicleService vehicleService = dataSnapshot.getValue(VehicleService.class);
+                servisi.add(vehicleService);
             }
 
             @Override
@@ -201,7 +201,7 @@ public class Message_activity extends AppCompatActivity {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
 
-                Klijent k = dataSnapshot.getValue(Klijent.class);
+                Client k = dataSnapshot.getValue(Client.class);
                 klijenti.add(k);
             }
 
@@ -241,7 +241,7 @@ public class Message_activity extends AppCompatActivity {
     }
 
     private String getUIDservisa(String email) {
-        for(Servis s: servisi){
+        for(VehicleService s: servisi){
 
             if(s.getEmail().equals(email))
                 return  s.getUID();
@@ -251,7 +251,7 @@ public class Message_activity extends AppCompatActivity {
     }
 
     private String getUIDklijenta(String email){
-        for(Klijent k: klijenti){
+        for(Client k: klijenti){
 
             if(k.getEmail().equals(email))
                 return  k.getUID();
@@ -260,8 +260,8 @@ public class Message_activity extends AppCompatActivity {
         return null;
     }
 
-    private Servis nadjiDest(String email) {
-        for(Servis s: servisi){
+    private VehicleService nadjiDest(String email) {
+        for(VehicleService s: servisi){
 
             if(s.getEmail().equals(email))
                 return  s;
@@ -269,8 +269,8 @@ public class Message_activity extends AppCompatActivity {
         }
         return null;
     }
-    private Klijent nadjiDest2(String email) {
-        for(Klijent k: klijenti){
+    private Client nadjiDest2(String email) {
+        for(Client k: klijenti){
 
             if(k.getEmail().equals(email))
                 return  k;

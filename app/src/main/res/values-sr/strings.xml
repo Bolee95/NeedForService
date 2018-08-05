@@ -19,13 +19,13 @@
     <!-- Stringovi za forme za registraciju klijenta ili servisa -->
     <string name="service">Servis</string>
     <string name="Client">Klijent</string>
-    <string name="ClientDescription">Popunite ovu formu ukoliko želite da se registrujete kao klijent</string>
+    <string name="ClientDescription">Popunite ovu formu ukoliko želite da se registrujete kao client</string>
     <string name="name">Ime...</string>
     <string name="email">E-mail...</string>
     <string name="number">Broj telefona...</string>
     <string name="surname">Prezime...</string>
     <string name="PIB">PIB vaše kompanije...</string>
-    <string name="ServiceDescription">Popunite ovu formu ukoliko želite da se registrujete kao servis</string>
+    <string name="ServiceDescription">Popunite ovu formu ukoliko želite da se registrujete kao vehicleService</string>
     <string name="nameService">Naziv vaše kompanije...</string>
     <string name="nameServiceOwner">Ime i prezime vlasnika...</string>
     <string name="OK">OK</string>
@@ -48,7 +48,7 @@
 
     <!--Stringovi u zahtev_za_servisisanje_form i dodaj_automobil_form-->
     <string name="tipUsluge">Tip usluge:</string>
-    <string name="automobil">Automobil:</string>
+    <string name="automobil">Vozilo:</string>
     <string name="ponudjeniTermini">Ponudjeni termini:</string>
     <string name="dodajTermin">Dodaj termin</string>
     <string name="izabraniTermini">Izabrani termini:</string>
@@ -57,7 +57,7 @@
     <string name="posalji">Posalji</string>
 
 
-    <string name="unesiPodatke">Unesite podatke o automobilu</string>
+    <string name="unesiPodatke">Unesite podatke o vozilu</string>
     <string name="proizvodjac">Proizvodjac:</string>
     <string name="model">Model:</string>
     <string name="regBroj">Registarski broj:</string>
@@ -77,21 +77,21 @@
     <string name="title_activity_info_client">Info_client</string>
 
     <!--Info-->
-    <string name="list_cars">Vidi listu automobila</string>
+    <string name="list_cars">Vidi listu vozila</string>
     <string name="registarski_broj">Registarski broj:</string>
     <string name="proizvodjac_i_model">Proizvodjac i model</string>
     <string name="predjena_kilometraza">Predjena kilometraza</string>
 
     <string name="normal">Običan režim</string>
-    <string name="find">Nađi najbliži servis</string>
+    <string name="find">Nađi najbliži vehicleService</string>
     <string name="NightMode">Noćni režim</string>
     <string name="title_activity_settings">Podešavanja</string>
 
-    <string name="feedback">Ovde možete ostaviti komentar i ocenu za servis</string>
+    <string name="feedback">Ovde možete ostaviti komentar i ocenu za vehicleService</string>
     <string name="Save">Zapamti promene</string>
-    <string name="listCars">Vidi listu automobila</string>
+    <string name="listCars">Vidi listu vozila</string>
     <string name="PorukaReplyBTN"><u>Odgovori</u></string>
-    <string name="deleteCars">Obrisati automobil iz liste?</string>
+    <string name="deleteCars">Obrisati vozilo iz liste?</string>
 
 
     <!-- Car info strings -->
@@ -106,7 +106,7 @@
     <string name="Serviced">Datum poslednjeg servisiranja:</string>
 
     <!--Insert Car strings-->
-    <string name="insertInfo">Unesite podatke o automobilu</string>
+    <string name="insertInfo">Unesite podatke o vozilu</string>
     <string name="Manufacture">Proizvođač:</string>
     <string name="Registry">Registarski broj:</string>
     <string name="ChassisNum">Broj šasije:</string>
@@ -168,7 +168,7 @@
     <string name="cena">Cena:</string>
     <string name="action_sign_in_short">Prijavi se</string>
     <string name="change_price">Promeni cenu</string>
-    <string name="remove_service">izbrisi servis</string>
+    <string name="remove_service">izbrisi vehicleService</string>
     <string name="permission_rationale"></string>
     <string name="emailHint">email...</string>
 
@@ -176,9 +176,9 @@
     <!-- Mapa stringovi -->
     <string name="navigation">Da li želite navigaciju do ovog mesta?</string>
     <string name="No">Ne</string>
-    <string name="closestService">Najbliži servis je: </string>
+    <string name="closestService">Najbliži vehicleService je: </string>
     <string name="Warning">Upozorenje</string>
-    <string name="EmptyFields">Ostavili ste neka polja nepopunjena. Molimo vas, popunite celu formu da bi ste dodali novi automobil!</string>
+    <string name="EmptyFields">Ostavili ste neka polja nepopunjena. Molimo vas, popunite celu formu da bi ste dodali novo vozilo!</string>
     <string name="Changes">Da li stvarno želite da napravite promene?</string>
     <string name="ChangesSaved">Promene zapamćene!</string>
     <string name="Yes">Da</string>
@@ -199,20 +199,20 @@
     <string name="AndPrice">  cena:</string>
     <string name="Done">Odrađeno!</string>
     <string name="Question">Pitanje</string>
-    <string name="infoAbout">Informacije o automobilu:</string>
+    <string name="infoAbout">Informacije o vozilu:</string>
     <string name="withRegistyNum">sa registarskim brojem: </string>
-    <string name="IsServiceDone">Da li je servisiranje za ovaj automobil gotovo?</string>
+    <string name="IsServiceDone">Da li je servisiranje za ovo vozilo gotovo?</string>
     <string name="empty_inbox">Sanduce je prazno</string>
     <string name="warrning">Upozorenje</string>
 
-    <string name="Added_new_car">Dodali ste novi automobil!</string>
+    <string name="Added_new_car">Dodali ste novo vozilo!</string>
     <string name="zauzeti_serveri">Serveri su zauzeti.</string>
 
 
     <string name="PriceChanged">Cena promenjena!</string>
     <string name="AreYouSure">Da li ste sigurni?</string>
     <string name="noMessages">Nema poruka</string>
-    <string name="car">Automobil:</string>
+    <string name="car">Vozilo:</string>
     <string name="producer">Proizvodjac:</string>
     <string name="fuel1">Gorivo:</string>
     <string name="owner">Vlasnik:</string>

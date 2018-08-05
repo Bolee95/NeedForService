@@ -25,8 +25,8 @@ import java.util.ArrayList;
 import ynca.nfs.Activities.clientActivities.carInfoActivity;
 import ynca.nfs.Adapter.ListaVozilaAdapter;
 import ynca.nfs.Adapter.ListaZahtevaAdapter;
+import ynca.nfs.Models.Request;
 import ynca.nfs.R;
-import ynca.nfs.Models.Zahtev;
 
 public class ListaZahtevaActivity extends AppCompatActivity {
 
@@ -46,23 +46,12 @@ public class ListaZahtevaActivity extends AppCompatActivity {
     ListaZahtevaAdapter adapter;
     private RecyclerView recyclerView;
 
-    ArrayList<Zahtev> zahtevi;
+    ArrayList<Request> zahtevi;
 
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lista_zahteva);
-
-
-        Window window = this.getWindow();
-        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-
-// add FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS flag to the window
-        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-
-// finally change the color
-        window.setStatusBarColor(ContextCompat.getColor(this,R.color.Black));
 
         recyclerView = (RecyclerView) findViewById(R.id.lista_zahteva_recycle_view_id);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
@@ -73,7 +62,7 @@ public class ListaZahtevaActivity extends AppCompatActivity {
         zahtevi = new ArrayList<>();
 
         mFirebaseDatabase = FirebaseDatabase.getInstance();
-        mDatabaseReference = mFirebaseDatabase.getReference().child("ZahteviServis")
+        mDatabaseReference = mFirebaseDatabase.getReference().child("ServiceRequests")
                 .child(mUser.getUid());
 
         mFirebaseDatabase2 = FirebaseDatabase.getInstance();
@@ -97,7 +86,7 @@ public class ListaZahtevaActivity extends AppCompatActivity {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
 
-                Zahtev z = dataSnapshot.getValue(Zahtev.class);
+                Request z = dataSnapshot.getValue(Request.class);
                 adapter.add(z);
                 z.setId(dataSnapshot.getKey());
 //                mDatabaseReference2.child("ZahteviKlijent").child(z.getIdKlijenta()).child(z.getId()))

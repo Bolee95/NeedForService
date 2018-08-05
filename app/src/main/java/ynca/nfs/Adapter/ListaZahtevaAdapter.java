@@ -17,10 +17,10 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 
-import ynca.nfs.Models.Automobil;
+import ynca.nfs.Models.Vehicle;
+import ynca.nfs.Models.Request;
 import ynca.nfs.Models.Poruka;
 import ynca.nfs.R;
-import ynca.nfs.Models.Zahtev;
 
 /**
  * Created by Nemanja Djordjevic on 5/29/2017.
@@ -33,11 +33,11 @@ public class ListaZahtevaAdapter extends RecyclerView.Adapter<ListaZahtevaAdapte
     private FirebaseAuth mAuth;
     private FirebaseUser mUser;
 
-    private ArrayList<Zahtev> zahtevi;
+    private ArrayList<Request> zahtevi;
 
     final  private ListaVozilaAdapter.OnListItemClickListener onItemsClickListen;
 
-    public void add(Zahtev z) {
+    public void add(Request z) {
         zahtevi.add(z);
     }
 
@@ -105,15 +105,15 @@ public class ListaZahtevaAdapter extends RecyclerView.Adapter<ListaZahtevaAdapte
 
         }
 
-        void bind (Zahtev z){
+        void bind (Request z){
 
             String str = z.getId();
             Accept.setTag(str);
             Reject.setTag(z.getId());
-            fromTv.setText(z.getImeKlijenta());
-            typeTv.setText(z.getTipUsluge());
-            suggestedTv.setText(z.getPredlozeniTermin());
-            noteTv.setText(z.getNapomena());
+            fromTv.setText(z.getClientName());
+            typeTv.setText(z.getTypeOfService());
+            suggestedTv.setText(z.getProposedDate());
+            noteTv.setText(z.getNote());
 
 
             Accept.setOnClickListener(new View.OnClickListener() {
@@ -130,19 +130,19 @@ public class ListaZahtevaAdapter extends RecyclerView.Adapter<ListaZahtevaAdapte
 
                                     String tag = String.valueOf(Accept.getTag());
 
-                                    Zahtev z = vratiZahtev(tag);
-                                    Automobil a = z.getAutomobil();
-                                    a.setTipUsluge(z.getTipUsluge());
+                                    Request z = vratiZahtev(tag);
+                                    Vehicle a = z.getVehicle();
+                                    a.setTypeOfService(z.getTypeOfService());
 
-                                    mDatabaseReference.child("Korisnik").child("Servis").child(mUser.getUid())
-                                            .child("automobili").push().setValue(a);
+                                    mDatabaseReference.child("Korisnik").child("VehicleService").child(mUser.getUid())
+                                            .child("acceptedServices").push().setValue(a);
                                     Poruka p = new Poruka(false, mUser.getEmail(), "", "Obavestenje",
                                             "Postovani, \n Obavestavamo Vas da je Vas zahtev prihvacen", "");
 
-                                    mDatabaseReference.child("Korisnik").child("Klijent").child(z.getIdKlijenta())
+                                    mDatabaseReference.child("Korisnik").child("Client").child(z.getClientId())
                                             .child("primljenePoruke").push().setValue(p);
 
-                                    mDatabaseReference.child("ZahteviServis").child(mUser.getUid()).child(z.getId()).removeValue();
+                                    mDatabaseReference.child("ServiceRequests").child(mUser.getUid()).child(z.getId()).removeValue();
 
                                     zahtevi.remove(z);
                                     notifyDataSetChanged();
@@ -164,15 +164,15 @@ public class ListaZahtevaAdapter extends RecyclerView.Adapter<ListaZahtevaAdapte
 
 //                    String tag = String.valueOf(Accept.getTag());
 //
-//                    Zahtev z = vratiZahtev(tag);
+//                    Request z = vratiZahtev(tag);
 //                    Automobil a = z.getAutomobil();
 //
-//                    mDatabaseReference.child("Korisnik").child("Servis").child(mUser.getUid())
+//                    mDatabaseReference.child("Korisnik").child("VehicleService").child(mUser.getUid())
 //                            .child("automobili").push().setValue(a);
 //                    Poruka p = new Poruka(false, mUser.getEmail(), "", "Obavestenje",
 //                            "Postovani, \n Obavestavamo Vas da je Vas zahtev prihvacen", "");
 //
-//                    mDatabaseReference.child("Korisnik").child("Klijent").child(z.getIdKlijenta())
+//                    mDatabaseReference.child("Korisnik").child("Client").child(z.getIdKlijenta())
 //                            .child("primljenePoruke").push().setValue(p);
 //
 //                    mDatabaseReference.child("ZahteviServis").child(mUser.getUid()).child(z.getId()).removeValue();
@@ -197,20 +197,20 @@ public class ListaZahtevaAdapter extends RecyclerView.Adapter<ListaZahtevaAdapte
 
                                     String tag = String.valueOf(Accept.getTag());
 
-                                    Zahtev z = vratiZahtev(tag);
-                                    Automobil a = z.getAutomobil();
+                                    Request z = vratiZahtev(tag);
+                                    Vehicle a = z.getVehicle();
 
 
                                     Poruka p = new Poruka(false, mUser.getEmail(), "", "Obavestenje",
                                             "Postovani, \n Obavestavamo Vas da je Vas zahtev za automobil "
-                                                    + a.getProizvodjac() + " "+ a.getModel() + " odbijen", "");
+                                                    + a.getManufacturer() + " "+ a.getModel() + " odbijen", "");
 
-                                    mDatabaseReference.child("Korisnik").child("Klijent").child(z.getIdKlijenta())
+                                    mDatabaseReference.child("Korisnik").child("Client").child(z.getClientId())
                                             .child("primljenePoruke").push().setValue(p);
 
                                     zahtevi.remove(z);
 
-                                    mDatabaseReference.child("ZahteviServis").child(mUser.getUid()).child(z.getId()).removeValue();
+                                    mDatabaseReference.child("ServiceRequests").child(mUser.getUid()).child(z.getId()).removeValue();
 
                                     //Toast.makeText(itemView.getContext(), tag, Toast.LENGTH_LONG).show();
                                 }
@@ -228,7 +228,7 @@ public class ListaZahtevaAdapter extends RecyclerView.Adapter<ListaZahtevaAdapte
 
 //                    String tag = String.valueOf(Accept.getTag());
 //
-//                    Zahtev z = vratiZahtev(tag);
+//                    Request z = vratiZahtev(tag);
 //                    Automobil a = z.getAutomobil();
 //
 //
@@ -236,7 +236,7 @@ public class ListaZahtevaAdapter extends RecyclerView.Adapter<ListaZahtevaAdapte
 //                            "Postovani, \n Obavestavamo Vas da je Vas zahtev za automobil "
 //                            + a.getProizvodjac() + " "+ a.getModel() + " odbijen", "");
 //
-//                    mDatabaseReference.child("Korisnik").child("Klijent").child(z.getIdKlijenta())
+//                    mDatabaseReference.child("Korisnik").child("Client").child(z.getIdKlijenta())
 //                            .child("primljenePoruke").push().setValue(p);
 //
 //                    zahtevi.remove(z);
@@ -256,8 +256,8 @@ public class ListaZahtevaAdapter extends RecyclerView.Adapter<ListaZahtevaAdapte
         }
     }
 
-    private Zahtev vratiZahtev(String tag) {
-        for(Zahtev z: zahtevi)
+    private Request vratiZahtev(String tag) {
+        for(Request z: zahtevi)
             if (tag.equals(z.getId()))
                 return z;
         return null;

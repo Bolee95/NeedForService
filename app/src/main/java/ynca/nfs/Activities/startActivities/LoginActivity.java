@@ -144,7 +144,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private void updateUI(FirebaseUser user) {
         if (user != null) {
             String email = user.getEmail();
-            mDatabase.child("Korisnik").child("Servis").orderByChild("email").equalTo(email).addListenerForSingleValueEvent(new ValueEventListener() {
+            mDatabase.child("Korisnik").child("VehicleService").orderByChild("email").equalTo(email).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     if(dataSnapshot.exists()){

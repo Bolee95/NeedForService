@@ -36,8 +36,8 @@ import com.google.firebase.storage.UploadTask;
 import com.google.gson.Gson;
 
 import ynca.nfs.Activities.startActivities.LoginActivity;
+import ynca.nfs.Models.VehicleService;
 import ynca.nfs.R;
-import ynca.nfs.Models.Servis;
 
 public class Info_Servis extends AppCompatActivity {
 
@@ -104,7 +104,7 @@ public class Info_Servis extends AppCompatActivity {
 
         mStorageReference = FirebaseStorage.getInstance().getReference();
         mDatabaseReference = FirebaseDatabase.getInstance().getReference()
-                .child("Korisnik").child("Servis");
+                .child("Korisnik").child("VehicleService");
         mAuth = FirebaseAuth.getInstance();
 
         mSaveButton.setOnClickListener(new View.OnClickListener() {
@@ -128,13 +128,13 @@ public class Info_Servis extends AppCompatActivity {
         SharedPreferences.Editor editor = shared.edit();
         Gson gson = new Gson();
         String json = shared.getString("TrenutniServis","");
-        Servis trenutniServis = gson.fromJson(json, Servis.class);
+        VehicleService trenutniVehicleService = gson.fromJson(json, VehicleService.class);
 
-        mNameET.setText(trenutniServis.getNaziv());
-        mOwnerNameET.setText(trenutniServis.getImeVlasnika());
-        mAddressET.setText(trenutniServis.getAdresa());
-        mNumberET.setText(trenutniServis.getTelefon());
-        mEmailET.setText(trenutniServis.getEmail());
+        mNameET.setText(trenutniVehicleService.getName());
+        mOwnerNameET.setText(trenutniVehicleService.getOwnersName());
+        mAddressET.setText(trenutniVehicleService.getAddress());
+        mNumberET.setText(trenutniVehicleService.getPhoneNumber());
+        mEmailET.setText(trenutniVehicleService.getEmail());
 
         //proverava da li vec postoji slika servisa
         StorageReference photoRef = mStorageReference.child("photos").child(mAuth.getCurrentUser().getUid());

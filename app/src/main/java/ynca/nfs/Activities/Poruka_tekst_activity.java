@@ -13,7 +13,7 @@ import android.widget.TextView;
 
 import ynca.nfs.Activities.clientActivities.Message_activity;
 import ynca.nfs.Activities.mainScreensActivities.mainScreenClientActivity;
-import ynca.nfs.Models.Klijent;
+import ynca.nfs.Models.Client;
 import ynca.nfs.Models.Poruka;
 import ynca.nfs.R;
 
@@ -31,7 +31,7 @@ public class Poruka_tekst_activity extends AppCompatActivity {
 
 
 
-    static Klijent trenutniKlijent;
+    static Client trenutniKlijent;
     static int BROJ_PORUKA;
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
@@ -94,10 +94,10 @@ public class Poruka_tekst_activity extends AppCompatActivity {
 
     //    public void vratiKlijenta(FirebaseUser user, DatabaseReference database) {
 //        String email = user.getEmail();
-//        database.child("Korisnik").child("Klijent").orderByChild("email").equalTo(email).addListenerForSingleValueEvent(new ValueEventListener() {
+//        database.child("Korisnik").child("Client").orderByChild("email").equalTo(email).addListenerForSingleValueEvent(new ValueEventListener() {
 //            @Override
 //            public void onDataChange(DataSnapshot dataSnapshot) {
-//                Klijent klijent = dataSnapshot.getValue(Klijent.class);
+//                Client klijent = dataSnapshot.getValue(Client.class);
 //                String ovdeNekiStringKojiCesVanDaDeklarises = klijent.getIme() + " " + klijent.getPrezime();
 //            }
 //
@@ -110,10 +110,10 @@ public class Poruka_tekst_activity extends AppCompatActivity {
 
 //    public void imeServisa(FirebaseUser user, DatabaseReference database){
 //        String email = user.getEmail();
-//        database.child("Korisnik").child("Servis").orderByChild("email").equalTo(email).addListenerForSingleValueEvent(new ValueEventListener() {
+//        database.child("Korisnik").child("VehicleService").orderByChild("email").equalTo(email).addListenerForSingleValueEvent(new ValueEventListener() {
 //            @Override
 //            public void onDataChange(DataSnapshot dataSnapshot) {
-//                Servis servis = dataSnapshot.getValue(Servis.class);
+//                VehicleService servis = dataSnapshot.getValue(VehicleService.class);
 //                String ovdeNekiStringKojiCesVanDaDeklarises = servis.getNaziv();
 //            }
 //
