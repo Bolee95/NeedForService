@@ -95,8 +95,6 @@ public class mainScreenClientActivity extends AppCompatActivity implements ItemL
     private DrawerLayout mDrawerLayout;
     private LinearLayout mDrawerList;
     private NavigationView navBar;
-    private TextView test;
-    private Button SOSCallClient;
     private TextView NameAndSurr;
     private TextView Descript;
 

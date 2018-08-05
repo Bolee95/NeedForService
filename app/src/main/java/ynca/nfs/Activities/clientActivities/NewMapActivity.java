@@ -1,13 +1,19 @@
 package ynca.nfs.Activities.clientActivities;
 
+
+import android.annotation.SuppressLint;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 
+import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -17,14 +23,17 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.gson.Gson;
 
 import java.util.ArrayList;
 
+import ynca.nfs.Models.Client;
 import ynca.nfs.Models.VehicleService;
 import ynca.nfs.R;
 
@@ -34,6 +43,7 @@ public class NewMapActivity extends FragmentActivity implements OnMapReadyCallba
     private FirebaseDatabase mFirebaseDatabase;
     private DatabaseReference mDatabaseReference;
     private ChildEventListener mChildEventListener;
+    private DatabaseReference mDatabaseReference1;
     public static ArrayList<VehicleService> services;
     private ArrayList<LatLng> servicesCoords;
     private CameraPosition mCameraPosition;
@@ -44,6 +54,10 @@ public class NewMapActivity extends FragmentActivity implements OnMapReadyCallba
     private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
     private static final String TAG = Map_activity.class.getSimpleName();
     public boolean mLocationPermissionGranted;
+    private boolean firstTimeLocated = true;
+    private Client currentClient;
+
+    LocationManager mLocationManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,11 +68,16 @@ public class NewMapActivity extends FragmentActivity implements OnMapReadyCallba
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-
         mFirebaseDatabase = FirebaseDatabase.getInstance();
         mDatabaseReference = mFirebaseDatabase.getReference().child("Korisnik").child("VehicleService");
+        mDatabaseReference1 = mFirebaseDatabase.getReference().child("Korisnik").child("Client");
         services = new ArrayList<VehicleService>();
-        servicesCoords = new ArrayList<LatLng>();
+
+        SharedPreferences shared = getSharedPreferences("SharedData",MODE_PRIVATE);
+        SharedPreferences.Editor editor = shared.edit();
+        Gson gson = new Gson();
+        String json = shared.getString("TrenutniKlijent","");
+        currentClient = gson.fromJson(json, Client.class);
 
 
         mChildEventListener = new ChildEventListener() {
@@ -68,37 +87,36 @@ public class NewMapActivity extends FragmentActivity implements OnMapReadyCallba
                 VehicleService temp = dataSnapshot.getValue(VehicleService.class);
                 services.add(temp);
 
-                    marker = mMap.addMarker(new MarkerOptions()
-                            .position(new LatLng(temp.getLongi(),temp.getLat()))
-                            .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED)));
+                marker = mMap.addMarker(new MarkerOptions()
+                        .position(new LatLng(temp.getLongi(), temp.getLat()))
+                        .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED)));
             }
 
-                @Override
-                public void onChildChanged (DataSnapshot dataSnapshot, String s){
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
 
-                }
-
-                @Override
-                public void onChildRemoved (DataSnapshot dataSnapshot){
-
-                }
-
-                @Override
-                public void onChildMoved (DataSnapshot dataSnapshot, String s){
-
-                }
-
-                @Override
-                public void onCancelled (DatabaseError databaseError){
-
-                }
             }
 
-            ;
-        mDatabaseReference.addChildEventListener(mChildEventListener);
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
 
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
         }
 
+        ;
+        mDatabaseReference.addChildEventListener(mChildEventListener);
+
+    }
 
 
     /**
@@ -113,14 +131,44 @@ public class NewMapActivity extends FragmentActivity implements OnMapReadyCallba
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-
-        // Add a marker in Sydney and move the camera
-        LatLng sydney = new LatLng(-34, 151);
-        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+        getDeviceLocation();
         updateLocationUI();
 
     }
+
+    private final LocationListener mLocationListener = new LocationListener() {
+        @Override
+        public void onLocationChanged(final Location location) {
+            mLastKnownLocation = location;
+            if(firstTimeLocated) {
+                CameraUpdate locationUpdated = CameraUpdateFactory.newLatLngZoom(
+                        new LatLng(mLastKnownLocation.getLatitude(),mLastKnownLocation.getLongitude()), 15);
+                mMap.animateCamera(locationUpdated);
+                firstTimeLocated = false;
+            }
+
+            currentClient.setLastKnownLat(mLastKnownLocation.getLatitude());
+            currentClient.setLastKnownlongi(mLastKnownLocation.getLongitude());
+            mDatabaseReference1.child(currentClient.getUID()).setValue(currentClient);
+
+
+        }
+
+        @Override
+        public void onStatusChanged(String s, int i, Bundle bundle) {
+
+        }
+
+        @Override
+        public void onProviderEnabled(String s) {
+
+        }
+
+        @Override
+        public void onProviderDisabled(String s) {
+
+        }
+    };
 
     private void getDeviceLocation() {
         if (ContextCompat.checkSelfPermission(this.getApplicationContext(),
@@ -133,10 +181,9 @@ public class NewMapActivity extends FragmentActivity implements OnMapReadyCallba
                     PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION);
         }
         if (mLocationPermissionGranted) {
-            //mLastKnownLocation = LocationServices.FusedLocationApi
-            //        .getLastLocation(mGoogleApiClient);
-            //TODO: Ovde treba da se doda da uzme poslednju poznatu lokaciju sa FusedLocationProviderClient
-            //Potreban Google play services 11.6 ili vise
+            mLocationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+            mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, (long) 1,
+                    (float) 0.1, mLocationListener);
         }
 
         if (mCameraPosition != null) {

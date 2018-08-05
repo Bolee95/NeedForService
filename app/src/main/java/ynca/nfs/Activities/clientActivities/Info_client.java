@@ -365,7 +365,7 @@ public class Info_client extends Activity {
                 @Override
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                     @SuppressWarnings("VisibleForTests")
-                    Uri s = taskSnapshot.getDownloadUrl();
+                    Uri s = taskSnapshot.getUploadSessionUri();
                     Glide.with(mProfilePicture.getContext())
                             .load(s).into(mProfilePicture);
                     hideProgressDialog();

@@ -360,7 +360,7 @@ public class Info_Servis extends AppCompatActivity {
                 @Override
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                     @SuppressWarnings("VisibleForTests")
-                    Uri s = taskSnapshot.getDownloadUrl();
+                    Uri s = taskSnapshot.getUploadSessionUri();
                     Glide.with(mPhotoService.getContext())
                             .load(s).into(mPhotoService);
                     hideProgressDialog();
