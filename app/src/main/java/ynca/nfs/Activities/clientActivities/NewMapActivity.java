@@ -52,6 +52,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import ynca.nfs.Models.Client;
+import ynca.nfs.Models.Vehicle;
 import ynca.nfs.Models.VehicleService;
 import ynca.nfs.R;
 
@@ -65,13 +66,18 @@ public class NewMapActivity extends AppCompatActivity implements OnMapReadyCallb
     private CheckBox radiusFilterEnabled;
 
     private FirebaseDatabase mFirebaseDatabase;
+    private DatabaseReference friendsDatabaseReference;
+    private ChildEventListener friendsEventListener;
     private DatabaseReference mDatabaseReference;
     private DatabaseReference mDatabaseReference1;
     private ChildEventListener mChildEventListener2;
+    private ChildEventListener servicesListener;
     private DatabaseReference mDatabaseReference2;
+
     public static ArrayList<VehicleService> services;
     private CameraPosition mCameraPosition;
-    private HashMap<String,Client> listOfFriends; //postavi se listener na referencu na prijatelje trenutno ulogovanog korisnika
+    private ArrayList<Client> listOfFriends;
+    private ArrayList<VehicleService> friendsServices;//postavi se listener na referencu na prijatelje trenutno ulogovanog korisnika
     // i onda se dodaju na mapu i osluskuju se sa listenerom za promene
 
     private Location mLastKnownLocation;
@@ -106,6 +112,8 @@ public class NewMapActivity extends AppCompatActivity implements OnMapReadyCallb
         showFriendsMarkers.setChecked(true);
         radiusFilterEnabled = (CheckBox) findViewById(R.id.radiusFilterEnabled);
         nightMode = false;
+        listOfFriends = new ArrayList<Client>();
+        friendsServices = new ArrayList<VehicleService>();
 
 
         //radiusFilterEnabled onClickListener
@@ -143,6 +151,7 @@ public class NewMapActivity extends AppCompatActivity implements OnMapReadyCallb
         mDatabaseReference = mFirebaseDatabase.getReference().child("Korisnik").child("VehicleService");
         mDatabaseReference1 = mFirebaseDatabase.getReference().child("Korisnik").child("Client");
         mDatabaseReference2 = mFirebaseDatabase.getReference().child("Korisnik").child("Client").child(currentClient.getUID()).child("listOfAddedServices");
+        friendsDatabaseReference = mFirebaseDatabase.getReference().child("Korisnik").child("Client").child(currentClient.getUID()).child("listOfFriends");
         services = new ArrayList<VehicleService>();
 
 
@@ -201,22 +210,131 @@ public class NewMapActivity extends AppCompatActivity implements OnMapReadyCallb
 
         mDatabaseReference2.addChildEventListener(mChildEventListener2);
 
+
+        servicesListener = new ChildEventListener() {
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+                VehicleService temp = dataSnapshot.getValue(VehicleService.class);
+                services.add(temp);
+
+                Marker marker = mMap.addMarker(new MarkerOptions()
+                        .position(new LatLng(temp.getLat(), temp.getLongi()))
+                        .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)));
+            }
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        };
+
+        mDatabaseReference.addChildEventListener(servicesListener);
+
+
+        friendsEventListener = new ChildEventListener() {
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                Client temp = dataSnapshot.getValue(Client.class);
+                listOfFriends.add(temp);
+                HashMap<String,VehicleService> tempList = temp.getListOfAddedServices();
+                for (VehicleService tempService : tempList.values()
+                        ) {
+                    friendsServices.add(tempService);
+
+                }
+                Marker marker = mMap.addMarker(new MarkerOptions()
+                        .position(new LatLng(temp.getLastKnownLat(), temp.getLastKnownlongi()))
+                        .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_CYAN)));
+            }
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        };
+
+        friendsDatabaseReference.addChildEventListener(friendsEventListener);
     }
 
-    private void filterMap()
-    {
-//        mMap.clear();
-//        Marker marker;
-//        for (VehicleService temp: services
-//             ) {
-//            if (temp.getAddedByUser() != null) {
-//                if (temp.getAddedByUser() == showFriendsMarkers.isChecked())
-//                    marker = mMap.addMarker(new MarkerOptions()
-//                            .position(new LatLng(temp.getLat(), temp.getLongi()))
-//                            .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ROSE)));
-//            }
-//
-//        }
+    private void filterMap() {
+        mMap.clear();
+        for (VehicleService temp : services
+                ) {
+
+            if (temp.getAddedByUser() != null) {
+                if (temp.getAddedByUser() == true) {
+                    mMap.addMarker(new MarkerOptions()
+                            .position(new LatLng(temp.getLat(), temp.getLongi()))
+                            .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
+                } else {
+                    mMap.addMarker(new MarkerOptions()
+                            .position(new LatLng(temp.getLat(), temp.getLongi()))
+                            .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)));
+                }
+            }
+
+        }
+
+
+        if (showFriendsMarkers.isChecked()) {
+            for (VehicleService temp :
+                    friendsServices) {
+                //U zavisnosti da li li mogu da se prikazu servisi prijatelja
+                //friendsServices
+                //HashMap<String,VehicleService> tempList = temp.getListOfAddedServices();
+                mMap.addMarker(new MarkerOptions()
+                        .position(new LatLng(temp.getLat(), temp.getLongi()))
+                        .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
+            }
+
+        }
+
+        if (showFriends.isChecked())
+        //U zavisnosti od toga da li je dozvoljeno da se prikazu prijatelji, uzimaju se njihove lokacije sa
+        //listOfFriends se prikazuje
+        {
+            for (Client temp :
+                    listOfFriends) {
+
+                mMap.addMarker(new MarkerOptions()
+                        .position(new LatLng(temp.getLastKnownLat(), temp.getLastKnownlongi()))
+                        .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ROSE)));
+
+            }
+        }
+
+
     }
 
 
