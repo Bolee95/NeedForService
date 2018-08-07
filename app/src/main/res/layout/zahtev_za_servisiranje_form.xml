@@ -66,13 +66,11 @@
 
             <EditText
                 android:id="@+id/proposed_dates_id"
-                android:inputType="datetime"
+                android:inputType="date"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
                 />
-
-
 
             <TextView
                 android:layout_width="match_parent"

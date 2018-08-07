@@ -219,4 +219,10 @@
     <string name="owner">Owner:</string>
     <string name="usluga">Service:</string>
     <string name="title_activity_new_map">Map</string>
+    <string name="title_activity_add_new_service">addNewServiceActivity</string>
+
+
+    <!-- Stringovi za novi servis -->
+    <string name="checkboxLocation">Use my current location for service coordinates</string>
+    <string name="addNewService">Add new service</string>
 </resources>

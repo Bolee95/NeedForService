@@ -24,8 +24,7 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/launcher_icon"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme"
-        >
+        android:theme="@style/AppTheme">
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
@@ -111,7 +110,10 @@
         <activity android:name=".Activities.NovaUslugaActivity" />
         <activity
             android:name=".Activities.clientActivities.NewMapActivity"
-            android:label="@string/title_activity_new_map"></activity>
+            android:label="@string/title_activity_new_map" />
+        <activity
+            android:name=".Activities.clientActivities.addNewServiceActivity"
+            android:label="@string/title_activity_add_new_service"></activity>
     </application>
 
 </manifest>

@@ -217,4 +217,8 @@
     <string name="fuel1">Gorivo:</string>
     <string name="owner">Vlasnik:</string>
     <string name="usluga">Usluga:</string>
+
+    <!-- Stringovi za novi servis -->
+    <string name="checkboxLocation">Iskoristi trenutnu lokaciju za koodinate servisa</string>
+    <string name="addNewService">Dodaj novi servis</string>
 </resources>

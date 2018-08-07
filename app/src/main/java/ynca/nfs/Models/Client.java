@@ -19,7 +19,6 @@ public class Client {
     private HashMap<String,Client> listOfFriends; //lista prijatelja
     private HashMap<String,VehicleService> listOfAddedServices; //lista servisa koje je dodao korisnik
     private int reviewsCount; //broji koliko puta je ocenjivao servise
-    private int locationsAdded;
 
 
     public Client(String _ime, String _prezime, String _brojTelefona, String _email, String uid)
@@ -35,7 +34,6 @@ public class Client {
         requests = new HashMap<>();
         primljenePoruke = new HashMap<>();
         setReviewsCount(0);
-        setLocationsAdded(0);
     }
 
     public Client(){}
@@ -157,11 +155,4 @@ public class Client {
         this.listOfAddedServices = listOfAddedServices;
     }
 
-    public int getLocationsAdded() {
-        return locationsAdded;
-    }
-
-    public void setLocationsAdded(int locationsAdded) {
-        this.locationsAdded = locationsAdded;
-    }
 }

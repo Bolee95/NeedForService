@@ -2,6 +2,8 @@ package ynca.nfs.Activities.clientActivities;
 
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
@@ -36,6 +38,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 
 import java.util.ArrayList;
@@ -91,6 +94,10 @@ public class NewMapActivity extends AppCompatActivity implements OnMapReadyCallb
         currentClient = gson.fromJson(json, Client.class);
         mDefaultLocation = new LatLng(currentClient.getLastKnownLat(),currentClient.getLastKnownlongi());
 
+        mLastKnownLocation = new Location("");
+        mLastKnownLocation.setLongitude(mDefaultLocation.longitude);
+        mLastKnownLocation.setLatitude(mDefaultLocation.latitude);
+
         //Toolbar podesavanja
         Toolbar toolbar = (Toolbar) findViewById(R.id.mapToolbar);
         setSupportActionBar(toolbar);
@@ -120,7 +127,8 @@ public class NewMapActivity extends AppCompatActivity implements OnMapReadyCallb
 
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
+                //services.remove(dataSnapshot.getValue(VehicleService.class));
+                //services.add(dataSnapshot.getValue(VehicleService.class));
             }
 
             @Override
@@ -160,6 +168,11 @@ public class NewMapActivity extends AppCompatActivity implements OnMapReadyCallb
 
         if(id == R.id.newServiceItem)
         {
+            Intent newService = new Intent(this,addNewServiceActivity.class);
+            newService.putExtra("long",(Double) mLastKnownLocation.getLongitude());
+            newService.putExtra("lat",(Double) mLastKnownLocation.getLatitude());
+            newService.putExtra("uid",(String) currentClient.getUID());
+            startActivityForResult(newService,1);
             //Pokrece se intent sa opcijama za dodavanje novog servisa na trenutnoj lokaciji
         }
         else if (id == R.id.switchNightMode)
@@ -183,6 +196,17 @@ public class NewMapActivity extends AppCompatActivity implements OnMapReadyCallb
 
         return super.onOptionsItemSelected(item);
 
+    }
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
+        super.onActivityResult(requestCode,resultCode,data);
+        if(resultCode == Activity.RESULT_OK)
+        {
+            Toast.makeText(this,"New service added!",Toast.LENGTH_SHORT).show();
+        }
     }
 
 

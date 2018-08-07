@@ -3,8 +3,7 @@ package ynca.nfs.Models;
 import java.util.HashMap;
 
 public class VehicleService {
-    
-    //// TODO: 6/2/2017  float prosecnaOcena;
+
     private HashMap<String, Request> requests; //lista zahteva
     private String name; //? //naziv servisa
     private String ownersName; //ime vlasnika
