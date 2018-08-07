@@ -108,6 +108,7 @@ public class addNewServiceActivity  extends AppCompatActivity implements OnMapRe
                 Toast.makeText(getApplicationContext(),"New service has been added!",Toast.LENGTH_LONG).show();
                 String key =mDatabaseReference.push().getKey();
                 newService.setUID(key);
+                newService.setAddedByUser(true);
                 mDatabaseReference.child(key).setValue(newService);
 
                 finish();

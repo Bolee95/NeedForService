@@ -28,6 +28,7 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -81,6 +82,7 @@ public class NewMapActivity extends AppCompatActivity implements OnMapReadyCallb
     public boolean mLocationPermissionGranted;
     private boolean firstTimeLocated = true;
     private Client currentClient;
+    private boolean nightMode;
 
     LocationManager mLocationManager;
 
@@ -101,6 +103,7 @@ public class NewMapActivity extends AppCompatActivity implements OnMapReadyCallb
         filterRadius = (EditText) findViewById(R.id.radiusFilter);
         filterRadius.setEnabled(false);
         radiusFilterEnabled = (CheckBox) findViewById(R.id.radiusFilterEnabled);
+        nightMode = false;
 
 
         //radiusFilterEnabled onClickListener
@@ -209,7 +212,16 @@ public class NewMapActivity extends AppCompatActivity implements OnMapReadyCallb
         }
         else if (id == R.id.switchNightMode)
         {
-            //Night mode switch
+            if (!nightMode) {
+                mMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(
+                        getBaseContext(), R.raw.style_night));
+                nightMode = true;
+            }
+            else {
+                mMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(
+                        getBaseContext(), R.raw.style_normal));
+                nightMode = false;
+            }
         }
         else if (id == R.id.filterMap)
         {
