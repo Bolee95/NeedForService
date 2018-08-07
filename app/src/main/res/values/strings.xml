@@ -225,4 +225,16 @@
     <!-- Stringovi za novi servis -->
     <string name="checkboxLocation">Use my current location for service coordinates</string>
     <string name="addNewService">Add new service</string>
+
+
+    <!-- Stringovi za novu mapu-->
+    <string name="newMarker">New marker</string>
+    <string name="nightMode">Switch night mode</string>
+    <string name="search">Search</string>
+    <string name="mapFilter">Map filter</string>
+    <string name="friendsServices">Friends services</string>
+    <string name="showFriends">Show friends</string>
+    <string name="enableRadius">Radius enabled</string>
+    <string name="radius">Radius</string>
+
 </resources>

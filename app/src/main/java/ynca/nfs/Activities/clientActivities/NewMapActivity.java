@@ -102,6 +102,8 @@ public class NewMapActivity extends AppCompatActivity implements OnMapReadyCallb
         showFriends = (CheckBox)  findViewById(R.id.friendsThumbnails);
         filterRadius = (EditText) findViewById(R.id.radiusFilter);
         filterRadius.setEnabled(false);
+        showFriends.setChecked(true);
+        showFriendsMarkers.setChecked(true);
         radiusFilterEnabled = (CheckBox) findViewById(R.id.radiusFilterEnabled);
         nightMode = false;
 
@@ -114,6 +116,19 @@ public class NewMapActivity extends AppCompatActivity implements OnMapReadyCallb
                     filterRadius.setEnabled(true);
                 else
                     filterRadius.setEnabled(false);
+            }
+        });
+
+        showFriendsMarkers.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                filterMap();
+            }
+        });
+        showFriends.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                filterMap();
             }
         });
 
@@ -186,6 +201,22 @@ public class NewMapActivity extends AppCompatActivity implements OnMapReadyCallb
 
         mDatabaseReference2.addChildEventListener(mChildEventListener2);
 
+    }
+
+    private void filterMap()
+    {
+//        mMap.clear();
+//        Marker marker;
+//        for (VehicleService temp: services
+//             ) {
+//            if (temp.getAddedByUser() != null) {
+//                if (temp.getAddedByUser() == showFriendsMarkers.isChecked())
+//                    marker = mMap.addMarker(new MarkerOptions()
+//                            .position(new LatLng(temp.getLat(), temp.getLongi()))
+//                            .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ROSE)));
+//            }
+//
+//        }
     }
 
 

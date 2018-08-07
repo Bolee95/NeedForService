@@ -221,4 +221,16 @@
     <!-- Stringovi za novi servis -->
     <string name="checkboxLocation">Iskoristi trenutnu lokaciju za koodinate servisa</string>
     <string name="addNewService">Dodaj novi servis</string>
+
+
+    <!-- Stringovi za novu mapu-->
+    <string name="newMarker">Novi servis</string>
+    <string name="nightMode">Prekidac za nocni rezim</string>
+    <string name="search">Pretraga</string>
+    <string name="mapFilter">Filter mape</string>
+    <string name="friendsServices">Servisi prijatelja</string>
+    <string name="showFriends">Prikazi prijatelje</string>
+    <string name="enableRadius">Filter sa radiusom ukljucen</string>
+    <string name="radius">Radius</string>
+
 </resources>

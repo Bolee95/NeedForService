@@ -57,20 +57,20 @@
                 android:id="@+id/friendsMarkers"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Friends services" />
+                android:text="@string/friendsServices" />
 
             <CheckBox
                 android:id="@+id/friendsThumbnails"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Show friends" />
+                android:text="@string/showFriends" />
             <CheckBox
                 android:id="@+id/radiusFilterEnabled"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Radius enabled:" />
+                android:text="@string/enableRadius" />
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
@@ -81,7 +81,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:textStyle="bold"
-                    android:text="Radius:" />
+                    android:text="@string/radius" />
                 <EditText
                     android:id="@+id/radiusFilter"
                     android:layout_width="80dp"

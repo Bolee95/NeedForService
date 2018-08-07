@@ -5,13 +5,13 @@
     <item
         android:id="@+id/newServiceItem"
         android:orderInCategory="100"
-        android:title="New marker"
+        android:title="@string/newMarker"
         app:showAsAction="always"
         android:icon="@drawable/baseline_add_white_18dp">
     </item>
     <item
         android:id="@+id/switchNightMode"
-        android:title="Turn on night mode"
+        android:title="@string/nightMode"
         android:orderInCategory="100"
         app:showAsAction="ifRoom"
         android:icon="@drawable/baseline_brightness_4_white_18dp">
@@ -20,7 +20,7 @@
     <item
         android:id="@+id/mapSearch"
         android:icon="@drawable/baseline_search_white_18dp"
-        android:title="Search"
+        android:title="@string/search"
         app:showAsAction="always"
         app:actionViewClass="android.widget.SearchView" />
    <!-- <item
@@ -32,7 +32,7 @@
     -->
     <item
         android:id="@+id/filterMap"
-        android:title="Map filter"
+        android:title="@string/mapFilter"
         app:showAsAction="always"
         android:icon="@drawable/baseline_filter_list_white_18dp">
     </item>
