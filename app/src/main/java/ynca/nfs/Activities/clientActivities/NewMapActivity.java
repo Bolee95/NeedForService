@@ -11,6 +11,7 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
@@ -40,6 +41,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.CheckBox;
+import android.widget.EditText;
 import android.widget.Toast;
 
 
@@ -54,13 +57,18 @@ import ynca.nfs.R;
 public class NewMapActivity extends AppCompatActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
+    private CheckBox showFriendsMarkers;
+    private CheckBox showFriends;
+    private EditText filterRadius;
+    private CoordinatorLayout filtersView;
+    private CheckBox radiusFilterEnabled;
+
     private FirebaseDatabase mFirebaseDatabase;
     private DatabaseReference mDatabaseReference;
     private DatabaseReference mDatabaseReference1;
     private ChildEventListener mChildEventListener2;
     private DatabaseReference mDatabaseReference2;
     public static ArrayList<VehicleService> services;
-    private ArrayList<LatLng> servicesCoords;
     private CameraPosition mCameraPosition;
     private HashMap<String,Client> listOfFriends; //postavi se listener na referencu na prijatelje trenutno ulogovanog korisnika
     // i onda se dodaju na mapu i osluskuju se sa listenerom za promene
@@ -84,6 +92,27 @@ public class NewMapActivity extends AppCompatActivity implements OnMapReadyCallb
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+
+        filtersView = (CoordinatorLayout) findViewById(R.id.mapFilter);
+        filtersView.setVisibility(View.INVISIBLE);
+
+        showFriendsMarkers = (CheckBox) findViewById(R.id.friendsMarkers);
+        showFriends = (CheckBox)  findViewById(R.id.friendsThumbnails);
+        filterRadius = (EditText) findViewById(R.id.radiusFilter);
+        filterRadius.setEnabled(false);
+        radiusFilterEnabled = (CheckBox) findViewById(R.id.radiusFilterEnabled);
+
+
+        //radiusFilterEnabled onClickListener
+        radiusFilterEnabled.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (radiusFilterEnabled.isChecked())
+                    filterRadius.setEnabled(true);
+                else
+                    filterRadius.setEnabled(false);
+            }
+        });
 
         //Uzimanje uloovanog korisnika
         SharedPreferences shared = getSharedPreferences("SharedData",MODE_PRIVATE);
@@ -122,7 +151,7 @@ public class NewMapActivity extends AppCompatActivity implements OnMapReadyCallb
         mChildEventListener2 = new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                Toast.makeText(getApplicationContext(),"EventListener Triggered",Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getApplicationContext(),"EventListener Triggered",Toast.LENGTH_SHORT).show();
                 VehicleService temp = dataSnapshot.getValue(VehicleService.class);
                 services.add(temp);
 
@@ -176,16 +205,22 @@ public class NewMapActivity extends AppCompatActivity implements OnMapReadyCallb
             newService.putExtra("long",(Double) mLastKnownLocation.getLongitude());
             newService.putExtra("lat",(Double) mLastKnownLocation.getLatitude());
             newService.putExtra("uid",(String) currentClient.getUID());
-            startActivityForResult(newService,1);
-            //Pokrece se intent sa opcijama za dodavanje novog servisa na trenutnoj lokaciji
+            startActivity(newService);
         }
         else if (id == R.id.switchNightMode)
         {
             //Night mode switch
         }
-        else if (id == R.id.switchFriendsView)
+        else if (id == R.id.filterMap)
         {
-            //dodaje markere sa prijateljima i njihove thumbnaile
+            if ( filtersView.getVisibility() == View.VISIBLE)
+            {
+                filtersView.setVisibility(View.INVISIBLE);
+            }
+            else
+                filtersView.setVisibility(View.VISIBLE);
+
+
         }
         else if (id == R.id.mapSearch)
         {

@@ -6,6 +6,7 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.os.Bundle;
 import android.app.Activity;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -45,8 +46,10 @@ public class addNewServiceActivity  extends AppCompatActivity implements OnMapRe
     private EditText newServiceName;
     private EditText newServicePhone;
     private EditText newServiceEmail;
+
     private Button addNewServiceButton;
     private Intent intent;
+
 
     private FirebaseDatabase mFirebaseDatabase;
     private DatabaseReference mDatabaseReference;
@@ -66,6 +69,7 @@ public class addNewServiceActivity  extends AppCompatActivity implements OnMapRe
         newServiceEmail = (EditText) findViewById(R.id.newServiceEmail);
         newServicePhone = (EditText) findViewById(R.id.newServicePhone);
         addNewServiceButton = (Button) findViewById(R.id.addNewServiceButton);
+
 
         intent = getIntent();
 

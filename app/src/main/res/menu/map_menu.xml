@@ -23,17 +23,18 @@
         android:title="Search"
         app:showAsAction="always"
         app:actionViewClass="android.widget.SearchView" />
-    <item
-        android:id="@+id/switchFriendsView"
-        android:title="Show friends"
-        app:showAsAction="ifRoom"
-        android:icon="@drawable/baseline_supervised_user_circle_white_18dp">
-    </item>
-    <item
-        android:id="@+id/radiusSearch"
-        android:title="Services in radius"
+   <!-- <item
+        android:id="@+id/filterMap"
+        android:title="Show/hide filter"
         app:showAsAction="always"
         android:icon="@drawable/baseline_track_changes_white_18dp">
+    </item>
+    -->
+    <item
+        android:id="@+id/filterMap"
+        android:title="Map filter"
+        app:showAsAction="always"
+        android:icon="@drawable/baseline_filter_list_white_18dp">
     </item>
 
     <!--Radius search and atribute search-->

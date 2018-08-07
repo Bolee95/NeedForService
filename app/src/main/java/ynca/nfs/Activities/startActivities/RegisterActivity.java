@@ -272,6 +272,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                         mNumberService.getText().toString(),
                         mEmailViewService.getText().toString(),
                         user.getUid());
+                vehicleService.setAddedByUser(false);
                 mDatabase.child("Korisnik").child("VehicleService").child(user.getUid()).setValue(vehicleService);
                 hideProgressDialog();
                 startActivity(new Intent(getBaseContext(), MainScreenServisActivity.class));

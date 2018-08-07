@@ -19,6 +19,7 @@ public class VehicleService {
     private String UID;
     private HashMap<String, Job> services; //lista usluga koje servis nudi
     private HashMap<String, Review> reviews; //recenzije
+    private Boolean addedByUser;
 
 
 
@@ -37,6 +38,7 @@ public class VehicleService {
         setPrimljenePoruke(new HashMap<String,Poruka>());
         setAcceptedServices(new HashMap<String,Vehicle>());
         setReviews(new HashMap<String, Review>());
+        addedByUser = false;
     }
 
     public VehicleService(String _ime, String _prezime, String _adresa, String _brojTelefona, String _email, String uid)
@@ -169,5 +171,13 @@ public class VehicleService {
 
     public void setCity(String city) {
         this.city = city;
+    }
+
+    public Boolean getAddedByUser() {
+        return addedByUser;
+    }
+
+    public void setAddedByUser(Boolean addedByUser) {
+        this.addedByUser = addedByUser;
     }
 }

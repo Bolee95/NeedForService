@@ -20,6 +20,7 @@ public class Vehicle implements Serializable{
     private String ownersMail; //email vlasnika
     private boolean onService; //STATUS VOZILA, DA LI se trenutno servisira ili ne
 
+
     public Vehicle(String reg, String _model, String _proizvodjac, int _predjeniPut,
                    int nbrojSasije, String ntipGodiva, int ngodinaProizvodnje, String nposlednjiSer,
                    String vlasnik, String vlasnikMail, String usluga )
