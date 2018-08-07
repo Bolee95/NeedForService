@@ -11,6 +11,7 @@ public class VehicleService {
     private String phoneNumber; //broj telefona
     private String email; //email
     private String address; //adresa
+    private String city;
     private double longi; //longitude koordinata
     private double lat; //latitude koordinalta
     private HashMap<String, Vehicle> acceptedServices; //lista vozila koja su trenutno na servisu
@@ -160,5 +161,13 @@ public class VehicleService {
 
     public void setReviews(HashMap<String, Review> reviews) {
         this.reviews = reviews;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
     }
 }

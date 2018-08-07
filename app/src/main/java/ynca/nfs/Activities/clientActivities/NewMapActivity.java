@@ -9,6 +9,8 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
@@ -43,6 +45,7 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 import ynca.nfs.Models.Client;
 import ynca.nfs.Models.VehicleService;
@@ -53,8 +56,9 @@ public class NewMapActivity extends AppCompatActivity implements OnMapReadyCallb
     private GoogleMap mMap;
     private FirebaseDatabase mFirebaseDatabase;
     private DatabaseReference mDatabaseReference;
-    private ChildEventListener mChildEventListener;
     private DatabaseReference mDatabaseReference1;
+    private ChildEventListener mChildEventListener2;
+    private DatabaseReference mDatabaseReference2;
     public static ArrayList<VehicleService> services;
     private ArrayList<LatLng> servicesCoords;
     private CameraPosition mCameraPosition;
@@ -81,19 +85,22 @@ public class NewMapActivity extends AppCompatActivity implements OnMapReadyCallb
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-        mFirebaseDatabase = FirebaseDatabase.getInstance();
-        mDatabaseReference = mFirebaseDatabase.getReference().child("Korisnik").child("VehicleService");
-        mDatabaseReference1 = mFirebaseDatabase.getReference().child("Korisnik").child("Client");
-        services = new ArrayList<VehicleService>();
-
         //Uzimanje uloovanog korisnika
         SharedPreferences shared = getSharedPreferences("SharedData",MODE_PRIVATE);
         SharedPreferences.Editor editor = shared.edit();
         Gson gson = new Gson();
         String json = shared.getString("TrenutniKlijent","");
         currentClient = gson.fromJson(json, Client.class);
-        mDefaultLocation = new LatLng(currentClient.getLastKnownLat(),currentClient.getLastKnownlongi());
 
+        mFirebaseDatabase = FirebaseDatabase.getInstance();
+        mDatabaseReference = mFirebaseDatabase.getReference().child("Korisnik").child("VehicleService");
+        mDatabaseReference1 = mFirebaseDatabase.getReference().child("Korisnik").child("Client");
+        mDatabaseReference2 = mFirebaseDatabase.getReference().child("Korisnik").child("Client").child(currentClient.getUID()).child("listOfAddedServices");
+        services = new ArrayList<VehicleService>();
+
+
+
+        mDefaultLocation = new LatLng(currentClient.getLastKnownLat(),currentClient.getLastKnownlongi());
         mLastKnownLocation = new Location("");
         mLastKnownLocation.setLongitude(mDefaultLocation.longitude);
         mLastKnownLocation.setLatitude(mDefaultLocation.latitude);
@@ -112,43 +119,40 @@ public class NewMapActivity extends AppCompatActivity implements OnMapReadyCallb
             }
         });
 
-
-        mChildEventListener = new ChildEventListener() {
+        mChildEventListener2 = new ChildEventListener() {
             @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                Marker marker;
+            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                Toast.makeText(getApplicationContext(),"EventListener Triggered",Toast.LENGTH_SHORT).show();
                 VehicleService temp = dataSnapshot.getValue(VehicleService.class);
                 services.add(temp);
 
-                marker = mMap.addMarker(new MarkerOptions()
-                        .position(new LatLng(temp.getLongi(), temp.getLat()))
-                        .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED)));
+                Marker marker = mMap.addMarker(new MarkerOptions()
+                        .position(new LatLng(temp.getLat(), temp.getLongi()))
+                        .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
             }
 
             @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-                //services.remove(dataSnapshot.getValue(VehicleService.class));
-                //services.add(dataSnapshot.getValue(VehicleService.class));
-            }
-
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
+            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
 
             }
 
             @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
 
             }
 
             @Override
-            public void onCancelled(DatabaseError databaseError) {
+            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
 
             }
-        }
 
-        ;
-        mDatabaseReference.addChildEventListener(mChildEventListener);
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        };
+
+        mDatabaseReference2.addChildEventListener(mChildEventListener2);
 
     }
 
@@ -242,7 +246,11 @@ public class NewMapActivity extends AppCompatActivity implements OnMapReadyCallb
 
             currentClient.setLastKnownLat(mLastKnownLocation.getLatitude());
             currentClient.setLastKnownlongi(mLastKnownLocation.getLongitude());
-            mDatabaseReference1.child(currentClient.getUID()).setValue(currentClient);
+            Map<String,Object> childUpdate = new HashMap<>();
+            childUpdate.put("lastKnownLat",mLastKnownLocation.getLatitude());
+            childUpdate.put("lastKnownlongi",mLastKnownLocation.getLongitude());
+            mDatabaseReference1.child(currentClient.getUID()).updateChildren(childUpdate);
+
 
 
         }

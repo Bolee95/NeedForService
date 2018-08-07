@@ -96,12 +96,15 @@ public class addNewServiceActivity  extends AppCompatActivity implements OnMapRe
 
                 try {
                     addressOfService = mGeocoder.getFromLocation(newService.getLat(),newService.getLongi(),1).get(0);
-                    newService.setAddress(addressOfService.getThoroughfare() + " " + addressOfService.getFeatureName() + "," + addressOfService.getLocality());
+                    newService.setAddress(addressOfService.getThoroughfare() + " " + addressOfService.getFeatureName());
+                    newService.setCity(addressOfService.getLocality());
                 } catch (IOException e) {
                     newService.setAddress("");
                 }
                 Toast.makeText(getApplicationContext(),"New service has been added!",Toast.LENGTH_LONG).show();
-                mDatabaseReference.push().setValue(newService);
+                String key =mDatabaseReference.push().getKey();
+                newService.setUID(key);
+                mDatabaseReference.child(key).setValue(newService);
 
                 finish();
             }
