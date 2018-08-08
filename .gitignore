@@ -1,3 +1,6 @@
+### AndroidStudio ###
+# Covers files to be ignored for android development using Android Studio.
+
 # Built application files
 *.apk
 *.ap_
@@ -14,8 +17,12 @@ gen/
 out/
 
 # Gradle files
+.gradle
 .gradle/
 build/
+
+# Signing files
+.signing/
 
 # Local configuration file (sdk path, etc)
 local.properties
@@ -26,14 +33,30 @@ proguard/
 # Log Files
 *.log
 
-# Android Studio Navigation editor temp files
+# Android Studio
+/*/build/
+/*/local.properties
+/*/out
+/*/*/build
+/*/*/production
+captures/
 .navigation/
+*.ipr
+*~
+*.swp
 
 # Android Studio captures folder
 captures/
 
 # Intellij
 *.iml
+*.iws
+/out/
+
+# User-specific configurations
+.idea/caches/
+.idea/libraries/
+.idea/shelf/
 .idea/workspace.xml
 .idea/tasks.xml
 .idea/gradle.xml
