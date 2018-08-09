@@ -18,7 +18,7 @@ public class Client {
     private String UID; //kljuc u Firebaseu
     private double lastKnownLat; //poslednja poznata lat koordinata, treba cesto da se azurira
     private double lastKnownlongi; //poslednja poznata longi kooridnata
-    private ArrayList<Client> listOfFriends; //lista prijatelja
+    private ArrayList<String> listOfFriendsUIDs; //lista prijatelja
     private HashMap<String,VehicleService> listOfAddedServices; //lista servisa koje je dodao korisnik
     private int reviewsCount; //broji koliko puta je ocenjivao servise
 
@@ -31,7 +31,7 @@ public class Client {
         phoneNumber=_brojTelefona;
         email=_email;
         listOfCars = new HashMap<String, Vehicle>();
-        listOfFriends = new ArrayList<Client>();
+        listOfFriendsUIDs = new ArrayList<String>();
         UID = uid;
         requests = new HashMap<>();
         primljenePoruke = new HashMap<>();
@@ -133,12 +133,12 @@ public class Client {
         this.lastKnownlongi = lastKnownlongi;
     }
 
-    public ArrayList<Client> getListOfFriends() {
-        return listOfFriends;
+    public ArrayList<String> getListOfFriendsUIDs() {
+        return listOfFriendsUIDs;
     }
 
-    public void setListOfFriends(ArrayList<Client> listOfFriends) {
-        this.listOfFriends = listOfFriends;
+    public void setListOfFriendsUIDs(ArrayList<String> listOfFriends) {
+        this.listOfFriendsUIDs = listOfFriends;
     }
 
     public int getReviewsCount() {

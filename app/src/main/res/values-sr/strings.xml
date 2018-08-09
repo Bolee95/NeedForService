@@ -233,4 +233,8 @@
     <string name="enableRadius">Filter sa radiusom ukljucen</string>
     <string name="radius">Radius</string>
 
+    <!-- Stringovi za dodavanje prijatelja -->
+    <string name="addNewFriend">Dodaj novog prijatelja</string>
+    <string name="searchFriends">Pretrazi prijatelje</string>
+
 </resources>

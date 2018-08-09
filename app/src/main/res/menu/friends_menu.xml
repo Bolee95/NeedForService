@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/addFriends"
+        android:orderInCategory="100"
+        app:showAsAction="always"
+        android:title="@string/addNewFriend"
+
+        android:icon="@drawable/baseline_add_white_18dp"/>
+    <item
+        android:id="@+id/searchFriends"
+        android:icon="@drawable/baseline_search_white_18dp"
+        app:showAsAction="always"
+        android:title="@string/searchFriends" />
+</menu>

@@ -236,4 +236,8 @@
     <string name="enableRadius">Radius enabled</string>
     <string name="radius">Radius</string>
 
+    <!-- Stringovi za dodavanje prijatelja -->
+    <string name="addNewFriend">Add new friend</string>
+    <string name="searchFriends">Search friends</string>
+
 </resources>

@@ -238,4 +238,9 @@
     <string name="radius">Radius</string>
     <string name="FriendsButtonText">Friends</string>
 
+
+    <!-- Stringovi za dodavanje prijatelja -->
+    <string name="addNewFriend">Add new friend</string>
+    <string name="searchFriends">Search friends</string>
+
 </resources>
