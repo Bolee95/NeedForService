@@ -6,6 +6,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -27,6 +28,8 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
+import com.google.android.gms.maps.model.Circle;
+import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
@@ -89,6 +92,7 @@ public class NewMapActivity extends AppCompatActivity implements OnMapReadyCallb
     private boolean firstTimeLocated = true;
     private Client currentClient;
     private boolean nightMode;
+    private Circle circle;
 
     LocationManager mLocationManager;
 
@@ -115,15 +119,42 @@ public class NewMapActivity extends AppCompatActivity implements OnMapReadyCallb
         listOfFriends = new ArrayList<Client>();
         friendsServices = new ArrayList<VehicleService>();
 
+        filterRadius.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (radiusFilterEnabled.isChecked())
+                {
+                    if (filterRadius.getText().toString() != "") {
+                        circle = mMap.addCircle(new CircleOptions()
+                                .center(new LatLng(currentClient.getLastKnownLat(), currentClient.getLastKnownlongi()))
+                                .radius(Float.parseFloat(filterRadius.getText().toString()))
+                                .strokeColor(Color.BLUE)
+                                .fillColor(R.color.radius));
+                        filterMapWithRadius();
+                    }
+
+                }
+                else
+                {
+                    filterMap();
+                }
+            }
+        });
+
 
         //radiusFilterEnabled onClickListener
         radiusFilterEnabled.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (radiusFilterEnabled.isChecked())
+                {
                     filterRadius.setEnabled(true);
-                else
+
+            }
+                else {
                     filterRadius.setEnabled(false);
+                    filterMap();
+                }
             }
         });
 
@@ -174,7 +205,7 @@ public class NewMapActivity extends AppCompatActivity implements OnMapReadyCallb
                 //Ovo dugme ce da vodi na augmented reality mod
             }
         });
-
+        //region EventListeners
         mChildEventListener2 = new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
@@ -285,6 +316,77 @@ public class NewMapActivity extends AppCompatActivity implements OnMapReadyCallb
         };
 
         friendsDatabaseReference.addChildEventListener(friendsEventListener);
+        //endregion
+    }
+
+    private void filterMapWithRadius()
+    {
+        mMap.clear();
+        float[] results = new float[100];
+        float radius = Float.parseFloat(filterRadius.getText().toString());
+        circle = mMap.addCircle(new CircleOptions()
+                .center(new LatLng(currentClient.getLastKnownLat(), currentClient.getLastKnownlongi()))
+                .radius(Float.parseFloat(filterRadius.getText().toString()))
+                .strokeColor(R.color.colorAccent)
+                .fillColor(R.color.radius));
+        for (VehicleService temp : services
+                ) {
+
+            if (temp.getAddedByUser() != null) {
+                if (temp.getAddedByUser() == true) {
+                    Location.distanceBetween(currentClient.getLastKnownLat(),currentClient.getLastKnownlongi(),temp.getLat(),temp.getLongi(),results);
+                    if (results[0] < radius) {
+                        mMap.addMarker(new MarkerOptions()
+                                .position(new LatLng(temp.getLat(), temp.getLongi()))
+                                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
+                    }
+                } else {
+                    Location.distanceBetween(currentClient.getLastKnownLat(),currentClient.getLastKnownlongi(),temp.getLat(),temp.getLongi(),results);
+                    if (results[0] < radius) {
+                        mMap.addMarker(new MarkerOptions()
+                                .position(new LatLng(temp.getLat(), temp.getLongi()))
+                                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)));
+                    }
+                }
+            }
+
+        }
+
+
+        if (showFriendsMarkers.isChecked()) {
+            for (VehicleService temp :
+                    friendsServices) {
+                Location.distanceBetween(currentClient.getLastKnownLat(),currentClient.getLastKnownlongi(),temp.getLat(),temp.getLongi(),results);
+                if (results[0] < radius) {
+                    //U zavisnosti da li li mogu da se prikazu servisi prijatelja
+                    //friendsServices
+                    //HashMap<String,VehicleService> tempList = temp.getListOfAddedServices();
+                    mMap.addMarker(new MarkerOptions()
+                            .position(new LatLng(temp.getLat(), temp.getLongi()))
+                            .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
+                }
+            }
+
+        }
+
+        if (showFriends.isChecked())
+        //U zavisnosti od toga da li je dozvoljeno da se prikazu prijatelji, uzimaju se njihove lokacije sa
+        //listOfFriends se prikazuje
+        {
+            for (Client temp :
+                    listOfFriends) {
+                Location.distanceBetween(currentClient.getLastKnownLat(),currentClient.getLastKnownlongi(),temp.getLastKnownLat(),temp.getLastKnownlongi(),results);
+                if (results[0] < radius) {
+
+                    mMap.addMarker(new MarkerOptions()
+                            .position(new LatLng(temp.getLastKnownLat(), temp.getLastKnownlongi()))
+                            .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ROSE)));
+                }
+
+            }
+        }
+
+
     }
 
     private void filterMap() {

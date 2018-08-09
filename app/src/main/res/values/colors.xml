@@ -22,9 +22,11 @@
     <color name="background_material_dark">#213c46</color>
 
 
+
     <!-- Nove boje -->
     <color name="colorAccent">#23d6a5</color>
     <color name="background">#092631</color>
     <color name="backgroundLight">#213c46</color>
     <color name="secondary_text_material_light">#8a5d4646</color>
+    <color name="radius">#bb1bcad0</color>
 </resources>
