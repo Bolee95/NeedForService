@@ -1,6 +1,8 @@
 package ynca.nfs.Models;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 
 public class Client {
@@ -16,7 +18,7 @@ public class Client {
     private String UID; //kljuc u Firebaseu
     private double lastKnownLat; //poslednja poznata lat koordinata, treba cesto da se azurira
     private double lastKnownlongi; //poslednja poznata longi kooridnata
-    private HashMap<String,Client> listOfFriends; //lista prijatelja
+    private ArrayList<Client> listOfFriends; //lista prijatelja
     private HashMap<String,VehicleService> listOfAddedServices; //lista servisa koje je dodao korisnik
     private int reviewsCount; //broji koliko puta je ocenjivao servise
 
@@ -29,7 +31,7 @@ public class Client {
         phoneNumber=_brojTelefona;
         email=_email;
         listOfCars = new HashMap<String, Vehicle>();
-        listOfFriends = new HashMap<String, Client>();
+        listOfFriends = new ArrayList<Client>();
         UID = uid;
         requests = new HashMap<>();
         primljenePoruke = new HashMap<>();
@@ -131,11 +133,11 @@ public class Client {
         this.lastKnownlongi = lastKnownlongi;
     }
 
-    public HashMap<String, Client> getListOfFriends() {
+    public ArrayList<Client> getListOfFriends() {
         return listOfFriends;
     }
 
-    public void setListOfFriends(HashMap<String, Client> listOfFriends) {
+    public void setListOfFriends(ArrayList<Client> listOfFriends) {
         this.listOfFriends = listOfFriends;
     }
 

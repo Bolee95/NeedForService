@@ -14,7 +14,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
-    <Button
+
+        <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/NavListButton1"
@@ -53,6 +54,15 @@
         android:textSize="18dp"
         android:layout_marginTop="10dp"
         android:background="@drawable/rounded_button"/>
+
+        <Button
+            android:id="@+id/NavListFriendsButton"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/rounded_button"
+            android:text="@string/FriendsButtonText"
+            android:textSize="18dp" />
 
         <Button
             android:id="@+id/SignOutBtn"

@@ -113,7 +113,8 @@
             android:label="@string/title_activity_new_map" />
         <activity
             android:name=".Activities.clientActivities.addNewServiceActivity"
-            android:label="@string/title_activity_add_new_service"></activity>
+            android:label="@string/title_activity_add_new_service" />
+        <activity android:name=".Activities.clientActivities.FriendsActivity"></activity>
     </application>
 
 </manifest>

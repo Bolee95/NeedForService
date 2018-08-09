@@ -43,6 +43,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import ynca.nfs.Activities.clientActivities.Client_Inbox_Activity;
+import ynca.nfs.Activities.clientActivities.FriendsActivity;
 import ynca.nfs.Activities.clientActivities.addVehicleFormActivity;
 import ynca.nfs.Activities.clientActivities.Feedback_activity;
 import ynca.nfs.Activities.clientActivities.Info_client;
@@ -98,15 +99,17 @@ public class mainScreenClientActivity extends AppCompatActivity implements ItemL
     private TextView NameAndSurr;
     private TextView Descript;
 
-    //Dugmici iz navigacionog bara
+    //region NavBar Buttons Declarations
     private  Button NovoVozilo;
     private  Button testDugme;
     private Button testMapa;
     private ImageView slikaKlijent;
     private Button InboxBtn;
     private Button NikolaTest;
+    private Button FriendsButton;
     private Button signOutBtn;
     private RatingBar rating;
+    //endregion
 
 
 
@@ -119,13 +122,20 @@ public class mainScreenClientActivity extends AppCompatActivity implements ItemL
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_screen_client);
+
+        //region Views Initialization
+
         NovoVozilo = (Button) findViewById(R.id.NavListButton1);
         slikaKlijent = (ImageView) findViewById(R.id.imageViewNavBarClient);
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerList = (LinearLayout) findViewById(R.id.headerView);
         navBar = (NavigationView) findViewById(R.id.nav_view);
-       // SOSCallClient = (Button) findViewById(R.id.NavListButton4);
+        // SOSCallClient = (Button) findViewById(R.id.NavListButton4);
         signOutBtn = (Button) findViewById(R.id.SignOutBtn);
+        FriendsButton = (Button) findViewById(R.id.NavListFriendsButton);
+        //endregion
+
+
         servisi = new ArrayList<>();
         poruke = new HashMap<>();
         listaProsecnihOcena = new ArrayList<Float>();
@@ -143,17 +153,21 @@ public class mainScreenClientActivity extends AppCompatActivity implements ItemL
 
         mFirebaseStorage = FirebaseStorage.getInstance();
         mStorageReference = mFirebaseStorage.getReference();
-        //test = (TextView) findViewById(R.id.main_menu_header);
+
+
         //deo sa recycleom
         recycler = (RecyclerView) findViewById((R.id.RecycleViewClient));
         GridLayoutManager layoutManager = new GridLayoutManager(this,1);
         recycler.setLayoutManager(layoutManager);
-        //      layoutManager.addView(test);
+
+
         recycler.setHasFixedSize(true);
         adapter = new ItemListClientAdapter(BROJ_PRIKAZANIH_ELEMENATA, this);
 
         NameAndSurr = (TextView) findViewById(R.id.NameAndSurnameNavBarClient_);
         Descript = (TextView) findViewById(R.id.DescriptionNavBarClient);
+
+        //region OnClick Listeners
         slikaKlijent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -161,6 +175,12 @@ public class mainScreenClientActivity extends AppCompatActivity implements ItemL
             }
         });
 
+        FriendsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getBaseContext(), FriendsActivity.class));
+            }
+        });
 
         signOutBtn.setOnClickListener(new View.OnClickListener(){
             @Override
@@ -206,6 +226,9 @@ public class mainScreenClientActivity extends AppCompatActivity implements ItemL
 
             }
         });
+        //endregion
+
+
 
 
 

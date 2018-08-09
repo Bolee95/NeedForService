@@ -236,5 +236,6 @@
     <string name="showFriends">Show friends</string>
     <string name="enableRadius">Radius enabled</string>
     <string name="radius">Radius</string>
+    <string name="FriendsButtonText">Friends</string>
 
 </resources>
