@@ -21,7 +21,7 @@ public class Client {
     private ArrayList<String> listOfFriendsUIDs; //lista prijatelja
     private HashMap<String,VehicleService> listOfAddedServices; //lista servisa koje je dodao korisnik
     private int reviewsCount; //broji koliko puta je ocenjivao servise
-
+    private int servicesAdded; //brojac koji sadrzi broj dodatih servisa --> Za rangiranje, da bi moglo odmah order da ide preko firebasea
 
     public Client(String _ime, String _prezime, String _brojTelefona, String _email, String uid)
     {
@@ -36,6 +36,7 @@ public class Client {
         requests = new HashMap<>();
         primljenePoruke = new HashMap<>();
         setReviewsCount(0);
+        setServicesAdded(0);
     }
 
     public Client(){}
@@ -157,4 +158,11 @@ public class Client {
         this.listOfAddedServices = listOfAddedServices;
     }
 
+    public int getServicesAdded() {
+        return servicesAdded;
+    }
+
+    public void setServicesAdded(int servicesAdded) {
+        this.servicesAdded = servicesAdded;
+    }
 }

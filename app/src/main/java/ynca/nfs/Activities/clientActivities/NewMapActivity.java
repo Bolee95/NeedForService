@@ -58,7 +58,7 @@ import ynca.nfs.Models.Client;
 import ynca.nfs.Models.Vehicle;
 import ynca.nfs.Models.VehicleService;
 import ynca.nfs.R;
-
+//TODO: Prvi put kad se ukljuci aplikacija i kada se da dozvola za lokaciju, ne prikazuje trenutnu lokaciju
 public class NewMapActivity extends AppCompatActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
@@ -76,6 +76,7 @@ public class NewMapActivity extends AppCompatActivity implements OnMapReadyCallb
     private ChildEventListener mChildEventListener2;
     private ChildEventListener servicesListener;
     private DatabaseReference mDatabaseReference2;
+    private ChildEventListener clientChildrenUpdateListener;
 
     public static ArrayList<VehicleService> services;
     private CameraPosition mCameraPosition;
@@ -124,7 +125,8 @@ public class NewMapActivity extends AppCompatActivity implements OnMapReadyCallb
             public void onFocusChange(View v, boolean hasFocus) {
                 if (radiusFilterEnabled.isChecked())
                 {
-                    if (filterRadius.getText().toString() != "") {
+                    String test = filterRadius.getText().toString();
+                    if (!filterRadius.getText().toString().equals("") ) {
                         circle = mMap.addCircle(new CircleOptions()
                                 .center(new LatLng(currentClient.getLastKnownLat(), currentClient.getLastKnownlongi()))
                                 .radius(Float.parseFloat(filterRadius.getText().toString()))
@@ -191,6 +193,7 @@ public class NewMapActivity extends AppCompatActivity implements OnMapReadyCallb
         mLastKnownLocation = new Location("");
         mLastKnownLocation.setLongitude(mDefaultLocation.longitude);
         mLastKnownLocation.setLatitude(mDefaultLocation.latitude);
+
 
         //Toolbar podesavanja
         Toolbar toolbar = (Toolbar) findViewById(R.id.mapToolbar);
@@ -316,6 +319,40 @@ public class NewMapActivity extends AppCompatActivity implements OnMapReadyCallb
         };
 
         friendsDatabaseReference.addChildEventListener(friendsEventListener);
+
+
+        clientChildrenUpdateListener = new ChildEventListener() {
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                Client temp = dataSnapshot.getValue(Client.class);
+                if (temp.getUID() == currentClient.getUID())
+                {
+                    currentClient.setServicesAdded(temp.getServicesAdded());
+                }
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        };
+        mDatabaseReference1.addChildEventListener(clientChildrenUpdateListener);
+
         //endregion
     }
 
@@ -459,6 +496,10 @@ public class NewMapActivity extends AppCompatActivity implements OnMapReadyCallb
             newService.putExtra("long",(Double) mLastKnownLocation.getLongitude());
             newService.putExtra("lat",(Double) mLastKnownLocation.getLatitude());
             newService.putExtra("uid",(String) currentClient.getUID());
+
+
+            //newService.putExtra("servicesAdded",currentClient.getServicesAdded());
+
             startActivity(newService);
         }
         else if (id == R.id.switchNightMode)
@@ -580,6 +621,7 @@ public class NewMapActivity extends AppCompatActivity implements OnMapReadyCallb
                     PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION);
         }
         if (mLocationPermissionGranted) {
+            mMap.setMyLocationEnabled(true);
             mLocationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
             mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, (long) 1,
                     (float) 0.1, mLocationListener);
