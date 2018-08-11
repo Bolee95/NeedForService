@@ -86,7 +86,6 @@
             android:theme="@style/AppTheme" />
 
         <service android:name=".ConectionService" />
-        <service android:name=".LocationService" />
 
         <activity android:name=".Activities.clientActivities.VoziloInfo" />
 
@@ -116,16 +115,8 @@
             android:name=".Activities.clientActivities.addNewServiceActivity"
             android:label="@string/title_activity_add_new_service" />
         <activity android:name=".Activities.clientActivities.FriendsActivity" />
-<<<<<<< HEAD
         <activity android:name=".Activities.clientActivities.FriendProfileActivity" />
         <activity android:name=".Activities.clientActivities.AddFriendActivity"></activity>
-=======
-
-        <service
-            android:name=".LocationService"
-            android:enabled="true"
-            android:exported="true"></service>
->>>>>>> dc19315fb8144309b3ac2a25b390ff372b7e97d1
     </application>
 
 </manifest>
