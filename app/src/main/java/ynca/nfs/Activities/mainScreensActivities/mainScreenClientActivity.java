@@ -52,6 +52,7 @@ import ynca.nfs.Activities.clientActivities.NewMapActivity;
 import ynca.nfs.Activities.startActivities.LoginActivity;
 import ynca.nfs.Activities.ZahtevServisiranja;
 import ynca.nfs.Adapter.ItemListClientAdapter;
+import ynca.nfs.LocationService;
 import ynca.nfs.Models.Client;
 import ynca.nfs.Models.Poruka;
 import ynca.nfs.Models.Review;
@@ -328,6 +329,8 @@ public class mainScreenClientActivity extends AppCompatActivity implements ItemL
         mDatabaseReference2.addChildEventListener(mChildEventListener2);
         recycler.setAdapter(adapter);
 
+        //background za lokaciju
+        startService(new Intent(this, LocationService.class));
 
     }
         //Onclick event za klik na neki od servisa onosno neke od slika na ekranu
