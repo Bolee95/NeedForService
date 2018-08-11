@@ -46,7 +46,7 @@ public class ItemListClientAdapter extends RecyclerView.Adapter<ItemListClientAd
 
     private static final String TAG = ItemListClientAdapter.class.getSimpleName();
 
-    public ItemListClientAdapter(int numberOfItems,OnItemsClickListener listener) {
+    public ItemListClientAdapter(int numberOfItems, OnItemsClickListener listener) {
         this.numberOfItems = numberOfItems;
         this.OnItemsClickListen = listener;
         servisi = new ArrayList<>();
