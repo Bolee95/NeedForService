@@ -6,6 +6,7 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.os.Bundle;
 import android.app.Activity;
+import android.support.annotation.NonNull;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -27,11 +28,17 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
+import ynca.nfs.Models.Client;
 import ynca.nfs.Models.VehicleService;
 import ynca.nfs.R;
 
@@ -53,6 +60,11 @@ public class addNewServiceActivity  extends AppCompatActivity implements OnMapRe
 
     private FirebaseDatabase mFirebaseDatabase;
     private DatabaseReference mDatabaseReference;
+    private DatabaseReference clientPointsUpdateReference;
+    private ValueEventListener currentClientInfoListener;
+
+    private int servicesAddedCount;
+    private Client currentClient;
 
     private LatLng newServiceCoord;
     @Override
@@ -72,11 +84,13 @@ public class addNewServiceActivity  extends AppCompatActivity implements OnMapRe
 
 
         intent = getIntent();
+        servicesAddedCount = intent.getIntExtra("servicesAdded",0);
+
 
         mFirebaseDatabase = FirebaseDatabase.getInstance();
         String uid = intent.getStringExtra("uid");
         mDatabaseReference = mFirebaseDatabase.getReference().child("Korisnik").child("Client").child(uid).child("listOfAddedServices");
-
+        clientPointsUpdateReference = mFirebaseDatabase.getReference().child("Korisnik").child("Client").child(uid);
         addNewServiceButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -111,6 +125,12 @@ public class addNewServiceActivity  extends AppCompatActivity implements OnMapRe
                 newService.setAddedByUser(true);
                 mDatabaseReference.child(key).setValue(newService);
 
+
+                //update client points
+                Map<String,Object> pointsUpdate = new HashMap<>();
+                pointsUpdate.put("servicesAdded",currentClient.getServicesAdded()+1);
+                clientPointsUpdateReference.updateChildren(pointsUpdate);
+
                 finish();
             }
         });
@@ -144,6 +164,23 @@ public class addNewServiceActivity  extends AppCompatActivity implements OnMapRe
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.newServiceMap);
         mapFragment.getMapAsync(this);
+
+        //region EventListeners
+        currentClientInfoListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                 currentClient = dataSnapshot.getValue(Client.class);
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        };
+
+        clientPointsUpdateReference.addListenerForSingleValueEvent(currentClientInfoListener);
+        //endregion
 
 
     }
