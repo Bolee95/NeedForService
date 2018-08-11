@@ -21,8 +21,8 @@
         android:id="@+id/NavListButton1"
         android:text="@string/newVehicle"
         android:textSize="18dp"
-
-        android:layout_marginTop="10dp"
+            android:fontFamily="@font/roboto_regular"
+            android:layout_marginTop="10dp"
         android:background="@drawable/rounded_button"
         />
 
@@ -35,6 +35,7 @@
         android:textSize="18dp"
         android:layout_marginTop="10dp"
         android:background="@drawable/rounded_button"
+        android:fontFamily="@font/roboto_regular"
 
         />
     <Button
@@ -45,6 +46,7 @@
         android:textSize="18dp"
         android:layout_marginTop="10dp"
         android:background="@drawable/rounded_button"
+        android:fontFamily="@font/roboto_regular"
         />
     <Button
         android:id="@+id/NavListInboxBTN"
@@ -53,7 +55,8 @@
         android:text="@string/MessageBox"
         android:textSize="18dp"
         android:layout_marginTop="10dp"
-        android:background="@drawable/rounded_button"/>
+        android:background="@drawable/rounded_button"
+        android:fontFamily="@font/roboto_regular" />
 
         <Button
             android:id="@+id/NavListFriendsButton"
@@ -62,7 +65,8 @@
             android:layout_marginTop="10dp"
             android:background="@drawable/rounded_button"
             android:text="@string/FriendsButtonText"
-            android:textSize="18dp" />
+            android:textSize="18dp"
+            android:fontFamily="@font/roboto_regular" />
 
         <Button
             android:id="@+id/SignOutBtn"
@@ -71,7 +75,8 @@
             android:layout_marginTop="50dp"
             android:background="@drawable/rounded_transparent"
             android:text="@string/SignOut"
-            android:textSize="18dp" />
+            android:textSize="18dp"
+            android:fontFamily="@font/roboto_regular" />
     </LinearLayout>
 
 </ScrollView>
