@@ -1,6 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+
+<menu
+
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+      >
+
+
+
 
     <item
         android:id="@+id/addFriends"
@@ -13,5 +20,9 @@
         android:id="@+id/searchFriends"
         android:icon="@drawable/baseline_search_white_18dp"
         app:showAsAction="always"
-        android:title="@string/searchFriends" />
+        android:title="@string/searchFriends"
+
+        app:actionViewClass="android.support.v7.widget.SearchView"
+        />
+
 </menu>
