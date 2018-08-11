@@ -86,7 +86,6 @@ public class mainScreenClientActivity extends AppCompatActivity implements ItemL
     private ArrayList<Float> listaProsecnihOcena ;
 
     //TODO probaj da resis NavView sa listom <item>
-    //region Views ans Layouts declarations
     private TextView DialogServiceName;
     private TextView DialogAdress;
     private TextView DialogEmail;
@@ -99,7 +98,6 @@ public class mainScreenClientActivity extends AppCompatActivity implements ItemL
     private NavigationView navBar;
     private TextView NameAndSurr;
     private TextView Descript;
-    //endregion
 
     //region NavBar Buttons Declarations
     private  Button NovoVozilo;
@@ -551,7 +549,8 @@ public class mainScreenClientActivity extends AppCompatActivity implements ItemL
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
 
                 Poruka p = dataSnapshot.getValue(Poruka.class);
-
+//                if(!p.isProcitana())
+//                    BROJ_NEPROCITANIH_PORUKA++;
 
             }
 
@@ -590,7 +589,7 @@ public class mainScreenClientActivity extends AppCompatActivity implements ItemL
     @Override
     protected void onDestroy() {
         super.onDestroy();
-
+        //BROJ_NEPROCITANIH_PORUKA = 0;
     }
 }
 
