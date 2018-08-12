@@ -149,7 +149,7 @@ $RECYCLE.BIN/
 
 # Windows shortcuts
 *.lnk
-google-services.json
+# google-services.json
 .idea/misc.xml
 .idea/modules.xml
 .idea/runConfigurations.xml

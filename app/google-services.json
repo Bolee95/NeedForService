@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "410467440564",
+    "firebase_url": "https://need-for-service.firebaseio.com",
+    "project_id": "need-for-service",
+    "storage_bucket": "need-for-service.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:410467440564:android:98de65083c47e520",
+        "android_client_info": {
+          "package_name": "ynca.nfs"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "410467440564-1139djkj0o9e7ufbmgr71rnpl0m5gvdm.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "ynca.nfs",
+            "certificate_hash": "fffb2cb2b6fa5234c4acf178410c47c5e1a965a6"
+          }
+        },
+        {
+          "client_id": "410467440564-1rbv7ehqqg3ku216mkl0g9hcpvoffdgi.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyALYXWSgCClTZqXKqq8pAoHiWltpcNdb9U"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "410467440564-1rbv7ehqqg3ku216mkl0g9hcpvoffdgi.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
