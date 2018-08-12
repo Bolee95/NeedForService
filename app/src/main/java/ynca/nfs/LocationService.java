@@ -27,7 +27,8 @@ public class LocationService extends Service {
     private LocationManager mLocationManager = null;
     private static final int LOCATION_INTERVAL = 1000;
     private static final float LOCATION_DISTANCE = 0;
-    private Location mLastLocation;
+    private Location mLastClientLocation;
+    private Location mVehicleServiceLocation;
     private Client currentClient;
 
     private FirebaseDatabase mFirebaseDatabase;
@@ -64,14 +65,14 @@ public class LocationService extends Service {
     private final LocationListener mLocationListener = new LocationListener() {
         @Override
         public void onLocationChanged(Location location) {
-            mLastLocation.set(location);
+            mLastClientLocation.set(location);
 
-            currentClient.setLastKnownLat(mLastLocation.getLatitude());
-            currentClient.setLastKnownlongi(mLastLocation.getLongitude());
+            currentClient.setLastKnownLat(mLastClientLocation.getLatitude());
+            currentClient.setLastKnownlongi(mLastClientLocation.getLongitude());
 
             Map<String,Object> childUpdate = new HashMap<>();
-            childUpdate.put("lastKnownLat",mLastLocation.getLatitude());
-            childUpdate.put("lastKnownlongi",mLastLocation.getLongitude());
+            childUpdate.put("lastKnownLat",mLastClientLocation.getLatitude());
+            childUpdate.put("lastKnownlongi",mLastClientLocation.getLongitude());
             //upis u bazu
             mDatabaseReference.child(currentClient.getUID()).updateChildren(childUpdate);
         }
@@ -116,6 +117,8 @@ public class LocationService extends Service {
     }
     @Override
     public void onCreate() {
+        mLastClientLocation = new Location("");
+        mVehicleServiceLocation = new Location("");
         initializeLocationManager();
 
         //uzimanje ulogovanog klijenta
