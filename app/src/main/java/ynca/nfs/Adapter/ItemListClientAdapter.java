@@ -21,21 +21,15 @@ import java.util.ArrayList;
 import ynca.nfs.Models.VehicleService;
 import ynca.nfs.R;
 
-/**
- * Created by bolee on 21.5.17..
- */
-
 public class ItemListClientAdapter extends RecyclerView.Adapter<ItemListClientAdapter.ItemsViewHolder> {
 
     final  private OnItemsClickListener OnItemsClickListen;
-
 
     private int numberOfItems;
 
     public interface OnItemsClickListener{
         void OnItemClick(int clickItemIndex);
     }
-
 
     private  ArrayList<VehicleService> servisi;
 

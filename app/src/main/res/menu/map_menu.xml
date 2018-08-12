@@ -18,11 +18,11 @@
 
     </item>
     <item
-        android:id="@+id/mapSearch"
+        android:id="@+id/mapSearchItem"
         android:icon="@drawable/baseline_search_white_18dp"
         android:title="@string/search"
         app:showAsAction="always"
-        app:actionViewClass="android.widget.SearchView" />
+        app:actionViewClass="android.support.v7.widget.SearchView" />
    <!-- <item
         android:id="@+id/filterMap"
         android:title="Show/hide filter"

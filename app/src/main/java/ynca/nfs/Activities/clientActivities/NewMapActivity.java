@@ -3,6 +3,8 @@ package ynca.nfs.Activities.clientActivities;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -18,7 +20,10 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 
 import com.google.android.gms.maps.CameraUpdate;
@@ -45,8 +50,12 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.support.v7.widget.SearchView;
+import android.widget.RatingBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 
@@ -54,19 +63,30 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import ynca.nfs.Activities.ZahtevServisiranja;
+import ynca.nfs.Activities.mainScreensActivities.mainScreenClientActivity;
+import ynca.nfs.Adapter.SearchResultAdapter;
 import ynca.nfs.Models.Client;
+import ynca.nfs.Models.Poruka;
 import ynca.nfs.Models.Vehicle;
 import ynca.nfs.Models.VehicleService;
 import ynca.nfs.R;
 //TODO: Prvi put kad se ukljuci aplikacija i kada se da dozvola za lokaciju, ne prikazuje trenutnu lokaciju
-public class NewMapActivity extends AppCompatActivity implements OnMapReadyCallback {
+public class NewMapActivity extends AppCompatActivity implements OnMapReadyCallback, SearchResultAdapter.OnItemsClickListener {
 
+    //region properties
     private GoogleMap mMap;
     private CheckBox showFriendsMarkers;
     private CheckBox showFriends;
     private EditText filterRadius;
     private CoordinatorLayout filtersView;
+    private CoordinatorLayout searchResultView;
     private CheckBox radiusFilterEnabled;
+
+    private MenuItem searchItem;
+    private SearchView searchField;
+    private RecyclerView mRecyclerView;
+    private SearchResultAdapter mAdapter;
 
     private FirebaseDatabase mFirebaseDatabase;
     private DatabaseReference friendsDatabaseReference;
@@ -94,13 +114,16 @@ public class NewMapActivity extends AppCompatActivity implements OnMapReadyCallb
     private Client currentClient;
     private boolean nightMode;
     private Circle circle;
+    private Context mContext;
 
     LocationManager mLocationManager;
+    //endregion
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_map);
+        mContext = this;
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
@@ -108,6 +131,8 @@ public class NewMapActivity extends AppCompatActivity implements OnMapReadyCallb
 
         filtersView = (CoordinatorLayout) findViewById(R.id.mapFilter);
         filtersView.setVisibility(View.INVISIBLE);
+        searchResultView = (CoordinatorLayout) findViewById(R.id.mapSearchResultView);
+        searchResultView.setVisibility(View.INVISIBLE);
 
         showFriendsMarkers = (CheckBox) findViewById(R.id.friendsMarkers);
         showFriends = (CheckBox)  findViewById(R.id.friendsThumbnails);
@@ -116,9 +141,13 @@ public class NewMapActivity extends AppCompatActivity implements OnMapReadyCallb
         showFriends.setChecked(true);
         showFriendsMarkers.setChecked(true);
         radiusFilterEnabled = (CheckBox) findViewById(R.id.radiusFilterEnabled);
+
         nightMode = false;
         listOfFriends = new ArrayList<Client>();
         friendsServices = new ArrayList<VehicleService>();
+
+
+        initRecycler();
 
         filterRadius.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
@@ -158,6 +187,8 @@ public class NewMapActivity extends AppCompatActivity implements OnMapReadyCallb
                 }
             }
         });
+
+
 
         showFriendsMarkers.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -213,6 +244,7 @@ public class NewMapActivity extends AppCompatActivity implements OnMapReadyCallb
                 //Toast.makeText(getApplicationContext(),"EventListener Triggered",Toast.LENGTH_SHORT).show();
                 VehicleService temp = dataSnapshot.getValue(VehicleService.class);
                 services.add(temp);
+                mAdapter.add(temp);
 
                 Marker marker = mMap.addMarker(new MarkerOptions()
                         .position(new LatLng(temp.getLat(), temp.getLongi()))
@@ -249,6 +281,9 @@ public class NewMapActivity extends AppCompatActivity implements OnMapReadyCallb
 
                 VehicleService temp = dataSnapshot.getValue(VehicleService.class);
                 services.add(temp);
+                //test
+                mAdapter.add(temp);
+                 mRecyclerView.setAdapter(mAdapter);
 
                 Marker marker = mMap.addMarker(new MarkerOptions()
                         .position(new LatLng(temp.getLat(), temp.getLongi()))
@@ -351,6 +386,19 @@ public class NewMapActivity extends AppCompatActivity implements OnMapReadyCallb
         mDatabaseReference1.addChildEventListener(clientChildrenUpdateListener);
 
         //endregion
+    }
+
+
+
+    private void initRecycler()
+    {
+        mRecyclerView = (RecyclerView) findViewById(R.id.searchRecycler);
+        mRecyclerView.setHasFixedSize(true);
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
+        mRecyclerView.setLayoutManager(layoutManager);
+        mAdapter = new SearchResultAdapter(services,this);
+
+
     }
 
     private void filterMapWithRadius()
@@ -478,6 +526,43 @@ public class NewMapActivity extends AppCompatActivity implements OnMapReadyCallb
     public boolean onCreateOptionsMenu(Menu menu)
     {
         getMenuInflater().inflate(R.menu.map_menu, menu);
+
+        //region searchField event listeners and init
+        searchItem = menu.findItem(R.id.mapSearchItem);
+        searchField = (SearchView) MenuItemCompat.getActionView(searchItem);
+
+        searchField.setOnCloseListener(new SearchView.OnCloseListener() {
+            @Override
+            public boolean onClose() {
+                searchResultView.setVisibility(View.INVISIBLE);
+                return false;
+            }
+        });
+
+        searchField.setOnSearchClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (searchResultView.getVisibility() == View.INVISIBLE)
+                {
+                    searchResultView.setVisibility(View.VISIBLE);
+                }
+            }
+        });
+
+        searchField.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                searchResultView.setVisibility(View.VISIBLE);
+                mAdapter.getFilter().filter(newText);
+                return true;
+            }
+        });
+        //endregion
         return true;
     }
 
@@ -519,11 +604,11 @@ public class NewMapActivity extends AppCompatActivity implements OnMapReadyCallb
 
 
         }
-        else if (id == R.id.mapSearch)
+        else if (id == R.id.mapSearchItem)
         {
 
-           //otvara formu za pretrazivanje po odredjenom atributu i onda pozicionira kameru u zavisnosti od izabranog
-            // ili na osnovu unetog radiusa
+            //TODO: Ovo ne radi, ne ulazi u ovu funkciju kada se klikne
+            searchResultView.setVisibility(View.VISIBLE);
         }
         else
         {
@@ -659,5 +744,16 @@ public class NewMapActivity extends AppCompatActivity implements OnMapReadyCallb
             mLastKnownLocation = null;
         }
     }
+
+
+    //Onclick event za klik na neki od servisa onosno neke od slika na ekranu
+    @Override
+    public void OnItemClick(int clickItemIndex,VehicleService service) {
+        searchResultView.setVisibility(View.INVISIBLE);
+        CameraUpdate locationUpdated = CameraUpdateFactory.newLatLngZoom(
+                new LatLng(service.getLat(),service.getLongi()), 15);
+        mMap.animateCamera(locationUpdated);
+
+        }
 
 }
