@@ -376,10 +376,11 @@ public class NewMapActivity extends AppCompatActivity implements OnMapReadyCallb
                 if (temp.getUID().equals(currentClient.getUID()))
                 {
                     //ako je promenjen broj servisa, treba da se registruje promena
-                    if (currentClient.getServicesAdded() != temp.getServicesAdded())
-                    currentClient.setServicesAdded(temp.getServicesAdded());
-                    if (mMap != null)
-                        filterMap();
+                    if (currentClient.getServicesAdded() != temp.getServicesAdded()) {
+                        currentClient.setServicesAdded(temp.getServicesAdded());
+                        if (mMap != null)
+                            filterMap();
+                    }
                 }
                 //ukoliko je doslo do promene i ta promena je kod prijatelja
                 if (currentClient.getListOfFriendsUIDs() != null && currentClient.getListOfFriendsUIDs().contains(temp.getUID()))
@@ -505,7 +506,6 @@ public class NewMapActivity extends AppCompatActivity implements OnMapReadyCallb
         mMap.clear();
         for (VehicleService temp : services
                 ) {
-
             if (temp.getAddedByUser() != null) {
                 if (temp.getAddedByUser() == true) {
                     mMap.addMarker(new MarkerOptions()
@@ -637,8 +637,6 @@ public class NewMapActivity extends AppCompatActivity implements OnMapReadyCallb
         else if (id == R.id.mapSearchItem)
         {
 
-            //TODO: Ovo ne radi, ne ulazi u ovu funkciju kada se klikne
-            searchResultView.setVisibility(View.VISIBLE);
         }
         else
         {

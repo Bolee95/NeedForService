@@ -68,14 +68,8 @@ public class mainScreenClientActivity extends AppCompatActivity implements ItemL
     private DatabaseReference mDatabaseReference;
     private ValueEventListener mChildEventListener;
 
-    private FirebaseDatabase mFirebaseDatabase2;
     private DatabaseReference mDatabaseReference2;
     private ChildEventListener mChildEventListener2;
-
-
-    private FirebaseDatabase mFirebaseDatabase3;
-    private DatabaseReference mDatabaseReference3;
-    private ChildEventListener mChildEventListener3;
 
     private FirebaseStorage mFirebaseStorage;
     private StorageReference mStorageReference;
@@ -232,11 +226,7 @@ public class mainScreenClientActivity extends AppCompatActivity implements ItemL
 
         mFirebaseDatabase = FirebaseDatabase.getInstance();
         mDatabaseReference = mFirebaseDatabase.getReference().child("Korisnik").child("Client").child(user.getUid());
-        mFirebaseDatabase2 = FirebaseDatabase.getInstance();
-        mDatabaseReference2 = mFirebaseDatabase2.getReference().child("Korisnik").child("VehicleService");
-        mFirebaseDatabase3 = FirebaseDatabase.getInstance();
-        mDatabaseReference3 = mFirebaseDatabase3.getReference().child("Korisnik").child("Client")
-                .child(user.getUid()).child("primljenePoruke");
+        mDatabaseReference2 = mFirebaseDatabase.getReference().child("Korisnik").child("VehicleService");
 
 
         //region dugmad za side meni
@@ -329,10 +319,41 @@ public class mainScreenClientActivity extends AppCompatActivity implements ItemL
 
         mDatabaseReference2.addChildEventListener(mChildEventListener2);
 
-        //endregion
-        // adapter.setUserLocation(new LatLng(trenutniKlijent.getLastKnownLat(),trenutniKlijent.getLastKnownlongi()));
 
-        //background za lokaciju
+
+        //citanje trenutnog klijenta iz baze
+        mChildEventListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                if (!userFetched) {
+                    currentUser = dataSnapshot.getValue(Client.class);
+                    SharedPreferences settings = getSharedPreferences("SharedData", MODE_PRIVATE);
+                    SharedPreferences.Editor prefEditor = settings.edit();
+                    Gson gson = new Gson();
+                    String json = gson.toJson(currentUser);
+                    prefEditor.putInt("brojPoruka", 0);
+                    prefEditor.putString("TrenutniKlijent", json);
+                    prefEditor.commit();
+                    adapter.setUserLocation(new LatLng(currentUser.getLastKnownLat(), currentUser.getLastKnownlongi()));
+                    NameAndSurr.setText(currentUser.getFirstName() + " " + currentUser.getLastName());
+                    Descript.setText(currentUser.getEmail());
+                    recycler.setAdapter(adapter);
+                    userFetched = true;
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        };
+
+        mDatabaseReference.addValueEventListener(mChildEventListener);
+
+
+        //endregion
+
+        //servis u backgroundu za lokaciju
         startService(new Intent(this, LocationService.class));
 
     }
@@ -417,15 +438,7 @@ public class mainScreenClientActivity extends AppCompatActivity implements ItemL
             });
 
         }
-        public void dialPhoneNumber(String phoneNumber) {
-            Intent intent = new Intent(Intent.ACTION_DIAL);
-            intent.setData(Uri.parse("tel:" + phoneNumber));
-            if (intent.resolveActivity(getPackageManager()) != null) {
-                startActivity(intent);
-            }
 
-
-    }
     @Override
     public void onBackPressed() {
 
@@ -474,86 +487,11 @@ public class mainScreenClientActivity extends AppCompatActivity implements ItemL
             }
         });
 
-        //citanje trenutnog klijenta iz baze
-        mChildEventListener = new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-
-                if (!userFetched) {
-                    currentUser = dataSnapshot.getValue(Client.class);
-                    SharedPreferences settings = getSharedPreferences("SharedData", MODE_PRIVATE);
-                    SharedPreferences.Editor prefEditor = settings.edit();
-                    Gson gson = new Gson();
-                    String json = gson.toJson(currentUser);
-                    prefEditor.putInt("brojPoruka", 0);
-                    prefEditor.putString("TrenutniKlijent", json);
-                    //prefEditor.putInt("brojNeprocitanih", BROJ_NEPROCITANIH_PORUKA);
-                    prefEditor.commit();
-                    adapter.setUserLocation(new LatLng(currentUser.getLastKnownLat(), currentUser.getLastKnownlongi()));
-                    NameAndSurr.setText(currentUser.getFirstName() + " " + currentUser.getLastName());
-                    Descript.setText(currentUser.getEmail());
-                    recycler.setAdapter(adapter);
-                    userFetched = true;
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        };
-
-
-
-        mDatabaseReference.addValueEventListener(mChildEventListener);
-
-
-        mChildEventListener3 = new ChildEventListener() {
-            @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-
-                Poruka p = dataSnapshot.getValue(Poruka.class);
-//                if(!p.isProcitana())
-//                    BROJ_NEPROCITANIH_PORUKA++;
-
-            }
-
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-
-            }
-
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        };
-
-        mDatabaseReference3.addChildEventListener(mChildEventListener3);
-    }
-    public static void resetujBrojNeprocitanihPoruka()
-    {
-        //BROJ_NEPROCITANIH_PORUKA =0;
-    }
-    public static  void dekrementirajBrojNeprocitanihPoruka()
-    {
-        //BROJ_NEPROCITANIH_PORUKA--;
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        //BROJ_NEPROCITANIH_PORUKA = 0;
     }
 }
 

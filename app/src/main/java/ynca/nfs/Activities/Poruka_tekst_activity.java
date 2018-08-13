@@ -52,8 +52,8 @@ public class Poruka_tekst_activity extends AppCompatActivity {
         Intent i = getIntent();
         boolean bilaProcitana = i.getBooleanExtra("porukaBilaProcitana", true);
         if (bilaProcitana)
-            mainScreenClientActivity.dekrementirajBrojNeprocitanihPoruka();
-        final Poruka poruka = (Poruka) i.getSerializableExtra("PorukaZaCitanje");
+            //mainScreenClientActivity.dekrementirajBrojNeprocitanihPoruka();
+       // final Poruka poruka = (Poruka) i.getSerializableExtra("PorukaZaCitanje");
         BROJ_PORUKA = (int) i.getIntExtra("BROJ_PORUKA",-1);
         posiljaocTV = (TextView) findViewById(R.id.PosiljaocPorukeTV);
         naslovTV = (TextView) findViewById(R.id.NaslovPorukeTV);
