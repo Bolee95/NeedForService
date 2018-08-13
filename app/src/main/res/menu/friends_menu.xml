@@ -13,5 +13,6 @@
         android:id="@+id/searchFriends"
         android:icon="@drawable/baseline_search_white_18dp"
         app:showAsAction="always"
-        android:title="@string/searchFriends" />
+        android:title="@string/searchFriends"
+        app:actionViewClass="android.support.v7.widget.SearchView"/>
 </menu>

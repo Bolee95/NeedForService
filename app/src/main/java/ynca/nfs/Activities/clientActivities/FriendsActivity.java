@@ -5,6 +5,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -12,12 +13,21 @@ import android.view.View;
 
 import com.google.android.gms.maps.model.MapStyleOptions;
 
+import java.util.ArrayList;
+
+import ynca.nfs.Adapter.FriendsListAdapter;
+import ynca.nfs.Models.Client;
 import ynca.nfs.R;
 
-public class FriendsActivity extends AppCompatActivity {
+public class FriendsActivity extends AppCompatActivity implements  FriendsListAdapter.OnItemsClickListener {
 
-    //region Views Initialization
+
+    private ArrayList<Client> friends;
+
+    //region Views Declarations
     private RecyclerView recyclerView;
+    private FriendsListAdapter adapter;
+    private SearchView searchView;
 
     //endregion
 
@@ -27,15 +37,18 @@ public class FriendsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.friends_list);
 
+        friends = new ArrayList<Client>();
 
 
-        //Toolbar podesavanja
+        //region Toolbar podesavanja
         Toolbar toolbar = (Toolbar) findViewById(R.id.friendsToolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setTitle("");
 
+
+//endregion
 
 
         recyclerView = (RecyclerView) findViewById(R.id.FriendsListRecycleView);
@@ -62,6 +75,7 @@ public class FriendsActivity extends AppCompatActivity {
         if(id == R.id.addFriends)
         {
             //kliknuta opcija za dodavanje novog prijatelja
+            startActivity(new Intent(getBaseContext(), AddFriendActivity.class));
         }
         else if (id == R.id.searchFriends)
         {
@@ -73,6 +87,17 @@ public class FriendsActivity extends AppCompatActivity {
             finish();
         }
         return super.onOptionsItemSelected(item);
+
+
+
+    }
+
+    @Override
+    public void OnItemClick(int clickItemIndex) {
+        final String friendUID = friends.get(clickItemIndex).getUID();
+        Intent intent = new Intent(getBaseContext(), FriendProfileActivity.class);
+        intent.putExtra("friendUID", friendUID);
+        startActivity(intent);
 
     }
 }

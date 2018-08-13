@@ -119,7 +119,10 @@
         <service
             android:name=".LocationService"
             android:enabled="true"
-            android:exported="true"></service>
+            android:exported="true" />
+
+        <activity android:name=".Activities.clientActivities.FriendProfileActivity" />
+        <activity android:name=".Activities.clientActivities.AddFriendActivity"></activity>
     </application>
 
 </manifest>
