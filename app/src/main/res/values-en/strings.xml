@@ -94,7 +94,7 @@
     <string name="Save">Save changes</string>
     <string name="listCars">See list of cars</string>
     <string name="PorukaReplyBTN"><u>REPLY</u></string>
-    <string name="deleteCars">Delete car from list?</string>
+    <string name="deleteCars">Delete car from list</string>
 
 
     <!-- Car info strings -->

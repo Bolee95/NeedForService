@@ -60,9 +60,8 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".Activities.mainScreensActivities.mainScreenClientActivity" />
         </activity>
-        <activity android:name=".Activities.clientActivities.Map_activity" />
         <activity
-            android:name=".Activities.clientActivities.Info_client"
+            android:name=".Activities.clientActivities.clientInfoActivity"
             android:label="@string/title_activity_info_client">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -71,7 +70,7 @@
         <activity android:name=".Activities.clientActivities.ListaVozilaActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".Activities.clientActivities.Info_client" />
+                android:value=".Activities.clientActivities.clientInfoActivity" />
         </activity>
         <activity
             android:name=".Activities.clientActivities.Client_Inbox_Activity"

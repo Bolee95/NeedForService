@@ -8,6 +8,7 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.support.design.widget.NavigationView;
 import android.support.v4.content.ContextCompat;
@@ -27,6 +28,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -35,6 +37,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.gson.Gson;
@@ -46,7 +49,7 @@ import ynca.nfs.Activities.clientActivities.Client_Inbox_Activity;
 import ynca.nfs.Activities.clientActivities.FriendsActivity;
 import ynca.nfs.Activities.clientActivities.addVehicleFormActivity;
 import ynca.nfs.Activities.clientActivities.Feedback_activity;
-import ynca.nfs.Activities.clientActivities.Info_client;
+import ynca.nfs.Activities.clientActivities.clientInfoActivity;
 import ynca.nfs.Activities.clientActivities.Message_activity;
 import ynca.nfs.Activities.clientActivities.NewMapActivity;
 import ynca.nfs.Activities.startActivities.LoginActivity;
@@ -63,7 +66,7 @@ public class mainScreenClientActivity extends AppCompatActivity implements ItemL
 
     private FirebaseDatabase mFirebaseDatabase;
     private DatabaseReference mDatabaseReference;
-    private ChildEventListener mChildEventListener;
+    private ValueEventListener mChildEventListener;
 
     private FirebaseDatabase mFirebaseDatabase2;
     private DatabaseReference mDatabaseReference2;
@@ -86,7 +89,7 @@ public class mainScreenClientActivity extends AppCompatActivity implements ItemL
     private static int BROJ_NEPROCITANIH_PORUKA = 0;
     private ArrayList<Float> listaProsecnihOcena ;
 
-    //TODO probaj da resis NavView sa listom <item>
+
     private TextView DialogServiceName;
     private TextView DialogAdress;
     private TextView DialogEmail;
@@ -110,9 +113,12 @@ public class mainScreenClientActivity extends AppCompatActivity implements ItemL
     private Button FriendsButton;
     private Button signOutBtn;
     private RatingBar rating;
+    private Intent userProfile;
+    private boolean userFetched;
     //endregion
 
 
+    private Client currentUser;
 
     //DUGMICI U DIALOGU
     private  Button request;
@@ -134,23 +140,13 @@ public class mainScreenClientActivity extends AppCompatActivity implements ItemL
         // SOSCallClient = (Button) findViewById(R.id.NavListButton4);
         signOutBtn = (Button) findViewById(R.id.SignOutBtn);
         FriendsButton = (Button) findViewById(R.id.NavListFriendsButton);
+        userProfile = new Intent(this, clientInfoActivity.class);
         //endregion
 
 
         servisi = new ArrayList<>();
         poruke = new HashMap<>();
         listaProsecnihOcena = new ArrayList<Float>();
-
-
-        Window window = this.getWindow();
-        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-
-// add FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS flag to the window
-        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-
-// finally change the color
-        window.setStatusBarColor(ContextCompat.getColor(this,R.color.Black));
-
 
         mFirebaseStorage = FirebaseStorage.getInstance();
         mStorageReference = mFirebaseStorage.getReference();
@@ -160,9 +156,12 @@ public class mainScreenClientActivity extends AppCompatActivity implements ItemL
         recycler = (RecyclerView) findViewById((R.id.RecycleViewClient));
         GridLayoutManager layoutManager = new GridLayoutManager(this,1);
         recycler.setLayoutManager(layoutManager);
-
-
         recycler.setHasFixedSize(true);
+
+        //Zbog promene lokacije, poziva se value listener cesto, ovo je fleg koji zaustavlja ponovno ucitavanje
+        userFetched = false;
+
+
         adapter = new ItemListClientAdapter(BROJ_PRIKAZANIH_ELEMENATA, this);
 
         NameAndSurr = (TextView) findViewById(R.id.NameAndSurnameNavBarClient_);
@@ -172,7 +171,10 @@ public class mainScreenClientActivity extends AppCompatActivity implements ItemL
         slikaKlijent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(getBaseContext(), Info_client.class));
+
+                userProfile.putExtra("currentUser", true);
+                userProfile.putExtra("uid",currentUser.getUID());
+                startActivity(userProfile);
             }
         });
 
@@ -221,29 +223,23 @@ public class mainScreenClientActivity extends AppCompatActivity implements ItemL
                 alertDialog.show();
 
 
-//                Toast.makeText(Main_screen_client.this, getResources().getString(R.string.Signout),
-//                        Toast.LENGTH_SHORT).show();
-
-
             }
         });
         //endregion
-
-
-
-
 
         auth = FirebaseAuth.getInstance();
         user = auth.getCurrentUser();
 
         mFirebaseDatabase = FirebaseDatabase.getInstance();
-        mDatabaseReference = mFirebaseDatabase.getReference().child("Korisnik").child("Client");
+        mDatabaseReference = mFirebaseDatabase.getReference().child("Korisnik").child("Client").child(user.getUid());
         mFirebaseDatabase2 = FirebaseDatabase.getInstance();
         mDatabaseReference2 = mFirebaseDatabase2.getReference().child("Korisnik").child("VehicleService");
         mFirebaseDatabase3 = FirebaseDatabase.getInstance();
         mDatabaseReference3 = mFirebaseDatabase3.getReference().child("Korisnik").child("Client")
                 .child(user.getUid()).child("primljenePoruke");
 
+
+        //region dugmad za side meni
         NovoVozilo = (Button) findViewById(R.id.NavListButton1);
         testDugme = (Button) findViewById(R.id.NavListButton2);
         NovoVozilo.setOnClickListener(new View.OnClickListener() {
@@ -278,8 +274,9 @@ public class mainScreenClientActivity extends AppCompatActivity implements ItemL
                 startActivity(new Intent(getBaseContext(), Client_Inbox_Activity.class));
             }
         });
+        //endregion
 
-
+        //region Database event listeners
         mChildEventListener2 = new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
@@ -287,7 +284,10 @@ public class mainScreenClientActivity extends AppCompatActivity implements ItemL
                 VehicleService vehicleService = dataSnapshot.getValue(VehicleService.class);
 
                 adapter.add(vehicleService);
-                recycler.setAdapter(adapter);
+
+                //za slucaj da se ova lista ucita pre korisnika
+                if (currentUser != null)
+                    recycler.setAdapter(adapter);
                 servisi.add(vehicleService);
 
                 if(vehicleService.getReviews() == null){
@@ -326,8 +326,11 @@ public class mainScreenClientActivity extends AppCompatActivity implements ItemL
             }
         };
 
+
         mDatabaseReference2.addChildEventListener(mChildEventListener2);
-        recycler.setAdapter(adapter);
+
+        //endregion
+        // adapter.setUserLocation(new LatLng(trenutniKlijent.getLastKnownLat(),trenutniKlijent.getLastKnownlongi()));
 
         //background za lokaciju
         startService(new Intent(this, LocationService.class));
@@ -472,79 +475,37 @@ public class mainScreenClientActivity extends AppCompatActivity implements ItemL
         });
 
         //citanje trenutnog klijenta iz baze
-
-        mChildEventListener = new ChildEventListener() {
+        mChildEventListener = new ValueEventListener() {
             @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
-
-                Client k = dataSnapshot.getValue(Client.class);
-                if(k.getEmail() == null) return;
-                if(k.getEmail().equals(user.getEmail())) {
-                    trenutniKlijent = k;
-
-                    int broj = 0;
-                    if(k.getPrimljenePoruke() != null) {
-                        ArrayList<Poruka> li = new ArrayList<Poruka>(k.getPrimljenePoruke().values());
-                        for (Poruka p : li) {
-                            if (!p.isProcitana())
-                                broj++;
-                        }
-                        BROJ_NEPROCITANIH_PORUKA = broj;
-
-                        if (BROJ_NEPROCITANIH_PORUKA > 0) {
-                            InboxBtn.setText(getResources().getString(R.string.NavListInboxBtn) + "(" + Integer.toString(BROJ_NEPROCITANIH_PORUKA) + ")");
-                        } else
-                            InboxBtn.setText(getResources().getString(R.string.NavListInboxBtn));
-                    } else {
-                        InboxBtn.setText(getResources().getString(R.string.NavListInboxBtn));
-                    }
-
-                    int br;
-                    if(trenutniKlijent.getPrimljenePoruke() == null){
-                        br =0;
-                    }
-                    else{
-                        br = trenutniKlijent.getPrimljenePoruke().size();
-                    }
-
+                if (!userFetched) {
+                    currentUser = dataSnapshot.getValue(Client.class);
                     SharedPreferences settings = getSharedPreferences("SharedData", MODE_PRIVATE);
                     SharedPreferences.Editor prefEditor = settings.edit();
                     Gson gson = new Gson();
-                    String json = gson.toJson(trenutniKlijent);
-                    prefEditor.putInt("brojPoruka", br);
+                    String json = gson.toJson(currentUser);
+                    prefEditor.putInt("brojPoruka", 0);
                     prefEditor.putString("TrenutniKlijent", json);
                     //prefEditor.putInt("brojNeprocitanih", BROJ_NEPROCITANIH_PORUKA);
                     prefEditor.commit();
-                    NameAndSurr.setText(trenutniKlijent.getFirstName() + " " + trenutniKlijent.getLastName());
-                    Descript.setText(trenutniKlijent.getEmail());
+                    adapter.setUserLocation(new LatLng(currentUser.getLastKnownLat(), currentUser.getLastKnownlongi()));
+                    NameAndSurr.setText(currentUser.getFirstName() + " " + currentUser.getLastName());
+                    Descript.setText(currentUser.getEmail());
+                    recycler.setAdapter(adapter);
+                    userFetched = true;
                 }
-
-
             }
 
             @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-
-            }
-
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
+            public void onCancelled(@NonNull DatabaseError databaseError) {
 
             }
         };
 
-        mDatabaseReference.addChildEventListener(mChildEventListener);
+
+
+        mDatabaseReference.addValueEventListener(mChildEventListener);
 
 
         mChildEventListener3 = new ChildEventListener() {

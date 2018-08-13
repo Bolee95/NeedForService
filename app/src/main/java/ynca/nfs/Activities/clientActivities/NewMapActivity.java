@@ -108,7 +108,7 @@ public class NewMapActivity extends AppCompatActivity implements OnMapReadyCallb
     private LatLng mDefaultLocation;
     private static final int DEFAULT_ZOOM = 15;
     private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
-    private static final String TAG = Map_activity.class.getSimpleName();
+    //private static final String TAG = Map_activity.class.getSimpleName();
     public boolean mLocationPermissionGranted;
     private boolean firstTimeLocated = true;
     private Client currentClient;
@@ -288,6 +288,7 @@ public class NewMapActivity extends AppCompatActivity implements OnMapReadyCallb
                 Marker marker = mMap.addMarker(new MarkerOptions()
                         .position(new LatLng(temp.getLat(), temp.getLongi()))
                         .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)));
+
             }
 
             @Override
@@ -356,15 +357,44 @@ public class NewMapActivity extends AppCompatActivity implements OnMapReadyCallb
         clientChildrenUpdateListener = new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
+                Client temp = dataSnapshot.getValue(Client.class);
+                //Dodavanje prijatelja u listu i na mapi
+                if (currentClient.getListOfFriendsUIDs() != null) {
+                    if (currentClient.getListOfFriendsUIDs().contains(temp.getUID())) {
+                        listOfFriends.add(temp);
+                        //TODO: Srediti da se prikazuje thumbnail kao marker
+                        Marker marker = mMap.addMarker(new MarkerOptions()
+                                .position(new LatLng(temp.getLastKnownLat(), temp.getLastKnownlongi()))
+                                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW)));
+                    }
+                }
             }
 
             @Override
             public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                 Client temp = dataSnapshot.getValue(Client.class);
-                if (temp.getUID() == currentClient.getUID())
+                if (temp.getUID().equals(currentClient.getUID()))
                 {
+                    //ako je promenjen broj servisa, treba da se registruje promena
+                    if (currentClient.getServicesAdded() != temp.getServicesAdded())
                     currentClient.setServicesAdded(temp.getServicesAdded());
+                    if (mMap != null)
+                        filterMap();
+                }
+                //ukoliko je doslo do promene i ta promena je kod prijatelja
+                if (currentClient.getListOfFriendsUIDs() != null && currentClient.getListOfFriendsUIDs().contains(temp.getUID()))
+                {
+                    for (Client friend:
+                         listOfFriends) {
+                        if (friend.getUID().equals(temp.getUID()))
+                        {
+                            //brise se iz liste i ubacuje se isti taj ali azurirani korisnik
+                            listOfFriends.remove(friend);
+                            listOfFriends.add(temp);
+                            if (mMap != null)
+                                filterMap();
+                        }
+                    }
                 }
             }
 
@@ -701,8 +731,8 @@ public class NewMapActivity extends AppCompatActivity implements OnMapReadyCallb
         if (mLocationPermissionGranted) {
             mMap.setMyLocationEnabled(true);
             mLocationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
-            mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, (long) 1,
-                    (float) 0.1, mLocationListener);
+            mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, (long) 10000,
+                    (float) 5, mLocationListener);
         }
 
         if (mCameraPosition != null) {
@@ -712,7 +742,7 @@ public class NewMapActivity extends AppCompatActivity implements OnMapReadyCallb
                     new LatLng(mLastKnownLocation.getLatitude(),
                             mLastKnownLocation.getLongitude()), DEFAULT_ZOOM));
         } else {
-            Log.d(TAG, "Current location is null. Using defaults.");
+            //Log.d(TAG, "Current location is null. Using defaults.");
             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(mDefaultLocation, DEFAULT_ZOOM));
             mMap.getUiSettings().setMyLocationButtonEnabled(false);
         }

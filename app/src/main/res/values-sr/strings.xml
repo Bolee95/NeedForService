@@ -91,7 +91,7 @@
     <string name="Save">Zapamti promene</string>
     <string name="listCars">Vidi listu vozila</string>
     <string name="PorukaReplyBTN"><u>Odgovori</u></string>
-    <string name="deleteCars">Obrisati vozilo iz liste?</string>
+    <string name="deleteCars">Obrisati vozilo iz liste</string>
 
 
     <!-- Car info strings -->
