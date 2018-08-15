@@ -71,27 +71,18 @@ public class clientInfoActivity  extends AppCompatActivity {
 
     private Intent intent;
     private boolean isCurrentUser;
-    private String uid;
     private Geocoder mGeocoder;
     private Toolbar toolbar;
 
     private ImageView mProfilePicture;
     private ProgressDialog mProgressDialog;
 
-    //ne pipaj
-    private static final int RC_PHOTO_PICKER =  2;
+    private static final int PHOTO_PICKER =  2;
 
     private FirebaseStorage mFirebaseStorage;
     private StorageReference mStorageReference;
-    private DatabaseReference mDatabaseReference;
-    private ValueEventListener userFetchListener;
 
-    private FirebaseAuth mAuth;
-
-//    private boolean isNameChanged;
-//    private boolean isEmailChanged;
-//    private boolean isPasswordChanged;
-//    private boolean isNumberChanged;
+    private Client currentClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -112,26 +103,20 @@ public class clientInfoActivity  extends AppCompatActivity {
         mStorageReference = mFirebaseStorage.getReference();
 
         intent = getIntent();
-        isCurrentUser = intent.getBooleanExtra("currentUser", false);
-        uid = intent.getStringExtra("uid");
+        isCurrentUser = intent.getBooleanExtra("editable", false);
 
         if(!isCurrentUser)
         {
             listCars.setVisibility(View.INVISIBLE);
         }
 
-        mAuth = FirebaseAuth.getInstance();
-        mDatabaseReference = FirebaseDatabase.getInstance().getReference()
-                .child("Korisnik").child("Client").child(uid);
-
         mProfilePicture.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (isCurrentUser) {
-                    Intent intentImagePicker = new Intent(Intent.ACTION_GET_CONTENT);
-                    intent.setType("image/*");
-                    intent.putExtra(Intent.EXTRA_LOCAL_ONLY, true);
-                    startActivityForResult(Intent.createChooser(intentImagePicker, "Select Picture"), RC_PHOTO_PICKER);
+
+                    Intent galleryIntent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                    startActivityForResult(galleryIntent, PHOTO_PICKER);
 
                 }
             }
@@ -151,6 +136,16 @@ public class clientInfoActivity  extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setTitle("");
+
+
+        //Uzima is Shared servis koji treba da se prikaze
+        SharedPreferences shared = getSharedPreferences("SharedData",MODE_PRIVATE);
+        SharedPreferences.Editor editor = shared.edit();
+        Gson gson = new Gson();
+        String json = shared.getString("infoClient","");
+        currentClient = gson.fromJson(json, Client.class);
+
+        initFields();
 
         //region event Listeners
 
@@ -271,7 +266,7 @@ public class clientInfoActivity  extends AppCompatActivity {
 
         //provera da li vec ima postojeca slika
         //endregion
-        StorageReference photoRef = mStorageReference.child("photos").child(mAuth.getCurrentUser().getUid());
+        StorageReference photoRef = mStorageReference.child("photos").child(currentClient.getUID());
         photoRef.getDownloadUrl().addOnSuccessListener(this, new OnSuccessListener<Uri>() {
            @Override
            public void onSuccess(Uri uri) {
@@ -281,53 +276,43 @@ public class clientInfoActivity  extends AppCompatActivity {
                            .load(uri).into(mProfilePicture);
                    //hideProgressDialog();
                }
+               else {
+                   mProfilePicture.setImageDrawable(getResources().getDrawable(R.drawable.sport_car_logos));
+               }
+
            }
         });
 
 
 
-        userFetchListener = new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                Client temp = dataSnapshot.getValue(Client.class);
+
+    }
 
 
+    private void initFields()
+    {
+        userEmail.setText(currentClient.getEmail());
+        phoneNumber.setText(currentClient.getPhoneNumber());
+        NameAndSurname.setText(currentClient.getFirstName() + " " + currentClient.getLastName());
+        if (currentClient.getServicesAdded() == 0)
+        {
+            servicesAdded.setText("0");
+        }
+        else {
+            String serviceAdded = String.valueOf(currentClient.getServicesAdded());
+            servicesAdded.setText(serviceAdded);
+        }
 
-                userEmail.setText(temp.getEmail());
-                phoneNumber.setText(temp.getPhoneNumber());
-                NameAndSurname.setText(temp.getFirstName() + " " + temp.getLastName());
-                if (temp.getServicesAdded() == 0)
-                {
-                    servicesAdded.setText("0");
-                }
-                else {
-                    String serviceAdded = String.valueOf(temp.getServicesAdded());
-                    servicesAdded.setText(serviceAdded);
-                }
 
-
-                Address address;
-                try {
-                    address = mGeocoder.getFromLocation(temp.getLastKnownLat(), temp.getLastKnownlongi(), 1).get(0);
-                    lastKnownLocation.setText(address.getLocality() + "," + address.getCountryName());
-                }
-                catch (IOException e)
-                {
-                    lastKnownLocation.setText("Unknown");
-                }
-
+        Address address;
+        try {
+            address = mGeocoder.getFromLocation(currentClient.getLastKnownLat(), currentClient.getLastKnownlongi(), 1).get(0);
+            lastKnownLocation.setText(address.getLocality() + "," + address.getCountryName());
             }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
+            catch (IOException e)
+            {
+                lastKnownLocation.setText("Unknown");
             }
-        };
-
-        mDatabaseReference.addListenerForSingleValueEvent(userFetchListener);
-
-        //endregion
-
     }
 
     @Override
@@ -344,8 +329,6 @@ public class clientInfoActivity  extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu)
     {
         getMenuInflater().inflate(R.menu.current_client_info_menu, menu);
-
-
         editButton = menu.findItem(R.id.editClientInfo);
         if (!isCurrentUser)
         {
@@ -360,109 +343,19 @@ public class clientInfoActivity  extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item)
     {
         int id = item.getItemId();
-
-
         finish();
-
-
         return super.onOptionsItemSelected(item);
 
     }
 
-//    public void ChangeSaveButtonState() {
-//        SaveBut.setVisibility(View.VISIBLE);
-//    }
 
-//    public void alertBox() {
-//        AlertDialog.Builder dialog = new AlertDialog.Builder(this)
-//                .setTitle(getResources().getString(R.string.Changes))
-//                //.setItems(mLikelyPlaceNames, listener)
-//                .setNegativeButton(getResources().getString(R.string.No), new DialogInterface.OnClickListener() {
-//                    @Override
-//                    public void onClick(DialogInterface dialog, int which) {
-//                        dialog.dismiss();
-//                    }
-//                })
-//                .setPositiveButton(getResources().getString(R.string.Yes), new DialogInterface.OnClickListener() {
-//                    @Override
-//                    public void onClick(DialogInterface dialog, int which) {
-//                        if(isEmailChanged) {
-//                            mAuth.getCurrentUser().updateEmail(EmailClientET.getText().toString())
-//                                    .addOnCompleteListener(new OnCompleteListener<Void>() {
-//                                        @Override
-//                                        public void onComplete(@NonNull Task<Void> task) {
-//                                            if (!task.isSuccessful()) {
-//                                                try {
-//                                                    throw task.getException();
-//                                                } catch (FirebaseAuthRecentLoginRequiredException e) {
-//                                                    Toast.makeText(clientInfoActivity.this, R.string.zauzeti_serveri,
-//                                                            Toast.LENGTH_SHORT).show();
-//                                                } catch (Exception ee) {
-//                                                    //nista
-//                                                }
-//                                            } else if(task.isSuccessful()){
-//                                                mDatabaseReference.child(mAuth.getCurrentUser().getUid())
-//                                                        .child("email").setValue(EmailClientET.getText().toString());
-//                                                mAuth.signOut();
-//                                                finishAffinity();
-//                                                startActivity(new Intent(getBaseContext(), LoginActivity.class));
-//                                            }
-//                                        }
-//                                    });
-//                        }
-//
-//                        if(isNumberChanged) {
-//                            mDatabaseReference.child(mAuth.getCurrentUser().getUid())
-//                                    .child("brojTelefona").setValue(PhoneNum.getText().toString());
-//                        }
-//
-//                        if(isNameChanged) {
-//                            String[] imePrezime = User.getText().toString().split(Pattern.quote(" "));
-//                            String ime = imePrezime[0];
-//                            String prezime = imePrezime[imePrezime.length - 1];
-//                            mDatabaseReference.child(mAuth.getCurrentUser().getUid())
-//                                    .child("ime").setValue(ime);
-//                            mDatabaseReference.child(mAuth.getCurrentUser().getUid())
-//                                    .child("prezime").setValue(prezime);
-//                        }
-//
-//                        if(isPasswordChanged) {
-//                            mAuth.getCurrentUser().updatePassword(PasswordClient.getText().toString())
-//                                    .addOnCompleteListener(new OnCompleteListener<Void>() {
-//                                        @Override
-//                                        public void onComplete(@NonNull Task<Void> task) {
-//                                            if (!task.isSuccessful()) {
-//                                                try {
-//                                                    throw task.getException();
-//                                                } catch (FirebaseAuthRecentLoginRequiredException e) {
-//                                                    Toast.makeText(clientInfoActivity.this, R.string.zauzeti_serveri,
-//                                                            Toast.LENGTH_SHORT).show();
-//                                                } catch (Exception ee) {
-//                                                    //nista
-//                                                }
-//                                            } else if(task.isSuccessful()){
-//                                                mAuth.signOut();
-//                                                finishAffinity();
-//                                                startActivity(new Intent(getBaseContext(), LoginActivity.class));
-//                                            }
-//                                        }
-//                                    });
-//                        }
-//
-//                        Toast.makeText(clientInfoActivity.this, getResources().getString(R.string.ChangesSaved),
-//                                Toast.LENGTH_SHORT).show();
-//                        dialog.dismiss();
-//                    }
-//                });
-//        dialog.show();
-//    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == RC_PHOTO_PICKER && resultCode == RESULT_OK){
+        if(requestCode == PHOTO_PICKER && resultCode == RESULT_OK){
             Uri selectedImageUri = data.getData();
-            StorageReference photoRef = mStorageReference.child("photos").child(mAuth.getCurrentUser().getUid());
+            StorageReference photoRef = mStorageReference.child("photos").child(currentClient.getUID());
 
             showProgressDialog();
             photoRef.putFile(selectedImageUri).addOnSuccessListener(this, new OnSuccessListener<UploadTask.TaskSnapshot>() {

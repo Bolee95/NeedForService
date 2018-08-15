@@ -59,10 +59,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
+import java.io.Console;
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import ynca.nfs.Activities.ServiceInfoActivity;
 import ynca.nfs.Activities.ZahtevServisiranja;
 import ynca.nfs.Activities.mainScreensActivities.mainScreenClientActivity;
 import ynca.nfs.Adapter.SearchResultAdapter;
@@ -218,7 +222,6 @@ public class NewMapActivity extends AppCompatActivity implements OnMapReadyCallb
         services = new ArrayList<VehicleService>();
 
 
-
         mDefaultLocation = new LatLng(currentClient.getLastKnownLat(),currentClient.getLastKnownlongi());
         mLastKnownLocation = new Location("");
         mLastKnownLocation.setLongitude(mDefaultLocation.longitude);
@@ -249,6 +252,7 @@ public class NewMapActivity extends AppCompatActivity implements OnMapReadyCallb
                 Marker marker = mMap.addMarker(new MarkerOptions()
                         .position(new LatLng(temp.getLat(), temp.getLongi()))
                         .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
+                marker.setTag(temp);
             }
 
             @Override
@@ -281,13 +285,14 @@ public class NewMapActivity extends AppCompatActivity implements OnMapReadyCallb
 
                 VehicleService temp = dataSnapshot.getValue(VehicleService.class);
                 services.add(temp);
-                //test
                 mAdapter.add(temp);
-                 mRecyclerView.setAdapter(mAdapter);
+                mRecyclerView.setAdapter(mAdapter);
+
 
                 Marker marker = mMap.addMarker(new MarkerOptions()
                         .position(new LatLng(temp.getLat(), temp.getLongi()))
                         .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)));
+                marker.setTag(temp);
 
             }
 
@@ -329,6 +334,7 @@ public class NewMapActivity extends AppCompatActivity implements OnMapReadyCallb
                 Marker marker = mMap.addMarker(new MarkerOptions()
                         .position(new LatLng(temp.getLastKnownLat(), temp.getLastKnownlongi()))
                         .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_CYAN)));
+                marker.setTag(temp);
             }
 
             @Override
@@ -366,6 +372,7 @@ public class NewMapActivity extends AppCompatActivity implements OnMapReadyCallb
                         Marker marker = mMap.addMarker(new MarkerOptions()
                                 .position(new LatLng(temp.getLastKnownLat(), temp.getLastKnownlongi()))
                                 .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW)));
+                        marker.setTag(temp);
                     }
                 }
             }
@@ -451,14 +458,14 @@ public class NewMapActivity extends AppCompatActivity implements OnMapReadyCallb
                     if (results[0] < radius) {
                         mMap.addMarker(new MarkerOptions()
                                 .position(new LatLng(temp.getLat(), temp.getLongi()))
-                                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
+                                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN))).setTag(temp);
                     }
                 } else {
                     Location.distanceBetween(currentClient.getLastKnownLat(),currentClient.getLastKnownlongi(),temp.getLat(),temp.getLongi(),results);
                     if (results[0] < radius) {
                         mMap.addMarker(new MarkerOptions()
                                 .position(new LatLng(temp.getLat(), temp.getLongi()))
-                                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)));
+                                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE))).setTag(temp);
                     }
                 }
             }
@@ -476,7 +483,7 @@ public class NewMapActivity extends AppCompatActivity implements OnMapReadyCallb
                     //HashMap<String,VehicleService> tempList = temp.getListOfAddedServices();
                     mMap.addMarker(new MarkerOptions()
                             .position(new LatLng(temp.getLat(), temp.getLongi()))
-                            .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
+                            .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE))).setTag(temp);
                 }
             }
 
@@ -493,7 +500,7 @@ public class NewMapActivity extends AppCompatActivity implements OnMapReadyCallb
 
                     mMap.addMarker(new MarkerOptions()
                             .position(new LatLng(temp.getLastKnownLat(), temp.getLastKnownlongi()))
-                            .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ROSE)));
+                            .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ROSE))).setTag(temp);
                 }
 
             }
@@ -510,11 +517,11 @@ public class NewMapActivity extends AppCompatActivity implements OnMapReadyCallb
                 if (temp.getAddedByUser() == true) {
                     mMap.addMarker(new MarkerOptions()
                             .position(new LatLng(temp.getLat(), temp.getLongi()))
-                            .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
+                            .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN))).setTag(temp);
                 } else {
                     mMap.addMarker(new MarkerOptions()
                             .position(new LatLng(temp.getLat(), temp.getLongi()))
-                            .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)));
+                            .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE))).setTag(temp);
                 }
             }
 
@@ -529,7 +536,7 @@ public class NewMapActivity extends AppCompatActivity implements OnMapReadyCallb
                 //HashMap<String,VehicleService> tempList = temp.getListOfAddedServices();
                 mMap.addMarker(new MarkerOptions()
                         .position(new LatLng(temp.getLat(), temp.getLongi()))
-                        .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
+                        .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE))).setTag(temp);
             }
 
         }
@@ -543,13 +550,15 @@ public class NewMapActivity extends AppCompatActivity implements OnMapReadyCallb
 
                 mMap.addMarker(new MarkerOptions()
                         .position(new LatLng(temp.getLastKnownLat(), temp.getLastKnownlongi()))
-                        .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ROSE)));
+                        .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ROSE))).setTag(temp);
 
             }
         }
 
 
     }
+
+
 
 
     @Override
@@ -672,10 +681,68 @@ public class NewMapActivity extends AppCompatActivity implements OnMapReadyCallb
      */
     @Override
     public void onMapReady(GoogleMap googleMap) {
+
         mMap = googleMap;
+
+        mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+            @Override
+            public boolean onMarkerClick(Marker marker) {
+                Object temp = marker.getTag();
+
+                if (temp instanceof VehicleService)
+                {
+                    redirectToServiceInfo((VehicleService)temp);
+                }
+                else if (temp instanceof Client)
+                {
+                    redirectToClientInfo((Client)temp);
+                }
+
+                return true;
+            }
+        });
+
         getDeviceLocation();
         updateLocationUI();
 
+    }
+
+    private void redirectToClientInfo(Client client)
+    {
+        Intent clientIntent = new Intent(this, clientInfoActivity.class);
+        clientIntent.putExtra("editable", true);
+
+        SharedPreferences settings = getSharedPreferences("SharedData", MODE_PRIVATE);
+        SharedPreferences.Editor prefEditor = settings.edit();
+        Gson gson = new Gson();
+        String json = gson.toJson(client);
+        prefEditor.putString("clientInfo", json);
+        prefEditor.commit();
+
+        startActivity(clientIntent);
+    }
+
+
+    private void redirectToServiceInfo(VehicleService service)
+    {
+        Intent serviceIntent = new Intent(this, ServiceInfoActivity.class);
+        //udaljenost servisa od korisnika
+        float[] results = new float[10];
+        Location.distanceBetween(service.getLat(),service.getLongi(),currentClient.getLastKnownLat(),currentClient.getLastKnownlongi(),results);
+        DecimalFormat df = new DecimalFormat("#.##");
+        df.setRoundingMode(RoundingMode.CEILING);
+        String result = String.valueOf(df.format(results[0]/1000));
+        serviceIntent.putExtra("distance",result);
+        serviceIntent.putExtra("editable",false);
+
+        SharedPreferences settings = getSharedPreferences("SharedData", MODE_PRIVATE);
+        SharedPreferences.Editor prefEditor = settings.edit();
+        Gson gson = new Gson();
+        String json = gson.toJson(service);
+        prefEditor.putString("infoService", json);
+        prefEditor.commit();
+
+        startActivity(serviceIntent);
     }
 
     private final LocationListener mLocationListener = new LocationListener() {

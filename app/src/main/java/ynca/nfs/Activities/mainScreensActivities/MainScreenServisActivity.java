@@ -36,10 +36,10 @@ import com.google.gson.Gson;
 
 import java.util.ArrayList;
 
-import ynca.nfs.Activities.clientActivities.Info_Servis;
 import ynca.nfs.Activities.ListaCenovnikUslugaActivity;
 import ynca.nfs.Activities.ListaZahtevaActivity;
 import ynca.nfs.Activities.Lista_Recenzija_Activity;
+import ynca.nfs.Activities.ServiceInfoActivity;
 import ynca.nfs.Activities.Servis_Inbox_Activity;
 import ynca.nfs.Activities.startActivities.LoginActivity;
 import ynca.nfs.Adapter.ListaVozilaNaServisuAdapter;
@@ -85,15 +85,6 @@ public class MainScreenServisActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_screen_servis);
 
-        Window window = this.getWindow();
-        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-
-// add FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS flag to the window
-        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-
-// finally change the color
-        window.setStatusBarColor(ContextCompat.getColor(this,R.color.Black));
-
 
         NameOfService = (TextView) findViewById(R.id.NameAndSurnameNavBarServis);
         Descript = (TextView) findViewById(R.id.DescriptionNavBarServis);
@@ -138,7 +129,7 @@ public class MainScreenServisActivity extends AppCompatActivity {
         slikaServisa.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(getBaseContext(), Info_Servis.class));
+                startActivity(new Intent(getBaseContext(), ServiceInfoActivity.class));
             }
         });
 

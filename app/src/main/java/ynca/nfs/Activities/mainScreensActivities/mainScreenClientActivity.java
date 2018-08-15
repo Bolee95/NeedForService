@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.location.Location;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -42,9 +43,12 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.gson.Gson;
 
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import ynca.nfs.Activities.ServiceInfoActivity;
 import ynca.nfs.Activities.clientActivities.Client_Inbox_Activity;
 import ynca.nfs.Activities.clientActivities.FriendsActivity;
 import ynca.nfs.Activities.clientActivities.addVehicleFormActivity;
@@ -165,10 +169,8 @@ public class mainScreenClientActivity extends AppCompatActivity implements ItemL
         slikaKlijent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                redirectToUserProfile();
 
-                userProfile.putExtra("currentUser", true);
-                userProfile.putExtra("uid",currentUser.getUID());
-                startActivity(userProfile);
             }
         });
 
@@ -332,7 +334,6 @@ public class mainScreenClientActivity extends AppCompatActivity implements ItemL
                     SharedPreferences.Editor prefEditor = settings.edit();
                     Gson gson = new Gson();
                     String json = gson.toJson(currentUser);
-                    prefEditor.putInt("brojPoruka", 0);
                     prefEditor.putString("TrenutniKlijent", json);
                     prefEditor.commit();
                     adapter.setUserLocation(new LatLng(currentUser.getLastKnownLat(), currentUser.getLastKnownlongi()));
@@ -357,85 +358,125 @@ public class mainScreenClientActivity extends AppCompatActivity implements ItemL
         startService(new Intent(this, LocationService.class));
 
     }
+        private void redirectToUserProfile()
+        {
+
+            userProfile.putExtra("editable", true);
+
+            SharedPreferences settings = getSharedPreferences("SharedData", MODE_PRIVATE);
+            SharedPreferences.Editor prefEditor = settings.edit();
+            Gson gson = new Gson();
+            String json = gson.toJson(currentUser);
+            prefEditor.putString("infoClient", json);
+            prefEditor.commit();
+
+            startActivity(userProfile);
+
+
+        }
+
+
+
         //Onclick event za klik na neki od servisa onosno neke od slika na ekranu
         @Override
         public void OnItemClick(int clickItemIndex) {
-            final VehicleService temp1 = servisi.get(clickItemIndex);
-            final float prosecnaOcena = listaProsecnihOcena.get(clickItemIndex);
-           Dialog d=new Dialog(mainScreenClientActivity.this);
-            d.setContentView(R.layout.dialogbox);
-            rating = (RatingBar) d.findViewById(R.id.ratingBar);
-            request = (Button) d.findViewById(R.id.ButtonServiceRequest);
-            sendMsg = (Button) d.findViewById(R.id.ButtonServiceMessage);
-            rateComm = (Button) d.findViewById(R.id.ButtonRateAndComment);
-            DialogEmail = (TextView) d.findViewById(R.id.SeriviceName);
-
-            rating.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
-                @Override
-                public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
-                    ratingBar.setRating(prosecnaOcena);
-                }
-            });
-
-            rateComm.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent i = new Intent(getBaseContext(), Feedback_activity.class);
-                    i.putExtra("ServisKojiSeOcenjuje", DialogEmail.getText().toString() );
-
-                    startActivity(i);
+        Intent serviceIntent = new Intent(this, ServiceInfoActivity.class);
+        VehicleService temp = servisi.get(clickItemIndex);
 
 
-                }
-            });
-            DialogAdress = (TextView) d.findViewById(R.id.ServiceAdressResult);
-            DialogServiceName = (TextView) d.findViewById(R.id.ServiceNameResult);
-            DialogEmail = (TextView) d.findViewById(R.id.ServiceEmailResult);
-            DialogNumber = (TextView) d.findViewById(R.id.ServiceNumberResult);
+        //udaljenost servisa od korisnika
+        float[] results = new float[10];
+        Location.distanceBetween(temp.getLat(),temp.getLongi(),currentUser.getLastKnownLat(),currentUser.getLastKnownlongi(),results);
+        DecimalFormat df = new DecimalFormat("#.##");
+        df.setRoundingMode(RoundingMode.CEILING);
+        String result = String.valueOf(df.format(results[0]/1000));
+        serviceIntent.putExtra("distance",result);
+        serviceIntent.putExtra("editable",false);
 
+        SharedPreferences settings = getSharedPreferences("SharedData", MODE_PRIVATE);
+        SharedPreferences.Editor prefEditor = settings.edit();
+        Gson gson = new Gson();
+        String json = gson.toJson(temp);
+        prefEditor.putString("infoService", json);
+        prefEditor.commit();
 
-            DialogAdress.setText(String.valueOf(temp1.getAddress()));
-            DialogNumber.setText(String.valueOf(temp1.getPhoneNumber()));
-            DialogEmail.setText(String.valueOf(temp1.getEmail()));
-            DialogServiceName.setText(String.valueOf(temp1.getName()));
-            rating.setRating(prosecnaOcena);
-            d.setTitle(getResources().getString(R.string.InfoAboutService));
-            d.show();
-
-            request.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    startActivity(new Intent(getBaseContext(), ZahtevServisiranja.class));
-
-                }
-            });
-            sendMsg.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    SharedPreferences sp = getSharedPreferences("SharedData", MODE_PRIVATE);
-
-                    Intent i = new Intent(getBaseContext(), Message_activity.class);
-
-
-
-
-                    String mailTO = temp1.getEmail();
-                    Poruka p = new Poruka();
-                    p.setPosiljalac(mailTO);
-
-
-                    i.putExtra("MSG_DST", p);
-                    i.putExtra("isReply", true);
-
-
-
-
-                    startActivity(i);
-
-
-
-                }
-            });
+        startActivity(serviceIntent);
+//            final VehicleService temp1 = servisi.get(clickItemIndex);
+//            final float prosecnaOcena = listaProsecnihOcena.get(clickItemIndex);
+//           Dialog d=new Dialog(mainScreenClientActivity.this);
+//            d.setContentView(R.layout.dialogbox);
+//            rating = (RatingBar) d.findViewById(R.id.ratingBar);
+//            request = (Button) d.findViewById(R.id.ButtonServiceRequest);
+//            sendMsg = (Button) d.findViewById(R.id.ButtonServiceMessage);
+//            rateComm = (Button) d.findViewById(R.id.ButtonRateAndComment);
+//            DialogEmail = (TextView) d.findViewById(R.id.SeriviceName);
+//
+//            rating.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
+//                @Override
+//                public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
+//                    ratingBar.setRating(prosecnaOcena);
+//                }
+//            });
+//
+//            rateComm.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                    Intent i = new Intent(getBaseContext(), Feedback_activity.class);
+//                    i.putExtra("ServisKojiSeOcenjuje", DialogEmail.getText().toString() );
+//
+//                    startActivity(i);
+//
+//
+//                }
+//            });
+//            DialogAdress = (TextView) d.findViewById(R.id.ServiceAdressResult);
+//            DialogServiceName = (TextView) d.findViewById(R.id.ServiceNameResult);
+//            DialogEmail = (TextView) d.findViewById(R.id.ServiceEmailResult);
+//            DialogNumber = (TextView) d.findViewById(R.id.ServiceNumberResult);
+//
+//
+//            DialogAdress.setText(String.valueOf(temp1.getAddress()));
+//            DialogNumber.setText(String.valueOf(temp1.getPhoneNumber()));
+//            DialogEmail.setText(String.valueOf(temp1.getEmail()));
+//            DialogServiceName.setText(String.valueOf(temp1.getName()));
+//            rating.setRating(prosecnaOcena);
+//            d.setTitle(getResources().getString(R.string.InfoAboutService));
+//            d.show();
+//
+//            request.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                    startActivity(new Intent(getBaseContext(), ZahtevServisiranja.class));
+//
+//                }
+//            });
+//            sendMsg.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                    SharedPreferences sp = getSharedPreferences("SharedData", MODE_PRIVATE);
+//
+//                    Intent i = new Intent(getBaseContext(), Message_activity.class);
+//
+//
+//
+//
+//                    String mailTO = temp1.getEmail();
+//                    Poruka p = new Poruka();
+//                    p.setPosiljalac(mailTO);
+//
+//
+//                    i.putExtra("MSG_DST", p);
+//                    i.putExtra("isReply", true);
+//
+//
+//
+//
+//                    startActivity(i);
+//
+//
+//
+//                }
+//            });
 
         }
 

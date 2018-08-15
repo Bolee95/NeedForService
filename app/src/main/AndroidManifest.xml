@@ -105,7 +105,6 @@
         <activity android:name=".Activities.clientActivities.Feedback_activity" />
         <activity android:name=".Activities.clientActivities.Message_activity" />
         <activity android:name=".Activities.Lista_Recenzija_Activity" />
-        <activity android:name=".Activities.clientActivities.Info_Servis" />
         <activity android:name=".Activities.NovaUslugaActivity" />
         <activity
             android:name=".Activities.clientActivities.NewMapActivity"
@@ -121,7 +120,8 @@
             android:exported="true" />
 
         <activity android:name=".Activities.clientActivities.FriendProfileActivity" />
-        <activity android:name=".Activities.clientActivities.AddFriendActivity"></activity>
+        <activity android:name=".Activities.clientActivities.AddFriendActivity" />
+        <activity android:name=".Activities.ServiceInfoActivity"></activity>
     </application>
 
 </manifest>

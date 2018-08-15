@@ -32,6 +32,13 @@
     <string name="Service">Servis: </string>
     <string name="password">Lozinka...</string>
     <string name="submit">Potvrdi</string>
+
+    <string name="editTextPhoneNumber">Broj telefona...</string>
+    <string name="editTextAddress">Adresa...</string>
+    <string name="ediTextCity">Grad...</string>
+
+
+
     <!-- Strigovi za Client main screen -->
     <string name="Main_menu_header">Dobro došli. Ovde možete videti poslednja obaveštenja.</string>
     <string name="title_activity_main__screen__client">Main_Screen_Client</string>
