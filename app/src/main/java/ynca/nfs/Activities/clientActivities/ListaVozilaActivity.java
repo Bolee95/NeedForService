@@ -131,7 +131,7 @@ public class ListaVozilaActivity extends AppCompatActivity {
     public void onBackPressed() {
         super.onBackPressed();
 
-        startActivity(new Intent(ListaVozilaActivity.this, Info_client.class));
+        startActivity(new Intent(ListaVozilaActivity.this, clientInfoActivity.class));
 
     }
 }

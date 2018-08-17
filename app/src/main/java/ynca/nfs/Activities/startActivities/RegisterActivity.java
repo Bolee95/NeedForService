@@ -2,6 +2,9 @@ package ynca.nfs.Activities.startActivities;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.location.Address;
+import android.location.Geocoder;
+import android.location.Location;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
@@ -14,6 +17,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TabHost;
 import android.widget.TabHost.TabSpec;
 import android.widget.Toast;
@@ -26,6 +30,13 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
+import java.util.ListIterator;
 
 import ynca.nfs.Activities.mainScreensActivities.MainScreenServisActivity;
 import ynca.nfs.Activities.mainScreensActivities.mainScreenClientActivity;
@@ -50,25 +61,19 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     private EditText mNameOwnerService;
     private EditText mNumberService;
     private EditText mAddressService;
+    private EditText mCityService;
     private ProgressDialog mProgressDialog;
 
     private FirebaseAuth mAuth;
     private DatabaseReference mDatabase;
 
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    private Geocoder mGeocoder;
+    List<Address> locations; // za dobijanje koordinata
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
-
-        Window window = this.getWindow();
-        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-
-// add FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS flag to the window
-        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-
-// finally change the color
-        window.setStatusBarColor(ContextCompat.getColor(this,R.color.Black));
 
         //ovo je za tabove
         host = (TabHost) findViewById(R.id.TabRegistration);
@@ -98,6 +103,10 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         mNameOwnerService = (EditText) findViewById(R.id.EditTextServiceNameOwner);
         mNumberService = (EditText) findViewById(R.id.EditTextServiceNumber);
         mAddressService = (EditText) findViewById(R.id.EditTextServiceAdresa);
+        mCityService = (EditText) findViewById(R.id.EditTextCity);
+
+        //geocoder init
+        mGeocoder = new Geocoder(getApplicationContext());
 
         //buttons
         SubmitClient = (Button) findViewById(R.id.ButtonClientSubmit);
@@ -107,6 +116,138 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         SubmitService.setOnClickListener(this);
 
         mAuth = FirebaseAuth.getInstance();
+
+        locations = new List<Address>() {
+            //region podesavanje liste
+            @Override
+            public int size() {
+                return this.size();
+            }
+
+            @Override
+            public boolean isEmpty() {
+                if (this.size() == 0) {
+                    return true;
+                }
+                else
+                    return false;
+            }
+
+            @Override
+            public boolean contains(Object o) {
+                return false;
+            }
+
+            @NonNull
+            @Override
+            public Iterator<Address> iterator() {
+                return null;
+            }
+
+            @NonNull
+            @Override
+            public Object[] toArray() {
+                return new Object[0];
+            }
+
+            @NonNull
+            @Override
+            public <T> T[] toArray(@NonNull T[] a) {
+                return null;
+            }
+
+            @Override
+            public boolean add(Address address) {
+                this.add(address);
+                return true;
+            }
+
+            @Override
+            public boolean remove(Object o) {
+                return false;
+            }
+
+            @Override
+            public boolean containsAll(@NonNull Collection<?> c) {
+                return false;
+            }
+
+            @Override
+            public boolean addAll(@NonNull Collection<? extends Address> c) {
+                return false;
+            }
+
+            @Override
+            public boolean addAll(int index, @NonNull Collection<? extends Address> c) {
+                return false;
+            }
+
+            @Override
+            public boolean removeAll(@NonNull Collection<?> c) {
+                return false;
+            }
+
+            @Override
+            public boolean retainAll(@NonNull Collection<?> c) {
+                return false;
+            }
+
+            @Override
+            public void clear() {
+
+            }
+
+            @Override
+            public Address get(int index) {
+                return  this.get(index);
+
+            }
+
+            @Override
+            public Address set(int index, Address element) {
+                return null;
+            }
+
+            @Override
+            public void add(int index, Address element) {
+
+            }
+
+            @Override
+            public Address remove(int index) {
+                return null;
+            }
+
+            @Override
+            public int indexOf(Object o) {
+                return 0;
+            }
+
+            @Override
+            public int lastIndexOf(Object o) {
+                return 0;
+            }
+
+            @NonNull
+            @Override
+            public ListIterator<Address> listIterator() {
+                return null;
+            }
+
+            @NonNull
+            @Override
+            public ListIterator<Address> listIterator(int index) {
+                return null;
+            }
+
+            @NonNull
+            @Override
+            public List<Address> subList(int fromIndex, int toIndex) {
+                return null;
+            }
+            //endregion
+        };
+
     }
 
     private void createAccount(String email, String password) {
@@ -273,6 +414,25 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                         mEmailViewService.getText().toString(),
                         user.getUid());
                 vehicleService.setAddedByUser(false);
+                vehicleService.setCity(mCityService.getText().toString());
+
+                //dodavanje koordinata
+
+                try {
+                    locations = mGeocoder.getFromLocationName(vehicleService.getAddress() + "," + vehicleService.getCity(), 1);
+                }
+                catch (IOException ex)
+                {
+                    vehicleService.setLongi(0);
+                    vehicleService.setLongi(0);
+                }
+                if (!locations.isEmpty())
+                {
+                    vehicleService.setLongi(locations.get(0).getLongitude());
+                    vehicleService.setLat(locations.get(0).getLatitude());
+                }
+
+
                 mDatabase.child("Korisnik").child("VehicleService").child(user.getUid()).setValue(vehicleService);
                 hideProgressDialog();
                 startActivity(new Intent(getBaseContext(), MainScreenServisActivity.class));

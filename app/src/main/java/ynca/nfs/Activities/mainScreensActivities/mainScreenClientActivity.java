@@ -5,9 +5,11 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.location.Location;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.support.design.widget.NavigationView;
 import android.support.v4.content.ContextCompat;
@@ -27,6 +29,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -35,18 +38,22 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.gson.Gson;
 
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import ynca.nfs.Activities.ServiceInfoActivity;
 import ynca.nfs.Activities.clientActivities.Client_Inbox_Activity;
 import ynca.nfs.Activities.clientActivities.FriendsActivity;
 import ynca.nfs.Activities.clientActivities.addVehicleFormActivity;
 import ynca.nfs.Activities.clientActivities.Feedback_activity;
-import ynca.nfs.Activities.clientActivities.Info_client;
+import ynca.nfs.Activities.clientActivities.clientInfoActivity;
 import ynca.nfs.Activities.clientActivities.Message_activity;
 import ynca.nfs.Activities.clientActivities.NewMapActivity;
 import ynca.nfs.Activities.startActivities.LoginActivity;
@@ -63,16 +70,10 @@ public class mainScreenClientActivity extends AppCompatActivity implements ItemL
 
     private FirebaseDatabase mFirebaseDatabase;
     private DatabaseReference mDatabaseReference;
-    private ChildEventListener mChildEventListener;
+    private ValueEventListener mChildEventListener;
 
-    private FirebaseDatabase mFirebaseDatabase2;
     private DatabaseReference mDatabaseReference2;
     private ChildEventListener mChildEventListener2;
-
-
-    private FirebaseDatabase mFirebaseDatabase3;
-    private DatabaseReference mDatabaseReference3;
-    private ChildEventListener mChildEventListener3;
 
     private FirebaseStorage mFirebaseStorage;
     private StorageReference mStorageReference;
@@ -86,7 +87,7 @@ public class mainScreenClientActivity extends AppCompatActivity implements ItemL
     private static int BROJ_NEPROCITANIH_PORUKA = 0;
     private ArrayList<Float> listaProsecnihOcena ;
 
-    //TODO probaj da resis NavView sa listom <item>
+
     private TextView DialogServiceName;
     private TextView DialogAdress;
     private TextView DialogEmail;
@@ -110,9 +111,12 @@ public class mainScreenClientActivity extends AppCompatActivity implements ItemL
     private Button FriendsButton;
     private Button signOutBtn;
     private RatingBar rating;
+    private Intent userProfile;
+    private boolean userFetched;
     //endregion
 
 
+    private Client currentUser;
 
     //DUGMICI U DIALOGU
     private  Button request;
@@ -134,23 +138,13 @@ public class mainScreenClientActivity extends AppCompatActivity implements ItemL
         // SOSCallClient = (Button) findViewById(R.id.NavListButton4);
         signOutBtn = (Button) findViewById(R.id.SignOutBtn);
         FriendsButton = (Button) findViewById(R.id.NavListFriendsButton);
+        userProfile = new Intent(this, clientInfoActivity.class);
         //endregion
 
 
         servisi = new ArrayList<>();
         poruke = new HashMap<>();
         listaProsecnihOcena = new ArrayList<Float>();
-
-
-        Window window = this.getWindow();
-        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-
-// add FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS flag to the window
-        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-
-// finally change the color
-        window.setStatusBarColor(ContextCompat.getColor(this,R.color.Black));
-
 
         mFirebaseStorage = FirebaseStorage.getInstance();
         mStorageReference = mFirebaseStorage.getReference();
@@ -160,9 +154,12 @@ public class mainScreenClientActivity extends AppCompatActivity implements ItemL
         recycler = (RecyclerView) findViewById((R.id.RecycleViewClient));
         GridLayoutManager layoutManager = new GridLayoutManager(this,1);
         recycler.setLayoutManager(layoutManager);
-
-
         recycler.setHasFixedSize(true);
+
+        //Zbog promene lokacije, poziva se value listener cesto, ovo je fleg koji zaustavlja ponovno ucitavanje
+        userFetched = false;
+
+
         adapter = new ItemListClientAdapter(BROJ_PRIKAZANIH_ELEMENATA, this);
 
         NameAndSurr = (TextView) findViewById(R.id.NameAndSurnameNavBarClient_);
@@ -172,7 +169,8 @@ public class mainScreenClientActivity extends AppCompatActivity implements ItemL
         slikaKlijent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(getBaseContext(), Info_client.class));
+                redirectToUserProfile();
+
             }
         });
 
@@ -221,29 +219,19 @@ public class mainScreenClientActivity extends AppCompatActivity implements ItemL
                 alertDialog.show();
 
 
-//                Toast.makeText(Main_screen_client.this, getResources().getString(R.string.Signout),
-//                        Toast.LENGTH_SHORT).show();
-
-
             }
         });
         //endregion
-
-
-
-
 
         auth = FirebaseAuth.getInstance();
         user = auth.getCurrentUser();
 
         mFirebaseDatabase = FirebaseDatabase.getInstance();
-        mDatabaseReference = mFirebaseDatabase.getReference().child("Korisnik").child("Client");
-        mFirebaseDatabase2 = FirebaseDatabase.getInstance();
-        mDatabaseReference2 = mFirebaseDatabase2.getReference().child("Korisnik").child("VehicleService");
-        mFirebaseDatabase3 = FirebaseDatabase.getInstance();
-        mDatabaseReference3 = mFirebaseDatabase3.getReference().child("Korisnik").child("Client")
-                .child(user.getUid()).child("primljenePoruke");
+        mDatabaseReference = mFirebaseDatabase.getReference().child("Korisnik").child("Client").child(user.getUid());
+        mDatabaseReference2 = mFirebaseDatabase.getReference().child("Korisnik").child("VehicleService");
 
+
+        //region dugmad za side meni
         NovoVozilo = (Button) findViewById(R.id.NavListButton1);
         testDugme = (Button) findViewById(R.id.NavListButton2);
         NovoVozilo.setOnClickListener(new View.OnClickListener() {
@@ -278,8 +266,9 @@ public class mainScreenClientActivity extends AppCompatActivity implements ItemL
                 startActivity(new Intent(getBaseContext(), Client_Inbox_Activity.class));
             }
         });
+        //endregion
 
-
+        //region Database event listeners
         mChildEventListener2 = new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
@@ -287,7 +276,10 @@ public class mainScreenClientActivity extends AppCompatActivity implements ItemL
                 VehicleService vehicleService = dataSnapshot.getValue(VehicleService.class);
 
                 adapter.add(vehicleService);
-                recycler.setAdapter(adapter);
+
+                //za slucaj da se ova lista ucita pre korisnika
+                if (currentUser != null)
+                    recycler.setAdapter(adapter);
                 servisi.add(vehicleService);
 
                 if(vehicleService.getReviews() == null){
@@ -326,103 +318,168 @@ public class mainScreenClientActivity extends AppCompatActivity implements ItemL
             }
         };
 
-        mDatabaseReference2.addChildEventListener(mChildEventListener2);
-        recycler.setAdapter(adapter);
 
-        //background za lokaciju
+        mDatabaseReference2.addChildEventListener(mChildEventListener2);
+
+
+
+        //citanje trenutnog klijenta iz baze
+        mChildEventListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                if (!userFetched) {
+                    currentUser = dataSnapshot.getValue(Client.class);
+                    SharedPreferences settings = getSharedPreferences("SharedData", MODE_PRIVATE);
+                    SharedPreferences.Editor prefEditor = settings.edit();
+                    Gson gson = new Gson();
+                    String json = gson.toJson(currentUser);
+                    prefEditor.putString("TrenutniKlijent", json);
+                    prefEditor.commit();
+                    adapter.setUserLocation(new LatLng(currentUser.getLastKnownLat(), currentUser.getLastKnownlongi()));
+                    NameAndSurr.setText(currentUser.getFirstName() + " " + currentUser.getLastName());
+                    Descript.setText(currentUser.getEmail());
+                    recycler.setAdapter(adapter);
+                    userFetched = true;
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        };
+
+        mDatabaseReference.addValueEventListener(mChildEventListener);
+
+
+        //endregion
+
+        //servis u backgroundu za lokaciju
         startService(new Intent(this, LocationService.class));
 
     }
+        private void redirectToUserProfile()
+        {
+
+            userProfile.putExtra("editable", true);
+
+            SharedPreferences settings = getSharedPreferences("SharedData", MODE_PRIVATE);
+            SharedPreferences.Editor prefEditor = settings.edit();
+            Gson gson = new Gson();
+            String json = gson.toJson(currentUser);
+            prefEditor.putString("infoClient", json);
+            prefEditor.commit();
+
+            startActivity(userProfile);
+
+
+        }
+
+
+
         //Onclick event za klik na neki od servisa onosno neke od slika na ekranu
         @Override
         public void OnItemClick(int clickItemIndex) {
-            final VehicleService temp1 = servisi.get(clickItemIndex);
-            final float prosecnaOcena = listaProsecnihOcena.get(clickItemIndex);
-           Dialog d=new Dialog(mainScreenClientActivity.this);
-            d.setContentView(R.layout.dialogbox);
-            rating = (RatingBar) d.findViewById(R.id.ratingBar);
-            request = (Button) d.findViewById(R.id.ButtonServiceRequest);
-            sendMsg = (Button) d.findViewById(R.id.ButtonServiceMessage);
-            rateComm = (Button) d.findViewById(R.id.ButtonRateAndComment);
-            DialogEmail = (TextView) d.findViewById(R.id.SeriviceName);
-
-            rating.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
-                @Override
-                public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
-                    ratingBar.setRating(prosecnaOcena);
-                }
-            });
-
-            rateComm.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent i = new Intent(getBaseContext(), Feedback_activity.class);
-                    i.putExtra("ServisKojiSeOcenjuje", DialogEmail.getText().toString() );
-
-                    startActivity(i);
+        Intent serviceIntent = new Intent(this, ServiceInfoActivity.class);
+        VehicleService temp = servisi.get(clickItemIndex);
 
 
-                }
-            });
-            DialogAdress = (TextView) d.findViewById(R.id.ServiceAdressResult);
-            DialogServiceName = (TextView) d.findViewById(R.id.ServiceNameResult);
-            DialogEmail = (TextView) d.findViewById(R.id.ServiceEmailResult);
-            DialogNumber = (TextView) d.findViewById(R.id.ServiceNumberResult);
+        //udaljenost servisa od korisnika
+        float[] results = new float[10];
+        Location.distanceBetween(temp.getLat(),temp.getLongi(),currentUser.getLastKnownLat(),currentUser.getLastKnownlongi(),results);
+        DecimalFormat df = new DecimalFormat("#.##");
+        df.setRoundingMode(RoundingMode.CEILING);
+        String result = String.valueOf(df.format(results[0]/1000));
+        serviceIntent.putExtra("distance",result);
+        serviceIntent.putExtra("editable",false);
 
+        SharedPreferences settings = getSharedPreferences("SharedData", MODE_PRIVATE);
+        SharedPreferences.Editor prefEditor = settings.edit();
+        Gson gson = new Gson();
+        String json = gson.toJson(temp);
+        prefEditor.putString("infoService", json);
+        prefEditor.commit();
 
-            DialogAdress.setText(String.valueOf(temp1.getAddress()));
-            DialogNumber.setText(String.valueOf(temp1.getPhoneNumber()));
-            DialogEmail.setText(String.valueOf(temp1.getEmail()));
-            DialogServiceName.setText(String.valueOf(temp1.getName()));
-            rating.setRating(prosecnaOcena);
-            d.setTitle(getResources().getString(R.string.InfoAboutService));
-            d.show();
-
-            request.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    startActivity(new Intent(getBaseContext(), ZahtevServisiranja.class));
-
-                }
-            });
-            sendMsg.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    SharedPreferences sp = getSharedPreferences("SharedData", MODE_PRIVATE);
-
-                    Intent i = new Intent(getBaseContext(), Message_activity.class);
-
-
-
-
-                    String mailTO = temp1.getEmail();
-                    Poruka p = new Poruka();
-                    p.setPosiljalac(mailTO);
-
-
-                    i.putExtra("MSG_DST", p);
-                    i.putExtra("isReply", true);
-
-
-
-
-                    startActivity(i);
-
-
-
-                }
-            });
+        startActivity(serviceIntent);
+//            final VehicleService temp1 = servisi.get(clickItemIndex);
+//            final float prosecnaOcena = listaProsecnihOcena.get(clickItemIndex);
+//           Dialog d=new Dialog(mainScreenClientActivity.this);
+//            d.setContentView(R.layout.dialogbox);
+//            rating = (RatingBar) d.findViewById(R.id.ratingBar);
+//            request = (Button) d.findViewById(R.id.ButtonServiceRequest);
+//            sendMsg = (Button) d.findViewById(R.id.ButtonServiceMessage);
+//            rateComm = (Button) d.findViewById(R.id.ButtonRateAndComment);
+//            DialogEmail = (TextView) d.findViewById(R.id.SeriviceName);
+//
+//            rating.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
+//                @Override
+//                public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
+//                    ratingBar.setRating(prosecnaOcena);
+//                }
+//            });
+//
+//            rateComm.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                    Intent i = new Intent(getBaseContext(), Feedback_activity.class);
+//                    i.putExtra("ServisKojiSeOcenjuje", DialogEmail.getText().toString() );
+//
+//                    startActivity(i);
+//
+//
+//                }
+//            });
+//            DialogAdress = (TextView) d.findViewById(R.id.ServiceAdressResult);
+//            DialogServiceName = (TextView) d.findViewById(R.id.ServiceNameResult);
+//            DialogEmail = (TextView) d.findViewById(R.id.ServiceEmailResult);
+//            DialogNumber = (TextView) d.findViewById(R.id.ServiceNumberResult);
+//
+//
+//            DialogAdress.setText(String.valueOf(temp1.getAddress()));
+//            DialogNumber.setText(String.valueOf(temp1.getPhoneNumber()));
+//            DialogEmail.setText(String.valueOf(temp1.getEmail()));
+//            DialogServiceName.setText(String.valueOf(temp1.getName()));
+//            rating.setRating(prosecnaOcena);
+//            d.setTitle(getResources().getString(R.string.InfoAboutService));
+//            d.show();
+//
+//            request.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                    startActivity(new Intent(getBaseContext(), ZahtevServisiranja.class));
+//
+//                }
+//            });
+//            sendMsg.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                    SharedPreferences sp = getSharedPreferences("SharedData", MODE_PRIVATE);
+//
+//                    Intent i = new Intent(getBaseContext(), Message_activity.class);
+//
+//
+//
+//
+//                    String mailTO = temp1.getEmail();
+//                    Poruka p = new Poruka();
+//                    p.setPosiljalac(mailTO);
+//
+//
+//                    i.putExtra("MSG_DST", p);
+//                    i.putExtra("isReply", true);
+//
+//
+//
+//
+//                    startActivity(i);
+//
+//
+//
+//                }
+//            });
 
         }
-        public void dialPhoneNumber(String phoneNumber) {
-            Intent intent = new Intent(Intent.ACTION_DIAL);
-            intent.setData(Uri.parse("tel:" + phoneNumber));
-            if (intent.resolveActivity(getPackageManager()) != null) {
-                startActivity(intent);
-            }
 
-
-    }
     @Override
     public void onBackPressed() {
 
@@ -471,128 +528,11 @@ public class mainScreenClientActivity extends AppCompatActivity implements ItemL
             }
         });
 
-        //citanje trenutnog klijenta iz baze
-
-        mChildEventListener = new ChildEventListener() {
-            @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-
-
-                Client k = dataSnapshot.getValue(Client.class);
-                if(k.getEmail() == null) return;
-                if(k.getEmail().equals(user.getEmail())) {
-                    trenutniKlijent = k;
-
-                    int broj = 0;
-                    if(k.getPrimljenePoruke() != null) {
-                        ArrayList<Poruka> li = new ArrayList<Poruka>(k.getPrimljenePoruke().values());
-                        for (Poruka p : li) {
-                            if (!p.isProcitana())
-                                broj++;
-                        }
-                        BROJ_NEPROCITANIH_PORUKA = broj;
-
-                        if (BROJ_NEPROCITANIH_PORUKA > 0) {
-                            InboxBtn.setText(getResources().getString(R.string.NavListInboxBtn) + "(" + Integer.toString(BROJ_NEPROCITANIH_PORUKA) + ")");
-                        } else
-                            InboxBtn.setText(getResources().getString(R.string.NavListInboxBtn));
-                    } else {
-                        InboxBtn.setText(getResources().getString(R.string.NavListInboxBtn));
-                    }
-
-                    int br;
-                    if(trenutniKlijent.getPrimljenePoruke() == null){
-                        br =0;
-                    }
-                    else{
-                        br = trenutniKlijent.getPrimljenePoruke().size();
-                    }
-
-                    SharedPreferences settings = getSharedPreferences("SharedData", MODE_PRIVATE);
-                    SharedPreferences.Editor prefEditor = settings.edit();
-                    Gson gson = new Gson();
-                    String json = gson.toJson(trenutniKlijent);
-                    prefEditor.putInt("brojPoruka", br);
-                    prefEditor.putString("TrenutniKlijent", json);
-                    //prefEditor.putInt("brojNeprocitanih", BROJ_NEPROCITANIH_PORUKA);
-                    prefEditor.commit();
-                    NameAndSurr.setText(trenutniKlijent.getFirstName() + " " + trenutniKlijent.getLastName());
-                    Descript.setText(trenutniKlijent.getEmail());
-                }
-
-
-            }
-
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-
-            }
-
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        };
-
-        mDatabaseReference.addChildEventListener(mChildEventListener);
-
-
-        mChildEventListener3 = new ChildEventListener() {
-            @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-
-                Poruka p = dataSnapshot.getValue(Poruka.class);
-//                if(!p.isProcitana())
-//                    BROJ_NEPROCITANIH_PORUKA++;
-
-            }
-
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-
-            }
-
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        };
-
-        mDatabaseReference3.addChildEventListener(mChildEventListener3);
-    }
-    public static void resetujBrojNeprocitanihPoruka()
-    {
-        //BROJ_NEPROCITANIH_PORUKA =0;
-    }
-    public static  void dekrementirajBrojNeprocitanihPoruka()
-    {
-        //BROJ_NEPROCITANIH_PORUKA--;
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        //BROJ_NEPROCITANIH_PORUKA = 0;
     }
 }
 

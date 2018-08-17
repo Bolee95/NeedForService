@@ -35,6 +35,12 @@
     <string name="Service">Service: </string>
     <string name="password">Password...</string>
     <string name="submit">Submit</string>
+
+    <string name="editTextPhoneNumber">Phone number...</string>
+    <string name="editTextAddress">Address...</string>
+    <string name="ediTextCity">City...</string>
+
+
     <!-- Strigovi za Client main screen -->
     <string name="Main_menu_header">Welcome. Here you will see latest notifications.</string>
     <string name="title_activity_main__screen__client">Main_Screen_Client</string>
@@ -94,7 +100,7 @@
     <string name="Save">Save changes</string>
     <string name="listCars">See list of cars</string>
     <string name="PorukaReplyBTN"><u>REPLY</u></string>
-    <string name="deleteCars">Delete car from list?</string>
+    <string name="deleteCars">Delete car from list</string>
 
 
     <!-- Car info strings -->

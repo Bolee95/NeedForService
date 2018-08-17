@@ -73,23 +73,27 @@
 
             <Button
                 android:id="@+id/sign_in"
-                style="?android:textAppearanceSmall"
+
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:background="@drawable/rounded_button"
+                android:fontFamily="@font/roboto_regular"
                 android:text="@string/action_login"
+                android:textColor="@android:color/white"
                 android:textStyle="bold" />
 
             <Button
                 android:id="@+id/register"
-                style="?android:textAppearanceSmall"
+
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:layout_weight="1.38"
                 android:background="@drawable/rounded_button"
-                android:text="@string/register" />
+                android:fontFamily="@font/roboto_regular"
+                android:text="@string/register"
+                android:textStyle="bold" />
 
 
 

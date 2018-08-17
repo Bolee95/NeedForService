@@ -13,28 +13,6 @@
         android:descendantFocusability="beforeDescendants"
         android:focusableInTouchMode="true">
 
-        <!-- NE MORA I SLIKA ZA AUTO
-      <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:background="@color/colorPrimaryDark"
-
-                 android:descendantFocusability="beforeDescendants"
-                android:weightSum="1">
-
-
-          <ImageView
-              android:id="@+id/imageView2"
-              android:layout_width="220dp"
-              android:layout_height="200dp"
-              android:layout_gravity="center_horizontal"
-              android:background="@drawable/sport_car_logos"
-              android:gravity="bottom"
-              android:layout_weight="0.07" />
-
-      </LinearLayout> -->
-
     <LinearLayout
         android:id="@+id/linear"
         android:layout_width="match_parent"
@@ -56,12 +34,10 @@
                 android:id="@+id/ManufacturerCar"
                 android:layout_width="212dp"
                 android:layout_height="wrap_content"
-                android:background="#0000"
                 android:text="@string/Manufacturer"
                 android:gravity="left"
-
                 android:padding="16dp"
-                android:textColor="@color/Black"
+                android:textColor="@color/White"
                 android:textSize="16dp" />
 
 
@@ -71,10 +47,9 @@
                 android:textSize="16dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColorHint="#181737"
-                android:textColor="#181737"
+                android:textColorHint="@color/White"
+                android:textColor="@color/White"
                 android:maxLength="20"
-                android:background="#0000"
                 android:padding="16dp"
                 android:gravity="right"
                 />
@@ -98,9 +73,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/Model"
-                android:textColor="@color/Black"
+                android:textColor="@color/White"
 
-                android:background="#0000"
                 android:padding="16dp"
                 android:gravity="left"/>
 
@@ -111,10 +85,9 @@
                 android:textSize="16dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColorHint="#1b193b"
-                android:textColor="#181737"
+                android:textColorHint="@color/White"
+                android:textColor="@color/White"
                 android:maxLength="20"
-                android:background="#0000"
                 android:padding="16dp"
                 android:gravity="right"
                 />
@@ -141,9 +114,7 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/RegNumber"
-                android:textColor="@color/Black"
-
-                android:background="#0000"
+                android:textColor="@color/White"
                 android:padding="16dp"
                 android:gravity="left"
                 />
@@ -154,11 +125,10 @@
                 android:textSize="16dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColorHint="#1b193b"
+                android:textColorHint="@color/White"
                 android:inputType="text"
-                android:textColor="#181737"
+                android:textColor="@color/White"
                 android:maxLength="15"
-                android:background="#0000"
                 android:padding="16dp"
                 android:gravity="right"
                 />
@@ -183,9 +153,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/Chassis"
-                android:textColor="@color/Black"
-
-                android:background="#0000"
+                android:textColor="@color/White"
                 android:padding="16dp"
                 android:gravity="left"
                 />
@@ -196,11 +164,10 @@
                 android:textSize="16dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColorHint="#1b193b"
+                android:textColorHint="@color/White"
                 android:inputType="text"
-                android:textColor="#181737"
+                android:textColor="@color/White"
                 android:maxLength="15"
-                android:background="#0000"
                 android:padding="16dp"
                 android:gravity="right"
                 />
@@ -226,8 +193,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/fuel"
-                android:textColor="@color/Black"
-                android:background="#0000"
+                android:textColor="@color/White"
                 android:padding="16dp"
                 android:gravity="left"
                 />
@@ -239,11 +205,10 @@
                 android:textSize="16dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColorHint="#1b193b"
+                android:textColorHint="@color/White"
                 android:inputType="text"
-                android:textColor="#181737"
+                android:textColor="@color/White"
                 android:maxLength="12"
-                android:background="#0000"
                 android:padding="16dp"
                 android:gravity="right"
                 />
@@ -269,9 +234,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/Production"
-                    android:textColor="@color/Black"
-
-                    android:background="#0000"
+                    android:textColor="@color/White"
                     android:padding="16dp"
                     android:gravity="left"
                     />
@@ -282,10 +245,9 @@
                     android:textSize="16dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textColorHint="#181737"
+                    android:textColorHint="@color/White"
                     android:maxLength="12"
-                    android:textColor="@color/Black"
-                    android:background="#0000"
+                    android:textColor="@color/White"
                     android:padding="16dp"
                     android:gravity="right"
                     />
@@ -309,9 +271,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/Mileage"
-                android:textColor="@color/Black"
-
-                android:background="#0000"
+                android:textColor="@color/White"
                 android:padding="16dp"
                 android:gravity="left"
                 />
@@ -322,10 +282,9 @@
                 android:textSize="16dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColorHint="#181737"
-                android:textColor="@color/Black"
+                android:textColorHint="@color/White"
+                android:textColor="@color/White"
                 android:maxLength="12"
-                android:background="#0000"
                 android:padding="16dp"
                 android:gravity="right"
                 />
@@ -347,9 +306,7 @@
                 android:layout_width="199dp"
                 android:layout_height="wrap_content"
                 android:text="@string/Serviced"
-                android:textColor="@color/Black"
-
-                android:background="#0000"
+                android:textColor="@color/White"
                 android:padding="15dp"
                 android:gravity="left"
                 />
@@ -360,10 +317,8 @@
                 android:textSize="16dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColorHint="#181737"
-                android:textColor="@color/Black"
+                android:textColor="@color/White"
                 android:maxLength="12"
-                android:background="#0000"
                 android:padding="16dp"
                 android:gravity="right"
                 />
