@@ -42,8 +42,15 @@ public class SearchResultAdapter extends RecyclerView.Adapter<SearchResultAdapte
         if (mArrayList == null)
         {
             mArrayList = new ArrayList<VehicleService>();
+            mArrayList.add(s);
         }
-        mArrayList.add(s);
+        else
+        {
+            if (!mArrayList.contains(s))
+            {
+                mArrayList.add(s);
+            }
+        }
         mFilteredList = mArrayList;
     }
 
@@ -68,6 +75,21 @@ public class SearchResultAdapter extends RecyclerView.Adapter<SearchResultAdapte
         }
         else
             return mFilteredList.size();
+    }
+
+    private boolean listContains(VehicleService service)
+    {
+        if (mArrayList == null)
+        {
+            mArrayList = new ArrayList<VehicleService>();
+            return false;
+        }
+        else if (mArrayList.contains(service))
+        {
+            return  true;
+        }
+        else
+            return  false;
     }
 
     @Override

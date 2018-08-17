@@ -22,6 +22,8 @@ import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 
+import ynca.nfs.Activities.clientActivities.FeedbackActivity;
+import ynca.nfs.Activities.clientActivities.addNewServiceActivity;
 import ynca.nfs.Models.Client;
 import ynca.nfs.Models.Review;
 import ynca.nfs.Models.VehicleService;
@@ -89,6 +91,25 @@ public class ServiceInfoActivity extends AppCompatActivity {
 
 
         initFields();
+
+        requestService.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Intent toServiceIntent = new Intent(ServiceInfoActivity.this,ServiceRequestActivity.class);
+                toServiceIntent.putExtra("serviceUid",currentService.getUID());
+                startActivity(toServiceIntent);
+            }
+        });
+
+        reviewService.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent toServiceIntent = new Intent(ServiceInfoActivity.this,FeedbackActivity.class);
+                toServiceIntent.putExtra("uidOfReviewedService",currentService.getUID());
+                startActivity(toServiceIntent);
+            }
+        });
     }
 
 
@@ -99,7 +120,7 @@ public class ServiceInfoActivity extends AppCompatActivity {
         serviceLocation.setText(currentService.getAddress());
 
 
-
+        //TODO: Napraviti da se automatski updateuje rating, postaviti listener na bazu
         if (currentService.getReviews() != null)
         {
             int reviewCount = 0;
@@ -121,7 +142,12 @@ public class ServiceInfoActivity extends AppCompatActivity {
         }
         distance.setText(currentIntent.getStringExtra("distance") + " away!");
 
-
+        if (currentService.getAddedByUser())
+        {
+            requestService.setVisibility(View.INVISIBLE);
+            //TODO: Dodati da se moze review za servise dodate od strane korisnika
+            reviewService.setVisibility(View.INVISIBLE);
+        }
 
     }
 

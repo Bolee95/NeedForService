@@ -5,7 +5,7 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/Zahtev_Servisiranja_Layout"
-    tools:context="ynca.nfs.Activities.ZahtevServisiranja"
+    tools:context="ynca.nfs.Activities.ServiceRequestActivity"
    >
     <ScrollView
         android:layout_width="match_parent"
@@ -56,7 +56,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:id="@+id/usluge_servis_spinner"/>
-
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -67,10 +70,27 @@
             <EditText
                 android:id="@+id/proposed_dates_id"
                 android:inputType="date"
+                android:focusable="false"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
                 />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/proposedTime"
+                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
+                    />
+
+                <EditText
+                    android:id="@+id/proposed_time_id"
+                    android:inputType="date"
+                    android:focusable="false"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
+                    />
+            </LinearLayout>
 
             <TextView
                 android:layout_width="match_parent"

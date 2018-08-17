@@ -171,6 +171,7 @@
     <string name="MarkAsDone">Mark as done</string>
     <string name="typeOfService">Type of service:</string>
     <string name="proposedDate">Proposed date:</string>
+    <string name="proposedTime">Proposed time:</string>
     <string name="Name">Name:</string>
     <string name="OwnerName">Owner name:</string>
     <string name="Address">Address:</string>

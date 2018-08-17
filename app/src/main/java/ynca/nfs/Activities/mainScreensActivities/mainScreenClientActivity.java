@@ -1,7 +1,6 @@
 package ynca.nfs.Activities.mainScreensActivities;
 
 
-import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -12,15 +11,12 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.support.design.widget.NavigationView;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -52,12 +48,10 @@ import ynca.nfs.Activities.ServiceInfoActivity;
 import ynca.nfs.Activities.clientActivities.Client_Inbox_Activity;
 import ynca.nfs.Activities.clientActivities.FriendsActivity;
 import ynca.nfs.Activities.clientActivities.addVehicleFormActivity;
-import ynca.nfs.Activities.clientActivities.Feedback_activity;
 import ynca.nfs.Activities.clientActivities.clientInfoActivity;
-import ynca.nfs.Activities.clientActivities.Message_activity;
 import ynca.nfs.Activities.clientActivities.NewMapActivity;
 import ynca.nfs.Activities.startActivities.LoginActivity;
-import ynca.nfs.Activities.ZahtevServisiranja;
+import ynca.nfs.Activities.ServiceRequestActivity;
 import ynca.nfs.Adapter.ItemListClientAdapter;
 import ynca.nfs.LocationService;
 import ynca.nfs.Models.Client;
@@ -243,7 +237,7 @@ public class mainScreenClientActivity extends AppCompatActivity implements ItemL
         testDugme.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(getBaseContext(), ZahtevServisiranja.class));
+                startActivity(new Intent(getBaseContext(), ServiceRequestActivity.class));
             }
         });
         NovoVozilo.setOnClickListener(new View.OnClickListener() {
