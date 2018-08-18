@@ -118,7 +118,7 @@ public class Message_activity extends AppCompatActivity {
                 SharedPreferences sp = getSharedPreferences("SharedData", MODE_PRIVATE);
 
                 Gson gson = new Gson();
-                String json = sp.getString("TrenutniKlijent", "");
+                String json = sp.getString("currentClient", "");
                 Client k = gson.fromJson(json, Client.class);
                 json = sp.getString("TrenutniServis", "");
                 VehicleService s  = gson.fromJson(json, VehicleService.class );

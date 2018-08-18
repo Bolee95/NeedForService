@@ -83,7 +83,7 @@ public class carInfoActivity extends AppCompatActivity {
         SharedPreferences settings = getSharedPreferences("SharedData", MODE_PRIVATE);
 
         Gson gson = new Gson();
-        String json = settings.getString("TrenutniKlijent","");
+        String json = settings.getString("currentClient","");
         Client obj = gson.fromJson(json, Client.class);
         if (obj == null)
         {Delete.setVisibility(View.INVISIBLE);}

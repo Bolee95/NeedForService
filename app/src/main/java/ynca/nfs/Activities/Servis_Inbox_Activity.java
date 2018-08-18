@@ -95,7 +95,7 @@ public class Servis_Inbox_Activity  extends AppCompatActivity {
                 por.setProcitana(true);
 
                 Gson gson = new Gson();
-                String json = sp.getString("TrenutniKlijent", "");
+                String json = sp.getString("currentClient", "");
                 Client k = gson.fromJson(json, Client.class);
 
                 //// TODO: 6/1/2017  k je klijent kod koga poruka por treba da se update-uje

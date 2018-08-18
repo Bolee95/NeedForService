@@ -185,7 +185,7 @@ public class mainScreenClientActivity extends AppCompatActivity implements ItemL
                 SharedPreferences.Editor prefEditor = settings.edit();
                 Gson gson = new Gson();
                 String json = gson.toJson(trenutniKlijent);
-                prefEditor.putString("TrenutniKlijent", json);
+                prefEditor.putString("currentClient", json);
                 prefEditor.commit();
 
                 final AlertDialog alertDialog = new AlertDialog.Builder(v.getContext()).create();
@@ -328,7 +328,7 @@ public class mainScreenClientActivity extends AppCompatActivity implements ItemL
                     SharedPreferences.Editor prefEditor = settings.edit();
                     Gson gson = new Gson();
                     String json = gson.toJson(currentUser);
-                    prefEditor.putString("TrenutniKlijent", json);
+                    prefEditor.putString("currentClient", json);
                     prefEditor.commit();
                     adapter.setUserLocation(new LatLng(currentUser.getLastKnownLat(), currentUser.getLastKnownlongi()));
                     NameAndSurr.setText(currentUser.getFirstName() + " " + currentUser.getLastName());
@@ -361,7 +361,7 @@ public class mainScreenClientActivity extends AppCompatActivity implements ItemL
             SharedPreferences.Editor prefEditor = settings.edit();
             Gson gson = new Gson();
             String json = gson.toJson(currentUser);
-            prefEditor.putString("infoClient", json);
+            prefEditor.putString("clientInfo", json);
             prefEditor.commit();
 
             startActivity(userProfile);

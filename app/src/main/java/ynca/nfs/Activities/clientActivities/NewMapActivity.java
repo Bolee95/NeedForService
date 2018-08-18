@@ -6,10 +6,21 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffXfermode;
+import android.graphics.Rect;
+import android.graphics.RectF;
+import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.media.ThumbnailUtils;
+import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
@@ -42,12 +53,14 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.gson.Gson;
 import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.support.v7.widget.SearchView;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 
@@ -80,8 +93,7 @@ public class NewMapActivity extends AppCompatActivity implements OnMapReadyCallb
     private SearchResultAdapter mAdapter;
 
     private FirebaseDatabase mFirebaseDatabase;
-    private DatabaseReference friendsDatabaseReference;
-    private ChildEventListener friendsEventListener;
+
     private DatabaseReference mDatabaseReference;
     private DatabaseReference mDatabaseReference1;
     private ChildEventListener mChildEventListener2;
@@ -198,14 +210,13 @@ public class NewMapActivity extends AppCompatActivity implements OnMapReadyCallb
         SharedPreferences shared = getSharedPreferences("SharedData",MODE_PRIVATE);
         SharedPreferences.Editor editor = shared.edit();
         Gson gson = new Gson();
-        String json = shared.getString("TrenutniKlijent","");
+        String json = shared.getString("currentClient","");
         currentClient = gson.fromJson(json, Client.class);
 
         mFirebaseDatabase = FirebaseDatabase.getInstance();
         mDatabaseReference = mFirebaseDatabase.getReference().child("Korisnik").child("VehicleService");
         mDatabaseReference1 = mFirebaseDatabase.getReference().child("Korisnik").child("Client");
         mDatabaseReference2 = mFirebaseDatabase.getReference().child("Korisnik").child("Client").child(currentClient.getUID()).child("listOfAddedServices");
-        friendsDatabaseReference = mFirebaseDatabase.getReference().child("Korisnik").child("Client").child(currentClient.getUID()).child("listOfFriends");
         services = new ArrayList<VehicleService>();
 
 
@@ -235,11 +246,7 @@ public class NewMapActivity extends AppCompatActivity implements OnMapReadyCallb
                 VehicleService temp = dataSnapshot.getValue(VehicleService.class);
                 services.add(temp);
 
-                //if (!mAdapter.listContains(temp))
-                //{
                     mAdapter.add(temp);
-                //}
-
 
                 Marker marker = mMap.addMarker(new MarkerOptions()
                         .position(new LatLng(temp.getLat(), temp.getLongi()))
@@ -315,46 +322,6 @@ public class NewMapActivity extends AppCompatActivity implements OnMapReadyCallb
         mDatabaseReference.addChildEventListener(servicesListener);
 
 
-        friendsEventListener = new ChildEventListener() {
-            @Override
-            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                Client temp = dataSnapshot.getValue(Client.class);
-                listOfFriends.add(temp);
-                HashMap<String,VehicleService> tempList = temp.getListOfAddedServices();
-                for (VehicleService tempService : tempList.values()
-                        ) {
-                    friendsServices.add(tempService);
-
-                }
-                Marker marker = mMap.addMarker(new MarkerOptions()
-                        .position(new LatLng(temp.getLastKnownLat(), temp.getLastKnownlongi()))
-                        .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_CYAN)));
-                marker.setTag(temp);
-            }
-
-            @Override
-            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-            }
-
-            @Override
-            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
-
-            }
-
-            @Override
-            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        };
-
-        friendsDatabaseReference.addChildEventListener(friendsEventListener);
-
         clientChildrenUpdateListener = new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
@@ -363,14 +330,20 @@ public class NewMapActivity extends AppCompatActivity implements OnMapReadyCallb
                 if (currentClient.getListOfFriendsUIDs() != null) {
                     if (currentClient.getListOfFriendsUIDs().containsValue(temp.getUID())) {
                         listOfFriends.add(temp);
+
+                        Bitmap icon = BitmapFactory.decodeResource(getResources(),
+                                R.drawable.sport_car_logos);
+                        Bitmap thumbnail = getRoundedCornerBitmap(Bitmap.createScaledBitmap(icon, 120, 120, false),50);
+
                         //TODO: Srediti da se prikazuje thumbnail kao marker
                         Marker marker = mMap.addMarker(new MarkerOptions()
                                 .position(new LatLng(temp.getLastKnownLat(), temp.getLastKnownlongi()))
-                                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW)));
+                                .icon(BitmapDescriptorFactory.fromBitmap(thumbnail)));
                         marker.setTag(temp);
                     }
                 }
             }
+
 
             @Override
             public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
@@ -421,7 +394,27 @@ public class NewMapActivity extends AppCompatActivity implements OnMapReadyCallb
         //endregion
     }
 
+    private  Bitmap getRoundedCornerBitmap(Bitmap bitmap, int pixels) {
+        Bitmap output = Bitmap.createBitmap(bitmap.getWidth(), bitmap
+                .getHeight(), Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(output);
 
+        final int color = 0xff424242;
+        final Paint paint = new Paint();
+        final Rect rect = new Rect(0, 0, bitmap.getWidth(), bitmap.getHeight());
+        final RectF rectF = new RectF(rect);
+        final float roundPx = pixels;
+
+        paint.setAntiAlias(true);
+        canvas.drawARGB(0, 0, 0, 0);
+        paint.setColor(color);
+        canvas.drawRoundRect(rectF, roundPx, roundPx, paint);
+
+        paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
+        canvas.drawBitmap(bitmap, rect, rect, paint);
+
+        return output;
+    }
 
     private void initRecycler()
     {
@@ -493,9 +486,15 @@ public class NewMapActivity extends AppCompatActivity implements OnMapReadyCallb
                 Location.distanceBetween(currentClient.getLastKnownLat(),currentClient.getLastKnownlongi(),temp.getLastKnownLat(),temp.getLastKnownlongi(),results);
                 if (results[0] < radius) {
 
-                    mMap.addMarker(new MarkerOptions()
+                    Bitmap icon = BitmapFactory.decodeResource(getResources(),
+                            R.drawable.sport_car_logos);
+                    Bitmap thumbnail = getRoundedCornerBitmap(Bitmap.createScaledBitmap(icon, 120, 120, false),50);
+
+                    //TODO: Srediti da se prikazuje thumbnail kao marker
+                    Marker marker = mMap.addMarker(new MarkerOptions()
                             .position(new LatLng(temp.getLastKnownLat(), temp.getLastKnownlongi()))
-                            .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ROSE))).setTag(temp);
+                            .icon(BitmapDescriptorFactory.fromBitmap(thumbnail)));
+                    marker.setTag(temp);
                 }
 
             }
@@ -543,9 +542,15 @@ public class NewMapActivity extends AppCompatActivity implements OnMapReadyCallb
             for (Client temp :
                     listOfFriends) {
 
-                mMap.addMarker(new MarkerOptions()
+                Bitmap icon = BitmapFactory.decodeResource(getResources(),
+                        R.drawable.sport_car_logos);
+                Bitmap thumbnail = getRoundedCornerBitmap(Bitmap.createScaledBitmap(icon, 120, 120, false),50);
+
+                //TODO: Srediti da se prikazuje thumbnail kao marker
+                Marker marker = mMap.addMarker(new MarkerOptions()
                         .position(new LatLng(temp.getLastKnownLat(), temp.getLastKnownlongi()))
-                        .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ROSE))).setTag(temp);
+                        .icon(BitmapDescriptorFactory.fromBitmap(thumbnail)));
+                marker.setTag(temp);
 
             }
         }
@@ -705,7 +710,7 @@ public class NewMapActivity extends AppCompatActivity implements OnMapReadyCallb
     private void redirectToClientInfo(Client client)
     {
         Intent clientIntent = new Intent(this, clientInfoActivity.class);
-        clientIntent.putExtra("editable", true);
+        clientIntent.putExtra("editable", false);
 
         SharedPreferences settings = getSharedPreferences("SharedData", MODE_PRIVATE);
         SharedPreferences.Editor prefEditor = settings.edit();
