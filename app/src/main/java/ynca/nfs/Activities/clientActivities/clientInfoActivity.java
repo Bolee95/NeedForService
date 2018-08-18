@@ -35,6 +35,7 @@ import com.bumptech.glide.Glide;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -142,7 +143,7 @@ public class clientInfoActivity  extends AppCompatActivity {
         SharedPreferences shared = getSharedPreferences("SharedData",MODE_PRIVATE);
         SharedPreferences.Editor editor = shared.edit();
         Gson gson = new Gson();
-        String json = shared.getString("infoClient","");
+        String json = shared.getString("clientInfo","");
         currentClient = gson.fromJson(json, Client.class);
 
         initFields();
@@ -283,7 +284,7 @@ public class clientInfoActivity  extends AppCompatActivity {
            }
         });
 
-
+        mProfilePicture.setImageDrawable(getResources().getDrawable(R.drawable.sport_car_logos));
 
 
     }
