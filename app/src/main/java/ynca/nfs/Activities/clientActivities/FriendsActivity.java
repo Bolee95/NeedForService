@@ -28,6 +28,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import ynca.nfs.Adapter.FriendsListAdapter;
 import ynca.nfs.Models.Client;
@@ -154,9 +155,9 @@ public class FriendsActivity extends AppCompatActivity implements  FriendsListAd
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
 
-                ArrayList<String> currentClientFriends = currentClient.getListOfFriendsUIDs();
+                HashMap<String, String> currentClientFriends = currentClient.getListOfFriendsUIDs();
                 Client client = dataSnapshot.getValue(Client.class);
-                if (currentClientFriends.contains(client.getUID())) {
+                if (currentClientFriends.containsValue(client.getUID())) {
                     adapter.add(client);
                     recyclerView.setAdapter(adapter);
                     friends.add(client);
