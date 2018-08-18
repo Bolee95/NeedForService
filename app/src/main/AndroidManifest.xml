@@ -55,7 +55,7 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".Activities.mainScreensActivities.mainScreenClientActivity" />
         </activity>
-        <activity android:name=".Activities.ZahtevServisiranja">
+        <activity android:name=".Activities.ServiceRequestActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".Activities.mainScreensActivities.mainScreenClientActivity" />
@@ -102,7 +102,7 @@
         <activity android:name=".Activities.ListaCenovnikUslugaActivity" />
         <activity android:name=".Activities.ListaVozilaNaServisuActivity" />
         <activity android:name=".Activities.ListaZahtevaActivity" />
-        <activity android:name=".Activities.clientActivities.Feedback_activity" />
+        <activity android:name=".Activities.clientActivities.FeedbackActivity" />
         <activity android:name=".Activities.clientActivities.Message_activity" />
         <activity android:name=".Activities.Lista_Recenzija_Activity" />
         <activity android:name=".Activities.NovaUslugaActivity" />

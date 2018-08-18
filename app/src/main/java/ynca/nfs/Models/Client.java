@@ -1,8 +1,6 @@
 package ynca.nfs.Models;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 
 public class Client {
@@ -10,7 +8,7 @@ public class Client {
     private HashMap<String, Vehicle> listOfCars; //lista vozila koja klijent poseduje
     private HashMap<String, Request> requests; //lista zahteva za servisiranjem koje je uputnio
 
-    private HashMap<String, Poruka> primljenePoruke;
+    //private HashMap<String, Poruka> primljenePoruke;
     private String firstName; //ime
     private String lastName; //prezime
     private String phoneNumber; //broj telefona
@@ -18,7 +16,7 @@ public class Client {
     private String UID; //kljuc u Firebaseu
     private double lastKnownLat; //poslednja poznata lat koordinata, treba cesto da se azurira
     private double lastKnownlongi; //poslednja poznata longi kooridnata
-    private ArrayList<String> listOfFriendsUIDs; //lista prijatelja
+    private HashMap<String,String > listOfFriendsUIDs; //lista prijatelja
     private HashMap<String,VehicleService> listOfAddedServices; //lista servisa koje je dodao korisnik
     private int reviewsCount; //broji koliko puta je ocenjivao servise
     private int servicesAdded; //brojac koji sadrzi broj dodatih servisa --> Za rangiranje, da bi moglo odmah order da ide preko firebasea
@@ -33,10 +31,9 @@ public class Client {
         phoneNumber=_brojTelefona;
         email=_email;
         listOfCars = new HashMap<String, Vehicle>();
-        listOfFriendsUIDs = new ArrayList<String>();
+        setListOfFriendsUIDs(new HashMap<String, String>());
         UID = uid;
-        requests = new HashMap<>();
-        primljenePoruke = new HashMap<>();
+        requests = new HashMap<String, Request>();
         setReviewsCount(0);
         setServicesAdded(0);
     }
@@ -60,13 +57,6 @@ public class Client {
         this.UID = UID;
     }
 
-    public HashMap<String, Poruka> getPrimljenePoruke() {
-        return primljenePoruke;
-    }
-
-    public void setPrimljenePoruke(HashMap<String, Poruka> primljenePoruke) {
-        this.primljenePoruke = primljenePoruke;
-    }
 
     public HashMap<String, Vehicle> getListOfCars() {
         return listOfCars;
@@ -136,13 +126,6 @@ public class Client {
         this.lastKnownlongi = lastKnownlongi;
     }
 
-    public ArrayList<String> getListOfFriendsUIDs() {
-        return listOfFriendsUIDs;
-    }
-
-    public void setListOfFriendsUIDs(ArrayList<String> listOfFriends) {
-        this.listOfFriendsUIDs = listOfFriends;
-    }
 
     public int getReviewsCount() {
         return reviewsCount;
@@ -152,13 +135,6 @@ public class Client {
         this.reviewsCount = reviewsCount;
     }
 
-    public HashMap<String, VehicleService> getListOfAddedServices() {
-        return listOfAddedServices;
-    }
-
-    public void setListOfAddedServices(HashMap<String, VehicleService> listOfAddedServices) {
-        this.listOfAddedServices = listOfAddedServices;
-    }
 
     public int getServicesAdded() {
         return servicesAdded;
@@ -166,5 +142,22 @@ public class Client {
 
     public void setServicesAdded(int servicesAdded) {
         this.servicesAdded = servicesAdded;
+    }
+
+
+    public HashMap<String, String> getListOfFriendsUIDs() {
+        return listOfFriendsUIDs;
+    }
+
+    public void setListOfFriendsUIDs(HashMap<String, String> listOfFriendsUIDs) {
+        this.listOfFriendsUIDs = listOfFriendsUIDs;
+    }
+
+    public HashMap<String, VehicleService> getListOfAddedServices() {
+        return listOfAddedServices;
+    }
+
+    public void setListOfAddedServices(HashMap<String, VehicleService> listOfAddedServices) {
+        this.listOfAddedServices = listOfAddedServices;
     }
 }

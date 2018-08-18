@@ -1,5 +1,7 @@
 package ynca.nfs.Models;
 
+import java.sql.Time;
+
 /**
  * Created by Nemanja Djordjevic on 5/29/2017.
  */
@@ -9,6 +11,7 @@ public class Request {
     private String typeOfService;
     private Vehicle vehicle;
     private String proposedDate; //TODO: Promeniti u DateTime i promeniti elemente za unos
+    private String proposedTime;
     private String note;
     private String serviceId;
     private String id;
@@ -92,5 +95,13 @@ public class Request {
 
     public void setClientName(String clientName) {
         this.clientName = clientName;
+    }
+
+    public String getProposedTime() {
+        return proposedTime;
+    }
+
+    public void setProposedTime(String proposedTime) {
+        this.proposedTime = proposedTime;
     }
 }

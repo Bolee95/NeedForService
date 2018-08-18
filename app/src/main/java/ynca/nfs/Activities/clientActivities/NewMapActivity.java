@@ -1,9 +1,7 @@
 package ynca.nfs.Activities.clientActivities;
 
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -17,14 +15,12 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -39,7 +35,6 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -50,16 +45,12 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.support.v7.widget.SearchView;
-import android.widget.RatingBar;
-import android.widget.TextView;
 import android.widget.Toast;
 
 
-import java.io.Console;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -67,12 +58,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import ynca.nfs.Activities.ServiceInfoActivity;
-import ynca.nfs.Activities.ZahtevServisiranja;
-import ynca.nfs.Activities.mainScreensActivities.mainScreenClientActivity;
 import ynca.nfs.Adapter.SearchResultAdapter;
 import ynca.nfs.Models.Client;
-import ynca.nfs.Models.Poruka;
-import ynca.nfs.Models.Vehicle;
 import ynca.nfs.Models.VehicleService;
 import ynca.nfs.R;
 //TODO: Prvi put kad se ukljuci aplikacija i kada se da dozvola za lokaciju, ne prikazuje trenutnu lokaciju
@@ -247,7 +234,12 @@ public class NewMapActivity extends AppCompatActivity implements OnMapReadyCallb
                 //Toast.makeText(getApplicationContext(),"EventListener Triggered",Toast.LENGTH_SHORT).show();
                 VehicleService temp = dataSnapshot.getValue(VehicleService.class);
                 services.add(temp);
-                mAdapter.add(temp);
+
+                //if (!mAdapter.listContains(temp))
+                //{
+                    mAdapter.add(temp);
+                //}
+
 
                 Marker marker = mMap.addMarker(new MarkerOptions()
                         .position(new LatLng(temp.getLat(), temp.getLongi()))
@@ -285,7 +277,10 @@ public class NewMapActivity extends AppCompatActivity implements OnMapReadyCallb
 
                 VehicleService temp = dataSnapshot.getValue(VehicleService.class);
                 services.add(temp);
+                //if (!mAdapter.listContains(temp))
+                //{
                 mAdapter.add(temp);
+                //}
                 mRecyclerView.setAdapter(mAdapter);
 
 
@@ -366,7 +361,7 @@ public class NewMapActivity extends AppCompatActivity implements OnMapReadyCallb
                 Client temp = dataSnapshot.getValue(Client.class);
                 //Dodavanje prijatelja u listu i na mapi
                 if (currentClient.getListOfFriendsUIDs() != null) {
-                    if (currentClient.getListOfFriendsUIDs().contains(temp.getUID())) {
+                    if (currentClient.getListOfFriendsUIDs().containsValue(temp.getUID())) {
                         listOfFriends.add(temp);
                         //TODO: Srediti da se prikazuje thumbnail kao marker
                         Marker marker = mMap.addMarker(new MarkerOptions()
@@ -390,7 +385,7 @@ public class NewMapActivity extends AppCompatActivity implements OnMapReadyCallb
                     }
                 }
                 //ukoliko je doslo do promene i ta promena je kod prijatelja
-                if (currentClient.getListOfFriendsUIDs() != null && currentClient.getListOfFriendsUIDs().contains(temp.getUID()))
+                if (currentClient.getListOfFriendsUIDs() != null && currentClient.getListOfFriendsUIDs().containsValue(temp.getUID()))
                 {
                     for (Client friend:
                          listOfFriends) {

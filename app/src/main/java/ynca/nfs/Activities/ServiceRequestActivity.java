@@ -1,5 +1,8 @@
 package ynca.nfs.Activities;
 
+import android.app.DatePickerDialog;
+import android.app.TimePickerDialog;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.RequiresApi;
@@ -11,8 +14,10 @@ import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -23,8 +28,11 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
 
 import ynca.nfs.Models.Request;
 import ynca.nfs.Models.Vehicle;
@@ -37,11 +45,12 @@ import ynca.nfs.Models.Job;
  * Created by Nikola on 5/22/2017.
  */
 
-public class ZahtevServisiranja extends AppCompatActivity {
+public class ServiceRequestActivity extends AppCompatActivity {
 
     EditText mTypeOfService;
     EditText mProposedDates;
     EditText mNote;
+    EditText mProposedTime;
 
     Button mButtonSend;
 
@@ -75,30 +84,40 @@ public class ZahtevServisiranja extends AppCompatActivity {
     private ChildEventListener mChildEventListener2;
     private FirebaseAuth mAuth;
     private FirebaseUser mUser;
+    private Calendar calendar;
+    private TimePicker clock;
+    DatePickerDialog.OnDateSetListener date;
+    TimePickerDialog.OnTimeSetListener time;
+
+    private Intent extraIntent;
+    private String defaultServiceUid;
 
 
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.zahtev_za_servisiranje_form);
 
-
-        Window window = this.getWindow();
-        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-
-// add FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS flag to the window
-        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-
-// finally change the color
-        window.setStatusBarColor(ContextCompat.getColor(this,R.color.Black));
+        calendar = Calendar.getInstance();
 
 
-        //mTypeOfService = (EditText) findViewById(R.id.type_of_service_id);
+        date = new DatePickerDialog.OnDateSetListener() {
+
+            @Override
+            public void onDateSet(DatePicker view, int year, int monthOfYear,
+                                  int dayOfMonth) {
+                // TODO Auto-generated method stub
+                calendar.set(Calendar.YEAR, year);
+                calendar.set(Calendar.MONTH, monthOfYear);
+                calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+                updateLabel();
+            }
+        };
+
         mProposedDates = (EditText) findViewById(R.id.proposed_dates_id);
+        mProposedTime = (EditText) findViewById(R.id.proposed_time_id);
         mNote = (EditText) findViewById(R.id.note_id);
-
         mAutomobili = (Spinner) findViewById(R.id.automobili_klijenta_id);
         mServisi = (Spinner) findViewById(R.id.servisi_dostupni_klijentu_spinner);
         mButtonSend = (Button) findViewById(R.id.posalji_zahtev_btn_id);
@@ -124,6 +143,11 @@ public class ZahtevServisiranja extends AppCompatActivity {
         usluge = new ArrayList<>();
 
 
+        extraIntent = getIntent();
+
+        defaultServiceUid = extraIntent.getStringExtra("serviceUid");
+
+
         final ArrayAdapter<String> adapterAuto = new ArrayAdapter<String>(this, R.layout.support_simple_spinner_dropdown_item, listAutomobila);
         final ArrayAdapter<String> adapterServis = new ArrayAdapter<String>(this, R.layout.support_simple_spinner_dropdown_item, listServisa);
         adapterUsluga = new ArrayAdapter<String>(this, R.layout.support_simple_spinner_dropdown_item, imenaUsluga);
@@ -132,6 +156,37 @@ public class ZahtevServisiranja extends AppCompatActivity {
         mAutomobili.setAdapter(adapterAuto);
         mServisi.setAdapter(adapterServis);
         mUsluge.setAdapter(adapterUsluga);
+        //region event listeners
+        mProposedTime.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int hour = calendar.get(Calendar.HOUR_OF_DAY);
+                int minute = calendar.get(Calendar.MINUTE);
+                TimePickerDialog timePickerDialog = new TimePickerDialog(ServiceRequestActivity.this,
+                        new TimePickerDialog.OnTimeSetListener() {
+
+                            @Override
+                            public void onTimeSet(TimePicker view, int hourOfDay,
+                                                  int minute) {
+
+                                mProposedTime.setText(hourOfDay + ":" + minute);
+                            }
+                        }, hour, minute, true);
+                timePickerDialog.show();
+            }
+        });
+
+        mProposedDates.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+
+                new DatePickerDialog(ServiceRequestActivity.this, date, calendar
+                        .get(Calendar.YEAR), calendar.get(Calendar.MONTH),
+                        calendar.get(Calendar.DAY_OF_MONTH)).show();
+            }
+        });
+
 
         mButtonSend.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -146,11 +201,8 @@ public class ZahtevServisiranja extends AppCompatActivity {
                 String date = mProposedDates.getText().toString();
                 String note = mNote.getText().toString();
                 Request z = new Request(selectedUsluga.getJob(), date, note, selectedAuto, selectedVehicleService.getUID() , mUser.getUid(), mUser.getEmail());
-                //mDatabaseReference.child("Korisnik").child("Client").child(mUser.getUid()).child("zahtevi").push().setValue(z);
-                //mDatabaseReference.child("Korisnik").child("VehicleService").child(z.getServis().getUID()).child("zahtevi").push().setValue(z);
+                z.setProposedTime(mProposedTime.toString());
                 mDatabaseReference.child("ServiceRequests").child(selectedVehicleService.getUID()).push().setValue(z);
-                //mDatabaseReference.child("ZahteviKlijent").child(mUser.getUid()).push().setValue(z);
-        //        mDatabaseReference.push().setValue(z);
                 Toast.makeText(getApplicationContext(), getResources().getString(R.string.ZahtevPoslat), Toast.LENGTH_LONG).show();
                 finish();
 
@@ -253,9 +305,10 @@ public class ZahtevServisiranja extends AppCompatActivity {
 
                 VehicleService vehicleService =dataSnapshot.getValue(VehicleService.class);
                 mServisiLista.add(vehicleService);
-                //if(vehicleService.getListaUsluga()!=null){
-                //usluge = vehicleService.getListaUsluga();
-                //Collection<Usluga> str  = usluge.values();}
+                if (vehicleService.getUID().equals(defaultServiceUid))
+                {
+                    mServisi.setSelection(mServisiLista.size() - 1);
+                }
                 listServisa.add(vehicleService.getName());
                 adapterServis.notifyDataSetChanged();
             }
@@ -283,8 +336,16 @@ public class ZahtevServisiranja extends AppCompatActivity {
 
         mDatabaseReference2.addChildEventListener(mChildEventListener2);
 
+        //endregion
 
 
+    }
 
+
+    private void updateLabel() {
+        String myFormat = "MM/dd/yy"; //In which you need put here
+        SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.ENGLISH);
+
+        mProposedDates.setText(sdf.format(calendar.getTime()));
     }
 }

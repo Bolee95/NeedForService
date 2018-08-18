@@ -129,6 +129,7 @@
     <string name="from">Od  :</string>
     <string name="type_of_service">Usluga: </string>
     <string name="suggested_time">Datum: </string>
+    <string name="proposedTime">Vreme: </string>
     <string name="note">Napomena:</string>
     <string name="accept">Prihvati</string>
     <string name="decline">Odbij</string>

@@ -170,7 +170,7 @@ public class LocationService extends Service {
         SharedPreferences shared = getSharedPreferences("SharedData",MODE_PRIVATE);
         SharedPreferences.Editor editor = shared.edit();
         Gson gson = new Gson();
-        String json = shared.getString("TrenutniKlijent","");
+        String json = shared.getString("currentClient","");
         currentClient = gson.fromJson(json, Client.class);
 
         mFirebaseDatabase = FirebaseDatabase.getInstance();
