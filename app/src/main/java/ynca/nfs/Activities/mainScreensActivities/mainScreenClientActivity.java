@@ -4,6 +4,7 @@ package ynca.nfs.Activities.mainScreensActivities;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Build;
@@ -39,6 +40,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.gson.Gson;
 
+import java.io.IOException;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -116,6 +118,8 @@ public class mainScreenClientActivity extends AppCompatActivity implements ItemL
     private  Button request;
     private Button sendMsg;
     private Button rateComm;
+
+
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -509,21 +513,21 @@ public class mainScreenClientActivity extends AppCompatActivity implements ItemL
     protected void onResume(){
 
         super.onResume();
+
         final StorageReference photoRef = mStorageReference.child("photos").child(auth.getCurrentUser().getUid());
-
         photoRef.getDownloadUrl().addOnSuccessListener(this, new OnSuccessListener<Uri>() {
-            @Override
-            public void onSuccess(Uri uri) {
-                if(uri != null) {
-                    //showProgressDialog();
-                    Glide.with(slikaKlijent.getContext())
-                            .load(uri).into(slikaKlijent);
-                    //hideProgressDialog();
-                }
-            }
-        });
+                @Override
+                public void onSuccess(Uri uri) {
+                    if (uri != null) {
 
-    }
+                        Glide.with(slikaKlijent.getContext())
+                                .load(uri).into(slikaKlijent);
+
+                    }
+                }
+            });
+        }
+
 
     @Override
     protected void onDestroy() {
