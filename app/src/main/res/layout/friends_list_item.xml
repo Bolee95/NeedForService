@@ -15,26 +15,31 @@
         android:background="@drawable/rounded_button"
         android:scaleType="fitXY"
         android:layout_margin="5dp"
+        android:id="@+id/FriendsProfilePicture"
+
+
+
         />
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:layout_margin="5dp"
+        android:layout_marginTop="1dp"
         android:layout_marginLeft="15dp">
         <android.support.v7.widget.AppCompatTextView
             android:id="@+id/FriendsListItemNameTextView"
             android:layout_width="230dp"
             android:layout_height="wrap_content"
             android:textSize="20sp"
-            android:layout_marginTop="13dp"/>
+            android:layout_marginTop="12dp"/>
         <android.support.v7.widget.AppCompatTextView
-            android:id="@+id/FriendsListItemUsernameTextView"
+            android:id="@+id/FriendsListItemEmailTextView"
             android:layout_width="230dp"
             android:layout_height="wrap_content"
-            android:textSize="20sp"
-            android:layout_marginTop="20dp"
-            android:layout_marginBottom="13dp"/>
+            android:textSize="11sp"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="1dp"
+            android:textStyle="italic"/>
     </LinearLayout>
 </LinearLayout>
 </FrameLayout>

@@ -344,4 +344,16 @@
         "when a user tries to pick up one of cards.\n\n"
     </string>
 
+
+    <!-- Bluetooth stringovi -->
+    <string name="BluetoothRequestCanceled">To add new friends you must turn bluetooth on. </string>
+    <string name="BluetoothEnabled">Bluetooth is enabled.</string>
+    <string name="available_devices">Available devices</string>
+    <string name="paired_devices">Paired device</string>
+    <string name="device_scan_button">Scan</string>
+    <string name="scanning">Scanning...</string>
+    <string name="select_device">Select device</string>
+    <string name="none_found">No devices were found</string>
+    <string name="none_paired">There is no paired devices</string>
+
 </resources>

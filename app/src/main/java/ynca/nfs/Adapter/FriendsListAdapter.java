@@ -40,9 +40,8 @@ public class FriendsListAdapter extends RecyclerView.Adapter<FriendsListAdapter.
 
     private static  final String TAG = FriendsListAdapter.class.getSimpleName();
 
-    public FriendsListAdapter( OnItemsClickListener onItemsClickListen) {
+    public FriendsListAdapter(  OnItemsClickListener onItemsClickListen) {
         this.OnItemsClickListen = onItemsClickListen;
-
         friends = new ArrayList<Client>();
     }
 
@@ -63,7 +62,7 @@ public class FriendsListAdapter extends RecyclerView.Adapter<FriendsListAdapter.
     }
 
     @Override
-    public void onBindViewHolder(FriendsListAdapter.ItemsViewHolder holder, int position) {
+    public void onBindViewHolder(ItemsViewHolder holder, int position) {
 
         if(friends.size() ==0)
             return;
@@ -72,7 +71,7 @@ public class FriendsListAdapter extends RecyclerView.Adapter<FriendsListAdapter.
 
     @Override
     public int getItemCount() {
-        return 0;
+        return  friends.size();
     }
 
 
@@ -94,8 +93,8 @@ public class FriendsListAdapter extends RecyclerView.Adapter<FriendsListAdapter.
         public  ItemsViewHolder(View view)
         {
             super(view);
-            itemImage = (ImageView) view.findViewById(R.id.FriendsListItemNameTextView);
-            itemEmail = (TextView) view.findViewById(R.id.FriendsListItemUsernameTextView);
+            itemImage = (ImageView) view.findViewById(R.id.FriendsProfilePicture);
+            itemEmail = (TextView) view.findViewById(R.id.FriendsListItemEmailTextView);
             itemName = (TextView) view.findViewById(R.id.FriendsListItemNameTextView);
 
             view.setOnClickListener(this);
@@ -121,6 +120,7 @@ public class FriendsListAdapter extends RecyclerView.Adapter<FriendsListAdapter.
                     itemImage.setImageDrawable(itemView.getResources().getDrawable(R.drawable.user));
                 }
             });
+            itemImage.setClipToOutline(true);
 
             itemName.setText(client.getFirstName() + " " + client.getLastName());
             itemEmail.setText(client.getEmail());

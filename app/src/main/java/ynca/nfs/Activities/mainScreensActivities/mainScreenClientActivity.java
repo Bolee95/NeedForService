@@ -224,6 +224,7 @@ public class mainScreenClientActivity extends AppCompatActivity implements ItemL
         auth = FirebaseAuth.getInstance();
         user = auth.getCurrentUser();
 
+       
         mFirebaseDatabase = FirebaseDatabase.getInstance();
         mDatabaseReference = mFirebaseDatabase.getReference().child("Korisnik").child("Client").child(user.getUid());
         mDatabaseReference2 = mFirebaseDatabase.getReference().child("Korisnik").child("VehicleService");
