@@ -490,7 +490,6 @@ public class NewMapActivity extends AppCompatActivity implements OnMapReadyCallb
                     listOfFriends) {
                 Location.distanceBetween(currentClient.getLastKnownLat(),currentClient.getLastKnownlongi(),temp.getLastKnownLat(),temp.getLastKnownlongi(),results);
                 if (results[0] < radius) {
-
                     addFriendsMarker(temp);
                  }
             }
