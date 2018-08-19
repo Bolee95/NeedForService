@@ -41,6 +41,7 @@ public class FriendsActivity extends AppCompatActivity implements  FriendsListAd
     private int REQUEST_ENABLE_BT = 1;
 
     private static Client currentClient;
+    private HashMap<String, String> currentClientFriends;
 
     //region Firebase Declarations
     private FirebaseDatabase mFirebaseDatabase;
@@ -67,7 +68,11 @@ public class FriendsActivity extends AppCompatActivity implements  FriendsListAd
 
         friends = new ArrayList<Client>();
 
+        adapter = new FriendsListAdapter( this);
+
         fetchCurrentClient();
+        fetchFirebaseReferences();
+
 
 
         //region Toolbar podesavanja
@@ -146,7 +151,7 @@ public class FriendsActivity extends AppCompatActivity implements  FriendsListAd
 
     }
 
-    private void getFirebaseReferences() {
+    private void fetchFirebaseReferences() {
         mFirebaseDatabase = FirebaseDatabase.getInstance();
         mDatabaseReferenceClients = mFirebaseDatabase.getReference().child("Korisnik").child("Client");
 
@@ -155,11 +160,12 @@ public class FriendsActivity extends AppCompatActivity implements  FriendsListAd
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
 
-                HashMap<String, String> currentClientFriends = currentClient.getListOfFriendsUIDs();
+
                 Client client = dataSnapshot.getValue(Client.class);
                 if (currentClientFriends.containsValue(client.getUID())) {
-                    adapter.add(client);
+
                     recyclerView.setAdapter(adapter);
+                    adapter.add(client);
                     friends.add(client);
 
                 }
@@ -194,11 +200,12 @@ public class FriendsActivity extends AppCompatActivity implements  FriendsListAd
 
 
             SharedPreferences sharedPreferences = getSharedPreferences("SharedData", MODE_PRIVATE);
-            String currentClientJson = sharedPreferences.getString("TrenutniKlijent", "");
+            String currentClientJson = sharedPreferences.getString("currentClient", "");
 
             if (!currentClientJson.isEmpty()) {
                 Gson gsonInstance = new Gson();
                 currentClient = gsonInstance.fromJson(currentClientJson, Client.class);
+                currentClientFriends = currentClient.getListOfFriendsUIDs();
             }
 
 
