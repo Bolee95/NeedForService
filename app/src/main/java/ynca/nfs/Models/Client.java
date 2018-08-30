@@ -5,10 +5,11 @@ import java.util.HashMap;
 
 public class Client {
 
+
     private HashMap<String, Vehicle> listOfCars; //lista vozila koja klijent poseduje
     private HashMap<String, Request> requests; //lista zahteva za servisiranjem koje je uputnio
 
-    //private HashMap<String, Poruka> primljenePoruke;
+
     private String firstName; //ime
     private String lastName; //prezime
     private String phoneNumber; //broj telefona

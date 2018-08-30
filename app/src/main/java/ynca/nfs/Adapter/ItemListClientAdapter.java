@@ -1,8 +1,6 @@
 package ynca.nfs.Adapter;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.location.Location;
 import android.net.Uri;
 import android.support.annotation.NonNull;
@@ -17,19 +15,15 @@ import com.bumptech.glide.Glide;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
-import java.io.File;
-import java.io.IOException;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 import ynca.nfs.Models.VehicleService;
 import ynca.nfs.R;
-import ynca.nfs.SQLiteHelper;
 
 public class ItemListClientAdapter extends RecyclerView.Adapter<ItemListClientAdapter.ItemsViewHolder> {
 
@@ -94,8 +88,6 @@ public class ItemListClientAdapter extends RecyclerView.Adapter<ItemListClientAd
         private TextView address;
         private TextView distance;
 
-        private SQLiteHelper cashe;
-
         private StorageReference mStorageReference;
 
         public ItemsViewHolder(View view) {
@@ -105,58 +97,41 @@ public class ItemListClientAdapter extends RecyclerView.Adapter<ItemListClientAd
             itemText = (TextView) view.findViewById(R.id.itemTextClient);
             address = (TextView) view.findViewById(R.id.service_address);
             distance = (TextView) view.findViewById(R.id.distance);
-            cashe = new SQLiteHelper(itemImage.getContext());
 
             view.setOnClickListener(this);
         }
 
 
-        void bind(final VehicleService vehicleService){
-            if(!cashe.imageExists(vehicleService.getUID())) {
+        void bind(VehicleService vehicleService){
 
-                mStorageReference = FirebaseStorage.getInstance().getReference();
-                StorageReference photoRef = mStorageReference.child("photos").child(vehicleService.getUID());
-                try {
-                    final File localFile = File.createTempFile(vehicleService.getUID(),"");
-
-                photoRef.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
-                    @Override
-                    public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
-                        String filePath = localFile.getPath();
-                        Bitmap image = BitmapFactory.decodeFile(filePath);
-
-                        // ubacivanje u sql bazu
-                        cashe.saveImage(vehicleService.getUID(), image);
-                        itemImage.setImageBitmap(image);
-
-
+            mStorageReference = FirebaseStorage.getInstance().getReference();
+            StorageReference photoRef = mStorageReference.child("photos").child(vehicleService.getUID());
+            photoRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                @Override
+                public void onSuccess(Uri uri) {
+                    if(uri != null) {
+                        //showProgressDialog();
+                        Glide.with(itemImage.getContext())
+                                .load(uri).into(itemImage);
+                        //hideProgressDialog();
                     }
-                }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        itemImage.setImageDrawable(itemView.getResources().getDrawable(R.drawable.sport_car_logos));
-                    }
-                });
-                } catch (IOException e) {
-                    e.printStackTrace();
                 }
-            }
-            else
-            {
-                Bitmap cashedImage = cashe.getImage(vehicleService.getUID());
-                itemImage.setImageBitmap(cashedImage);
-            }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    itemImage.setImageDrawable(itemView.getResources().getDrawable(R.drawable.sport_car_logos));
+                }
+            });
 
             itemText.setText(vehicleService.getName());
-            address.setText(vehicleService.getAddress() + "," + vehicleService.getCity());
+            address.setText(vehicleService.getAddress() +  "," + vehicleService.getCity());
             float[] results = new float[10];
-            Location.distanceBetween(vehicleService.getLat(), vehicleService.getLongi(), usersCoordinates.latitude, usersCoordinates.longitude, results);
+            Location.distanceBetween(vehicleService.getLat(),vehicleService.getLongi(),usersCoordinates.latitude,usersCoordinates.longitude,results);
             DecimalFormat df = new DecimalFormat("#.##");
             df.setRoundingMode(RoundingMode.CEILING);
 
-            String result = String.valueOf(df.format(results[0] / 1000));
-            distance.setText("It's " + result + " km away!");
-
+            String result = String.valueOf(df.format(results[0]/1000));
+            distance.setText("It's " +  result + " km away!");
         }
 
         @Override

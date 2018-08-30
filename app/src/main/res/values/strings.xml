@@ -252,8 +252,6 @@
     <string name="title_activity_service_info">serviceInfoActivity</string>
 
 
-
-
     <string name="large_text">
         "Material is the metaphor.\n\n"
 
@@ -355,5 +353,6 @@
     <string name="select_device">Select device</string>
     <string name="none_found">No devices were found</string>
     <string name="none_paired">There is no paired devices</string>
+    <string name="SomethingWentWrong">Something went wrong</string>
 
 </resources>

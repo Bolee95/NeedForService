@@ -4,14 +4,6 @@ package ynca.nfs.Activities.mainScreensActivities;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
-import android.graphics.Paint;
-import android.graphics.PorterDuff;
-import android.graphics.PorterDuffXfermode;
-import android.graphics.Rect;
-import android.graphics.RectF;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Build;
@@ -33,11 +25,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
-import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -47,13 +35,10 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.gson.Gson;
 
-import java.io.File;
-import java.io.IOException;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -61,7 +46,7 @@ import java.util.HashMap;
 
 import ynca.nfs.Activities.ServiceInfoActivity;
 import ynca.nfs.Activities.clientActivities.Client_Inbox_Activity;
-import ynca.nfs.Activities.clientActivities.FriendsActivity;
+import ynca.nfs.Activities.clientActivities.Friends;
 import ynca.nfs.Activities.clientActivities.addVehicleFormActivity;
 import ynca.nfs.Activities.clientActivities.clientInfoActivity;
 import ynca.nfs.Activities.clientActivities.NewMapActivity;
@@ -74,7 +59,6 @@ import ynca.nfs.Models.Poruka;
 import ynca.nfs.Models.Review;
 import ynca.nfs.R;
 import ynca.nfs.Models.VehicleService;
-import ynca.nfs.SQLiteHelper;
 
 public class mainScreenClientActivity extends AppCompatActivity implements ItemListClientAdapter.OnItemsClickListener {
 
@@ -129,20 +113,14 @@ public class mainScreenClientActivity extends AppCompatActivity implements ItemL
     private Client currentUser;
 
     //DUGMICI U DIALOGU
-    private SQLiteHelper cashe;
     private  Button request;
     private Button sendMsg;
     private Button rateComm;
-
-
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_screen_client);
-
-        //cashe init
-        cashe = new SQLiteHelper(this);
 
         //region Views Initialization
 
@@ -193,7 +171,7 @@ public class mainScreenClientActivity extends AppCompatActivity implements ItemL
         FriendsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(getBaseContext(), FriendsActivity.class));
+                startActivity(new Intent(getBaseContext(), Friends.class));
             }
         });
 
@@ -368,42 +346,6 @@ public class mainScreenClientActivity extends AppCompatActivity implements ItemL
 
         mDatabaseReference.addValueEventListener(mChildEventListener);
 
-        //pribavljanje slike iz baze ili kesa
-        final StorageReference photoRef = mStorageReference.child("photos").child(auth.getCurrentUser().getUid());
-        if (!cashe.imageExists(auth.getCurrentUser().getUid())) {
-            try {
-                final File localFile = File.createTempFile(auth.getCurrentUser().getUid(), "");
-                photoRef.getFile(localFile).addOnSuccessListener(this, new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
-                    @Override
-                    public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
-                        String filePath = localFile.getPath();
-                        Bitmap image = BitmapFactory.decodeFile(filePath);
-                        cashe.saveImage(auth.getCurrentUser().getUid(), image);
-
-                        Bitmap profileImage = getRoundedCornerBitmap(Bitmap.createScaledBitmap(image, 250, 250, false), 50);
-
-                        slikaKlijent.setImageBitmap(profileImage);
-                    }
-                });
-
-                photoRef.getFile(localFile).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Bitmap image = BitmapFactory.decodeResource(getResources(),
-                                R.drawable.sport_car_logos);
-
-                        slikaKlijent.setImageBitmap(image);
-
-                    }
-                });
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        } else {
-            Bitmap cashedImage = cashe.getImage(auth.getCurrentUser().getUid());
-            Bitmap profileImage = getRoundedCornerBitmap(Bitmap.createScaledBitmap(cashedImage, 250, 250, false), 50);
-            slikaKlijent.setImageBitmap(cashedImage);
-        }
 
         //endregion
 
@@ -454,6 +396,82 @@ public class mainScreenClientActivity extends AppCompatActivity implements ItemL
         prefEditor.commit();
 
         startActivity(serviceIntent);
+//            final VehicleService temp1 = servisi.get(clickItemIndex);
+//            final float prosecnaOcena = listaProsecnihOcena.get(clickItemIndex);
+//           Dialog d=new Dialog(mainScreenClientActivity.this);
+//            d.setContentView(R.layout.dialogbox);
+//            rating = (RatingBar) d.findViewById(R.id.ratingBar);
+//            request = (Button) d.findViewById(R.id.ButtonServiceRequest);
+//            sendMsg = (Button) d.findViewById(R.id.ButtonServiceMessage);
+//            rateComm = (Button) d.findViewById(R.id.ButtonRateAndComment);
+//            DialogEmail = (TextView) d.findViewById(R.id.SeriviceName);
+//
+//            rating.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
+//                @Override
+//                public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
+//                    ratingBar.setRating(prosecnaOcena);
+//                }
+//            });
+//
+//            rateComm.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                    Intent i = new Intent(getBaseContext(), Feedback_activity.class);
+//                    i.putExtra("ServisKojiSeOcenjuje", DialogEmail.getText().toString() );
+//
+//                    startActivity(i);
+//
+//
+//                }
+//            });
+//            DialogAdress = (TextView) d.findViewById(R.id.ServiceAdressResult);
+//            DialogServiceName = (TextView) d.findViewById(R.id.ServiceNameResult);
+//            DialogEmail = (TextView) d.findViewById(R.id.ServiceEmailResult);
+//            DialogNumber = (TextView) d.findViewById(R.id.ServiceNumberResult);
+//
+//
+//            DialogAdress.setText(String.valueOf(temp1.getAddress()));
+//            DialogNumber.setText(String.valueOf(temp1.getPhoneNumber()));
+//            DialogEmail.setText(String.valueOf(temp1.getEmail()));
+//            DialogServiceName.setText(String.valueOf(temp1.getName()));
+//            rating.setRating(prosecnaOcena);
+//            d.setTitle(getResources().getString(R.string.InfoAboutService));
+//            d.show();
+//
+//            request.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                    startActivity(new Intent(getBaseContext(), ZahtevServisiranja.class));
+//
+//                }
+//            });
+//            sendMsg.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                    SharedPreferences sp = getSharedPreferences("SharedData", MODE_PRIVATE);
+//
+//                    Intent i = new Intent(getBaseContext(), Message_activity.class);
+//
+//
+//
+//
+//                    String mailTO = temp1.getEmail();
+//                    Poruka p = new Poruka();
+//                    p.setPosiljalac(mailTO);
+//
+//
+//                    i.putExtra("MSG_DST", p);
+//                    i.putExtra("isReply", true);
+//
+//
+//
+//
+//                    startActivity(i);
+//
+//
+//
+//                }
+//            });
 
         }
 
@@ -488,38 +506,28 @@ public class mainScreenClientActivity extends AppCompatActivity implements ItemL
 
 
     @Override
-    protected void onResume() {
+    protected void onResume(){
 
         super.onResume();
+        final StorageReference photoRef = mStorageReference.child("photos").child(auth.getCurrentUser().getUid());
+
+        photoRef.getDownloadUrl().addOnSuccessListener(this, new OnSuccessListener<Uri>() {
+            @Override
+            public void onSuccess(Uri uri) {
+                if(uri != null) {
+                    //showProgressDialog();
+                    Glide.with(slikaKlijent.getContext())
+                            .load(uri).into(slikaKlijent);
+                    //hideProgressDialog();
+                }
+            }
+        });
 
     }
-
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-    }
-
-    private Bitmap getRoundedCornerBitmap(Bitmap bitmap, int pixels) {
-        Bitmap output = Bitmap.createBitmap(bitmap.getWidth(), bitmap
-                .getHeight(), Bitmap.Config.ARGB_8888);
-        Canvas canvas = new Canvas(output);
-
-        final int color = 0xff424242;
-        final Paint paint = new Paint();
-        final Rect rect = new Rect(0, 0, bitmap.getWidth(), bitmap.getHeight());
-        final RectF rectF = new RectF(rect);
-        final float roundPx = pixels;
-
-        paint.setAntiAlias(true);
-        canvas.drawARGB(0, 0, 0, 0);
-        paint.setColor(color);
-        canvas.drawRoundRect(rectF, roundPx, roundPx, paint);
-
-        paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
-        canvas.drawBitmap(bitmap, rect, rect, paint);
-
-        return output;
     }
 }
 

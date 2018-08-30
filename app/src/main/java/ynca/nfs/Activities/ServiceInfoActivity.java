@@ -2,8 +2,6 @@ package ynca.nfs.Activities;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.net.Uri;
-import android.support.annotation.NonNull;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -18,11 +16,6 @@ import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
 import com.google.gson.Gson;
 
 import org.w3c.dom.Text;
@@ -54,9 +47,6 @@ public class ServiceInfoActivity extends AppCompatActivity {
     private VehicleService currentService;
     private Boolean editable;
 
-    private FirebaseStorage mFirebaseStorage;
-    private StorageReference mStorageReference;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,10 +63,6 @@ public class ServiceInfoActivity extends AppCompatActivity {
         requestService = (Button) findViewById(R.id.requestService);
         reviewService = (Button) findViewById(R.id.reviewService);
         distance = (TextView) findViewById(R.id.distanceAway);
-
-
-        mFirebaseStorage = FirebaseStorage.getInstance();
-        mStorageReference = mFirebaseStorage.getReference();
 
         serviceRating.setEnabled(false);
 
@@ -162,31 +148,6 @@ public class ServiceInfoActivity extends AppCompatActivity {
             //TODO: Dodati da se moze review za servise dodate od strane korisnika
             reviewService.setVisibility(View.INVISIBLE);
         }
-
-
-        StorageReference photoRef = mStorageReference.child("photos").child(currentService.getUID());
-        photoRef.getDownloadUrl().addOnSuccessListener(this, new OnSuccessListener<Uri>() {
-            @Override
-            public void onSuccess(Uri uri) {
-                if(uri != null) {
-                    //showProgressDialog();
-                    Glide.with(serviceImage.getContext())
-                            .load(uri).into(serviceImage);
-                    //hideProgressDialog();
-                }
-                else {
-                    serviceImage.setImageDrawable(getResources().getDrawable(R.drawable.sport_car_logos));
-                }
-
-            }
-        });
-        photoRef.getDownloadUrl().addOnFailureListener(this, new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                serviceImage.setImageDrawable(getResources().getDrawable(R.drawable.sport_car_logos));
-            }
-        });
-
 
     }
 
