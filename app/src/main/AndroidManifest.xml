@@ -124,7 +124,7 @@
         <activity android:name=".Activities.clientActivities.FriendProfileActivity" />
         <activity android:name=".Activities.clientActivities.AddFriendActivity" />
         <activity android:name=".Activities.ServiceInfoActivity" />
-        <activity android:name=".Activities.clientActivities.Friends" />
+        <activity android:name=".Activities.clientActivities.FriendsActivity" />
         <activity android:name=".Activities.DeviceListActivity"></activity>
     </application>
 

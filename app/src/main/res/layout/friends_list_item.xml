@@ -8,6 +8,10 @@
     android:layout_height="wrap_content"
     android:padding="2dp"
     android:background="@drawable/rounded_button">
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
     <ImageView
         android:layout_width="200px"
         android:layout_height="200px"
@@ -16,30 +20,56 @@
         android:scaleType="fitXY"
         android:layout_margin="5dp"
         android:id="@+id/FriendsProfilePicture"
-
-
-
         />
+        <TextView
+            android:id="@+id/FriendsListItemDistanceTextView"
+            android:layout_width="200px"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"/>
+    </LinearLayout>
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:layout_marginTop="1dp"
+        android:layout_marginTop="6dp"
         android:layout_marginLeft="15dp">
         <android.support.v7.widget.AppCompatTextView
             android:id="@+id/FriendsListItemNameTextView"
-            android:layout_width="230dp"
+            android:layout_width="190dp"
             android:layout_height="wrap_content"
             android:textSize="20sp"
             android:layout_marginTop="12dp"/>
         <android.support.v7.widget.AppCompatTextView
             android:id="@+id/FriendsListItemEmailTextView"
-            android:layout_width="230dp"
+            android:layout_width="190dp"
             android:layout_height="wrap_content"
             android:textSize="11sp"
             android:layout_marginTop="5dp"
             android:layout_marginBottom="1dp"
             android:textStyle="italic"/>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_gravity="center"
+        android:layout_marginTop="6dp">
+        <TextView
+            android:id="@+id/FriendsListItemPtsLabelTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+            android:textSize="15sp"
+            android:text="points"
+            android:paddingBottom="0dp"
+            android:layout_marginBottom="0dp"/>
+        <TextView
+            android:id="@+id/FriendsListItemPtsTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+            android:textSize="30sp"
+            android:gravity="bottom"/>
     </LinearLayout>
 </LinearLayout>
 </FrameLayout>

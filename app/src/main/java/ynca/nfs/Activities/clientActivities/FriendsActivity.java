@@ -9,12 +9,14 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.os.Vibrator;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -26,9 +28,11 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -42,8 +46,11 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.gson.Gson;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.List;
 import java.util.UUID;
 
 import ynca.nfs.Activities.DeviceListActivity;
@@ -53,12 +60,11 @@ import ynca.nfs.Models.Client;
 import ynca.nfs.Models.Friend;
 import ynca.nfs.R;
 
-public class Friends extends AppCompatActivity implements FriendsListAdapter.OnItemsClickListener, View.OnClickListener {
-    private Button btnAddFriend;
+public class FriendsActivity extends AppCompatActivity implements FriendsListAdapter.OnItemsClickListener {
+
     private BluetoothAdapter bluetoothAdapter = null;
     private static final int BT_DISCOVERABLE_TIME = 240;
     private static final int REQUEST_ENABLE_BT = 3;
-    //private  static  final int REQUEST_DISCOVERABLE_BT= 4;
     private static final int REQUEST_CONNECT_DEVICE_SECURE = 1;
     private static final int REQUEST_CONNECT_DEVICE_INSECURE = 2;
     private String connectedDeviceName = null;
@@ -69,13 +75,20 @@ public class Friends extends AppCompatActivity implements FriendsListAdapter.OnI
     private static Client currentClient;
     private HashMap<String, String> currentClientFriends;
     private ArrayList<Client> friends = new ArrayList<Client>();
-
+    private ArrayList<Client> notFriends = new ArrayList<>();
+    private ArrayList<Client> searchFriendsUnfiltered;
+    private ArrayList<Client> searchFriendsFiltered;
+    private ArrayList<Client> searchFriendsSorted;
     private final static String TAG = "BT";
     public static final int MESSAGE_STATE_CHANGE = 1;
     public static final int MESSAGE_READ = 2;
     public static final int MESSAGE_WRITE = 3;
     public static final int MESSAGE_DEVICE_NAME = 4;
     public static final int MESSAGE_TOAST = 5;
+    public  static  final  int SORT_BY_NAME_ASCENDING= 0;
+    public static final  int SORT_BY_NAME_DESCENDING= 1;
+    public static  final  int SORT_BY_POINTS=  2;
+    public static final  int SORT_BY_DISTANCE =  3;
 
     public static final String DEVICE_NAME = "device_name";
     public static final String TOAST = "toast";
@@ -85,16 +98,16 @@ public class Friends extends AppCompatActivity implements FriendsListAdapter.OnI
     private FirebaseUser user;
     private DatabaseReference databaseReference;
 
-    private ListView lvFriendsList;
-    private ArrayAdapter<String> friendsList;
-    private ArrayList<String> friendsIDList;
-    private ArrayAdapter<String> friendsIDListAdapter;
 
 
     //region Views Declarations
     private RecyclerView recyclerView;
     private FriendsListAdapter adapter;
+    private MenuItem searchItem;
     private SearchView searchView;
+    private Spinner spinner;
+
+
 
     //endregion
 
@@ -108,24 +121,8 @@ public class Friends extends AppCompatActivity implements FriendsListAdapter.OnI
 
 
         fetchCurrentClient();
-        adapter = new FriendsListAdapter( this);
 
-        //region Toolbar podesavanja
-        Toolbar toolbar = (Toolbar) findViewById(R.id.friendsToolbar);
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
-        getSupportActionBar().setTitle("");
-
-
-//endregion
-
-
-        recyclerView = (RecyclerView) findViewById(R.id.FriendsListRecycleView);
-        GridLayoutManager layoutManager = new GridLayoutManager(this, 1);
-        recyclerView.setLayoutManager(layoutManager);
-        recyclerView.setHasFixedSize(true);
-
+        setupUI();
 
 
 
@@ -133,6 +130,7 @@ public class Friends extends AppCompatActivity implements FriendsListAdapter.OnI
         firebaseAuth = FirebaseAuth.getInstance();
         user = firebaseAuth.getCurrentUser();
         idUser = user.getUid();
+
 
 
         databaseReference = FirebaseDatabase.getInstance().getReference("Korisnik").child("Client");
@@ -144,6 +142,77 @@ public class Friends extends AppCompatActivity implements FriendsListAdapter.OnI
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.friends_menu, menu);
+
+        //region searchField event listeners and init
+        searchItem = menu.findItem(R.id.searchFriends);
+        searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
+
+
+
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            //todo promeniti raspored linija tako da moze da se ubaci sotr
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                searchFriendsFiltered =  new ArrayList<Client>();
+                FriendsListAdapter filteredAdapter = new FriendsListAdapter(FriendsActivity.this,
+                        currentClient.getLastKnownLat(), currentClient.getLastKnownlongi());
+                recyclerView.setAdapter(filteredAdapter);
+                if(!newText.isEmpty())
+                {
+                searchFriendsUnfiltered = new ArrayList<Client>();
+                searchFriendsUnfiltered = (ArrayList<Client>) friends.clone();
+                searchFriendsSorted = new ArrayList<>();
+
+                for ( Client client : searchFriendsUnfiltered  )
+                {
+                    if (client.getFirstName().contains(newText) || client.getLastName().contains(newText)
+                            || client.getEmail().contains(newText))
+                        searchFriendsFiltered.add(client);
+                }
+                switch (spinner.getSelectedItemPosition()) {
+
+                        case SORT_BY_NAME_ASCENDING:
+                        searchFriendsSorted = sortClientList(searchFriendsFiltered, new LexicographicComparatorAsc());
+                        break;
+                        case SORT_BY_NAME_DESCENDING:
+                        searchFriendsSorted = sortClientList(searchFriendsFiltered, new LexicofraphicComparatorDesc());
+                        break;
+                        case SORT_BY_POINTS:
+                        searchFriendsSorted = sortClientList(searchFriendsFiltered, new PointsComparator());
+                        break;
+                        case SORT_BY_DISTANCE:
+                        searchFriendsSorted = sortClientList(searchFriendsFiltered, new DistanceComparator());
+                        break;
+                        default: break;
+
+                        }
+                    for (Client c: searchFriendsSorted) {
+                        filteredAdapter.add(c);
+                    }
+
+                recyclerView.setAdapter(filteredAdapter);
+                filteredAdapter.notifyDataSetChanged();
+
+                                }
+                else
+                {
+                    recyclerView.setAdapter(FriendsActivity.this.adapter);
+                    FriendsActivity.this.adapter.notifyDataSetChanged();
+                }
+
+
+
+
+
+                return true;
+            }
+        });
         return true;
     }
 
@@ -152,20 +221,12 @@ public class Friends extends AppCompatActivity implements FriendsListAdapter.OnI
         int id = item.getItemId();
 
         if (id == R.id.addFriends) {
-            //kliknuta opcija za dodavanje novog prijatelja
 
-//            BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-//
-//            if (!bluetoothAdapter.isEnabled()) {
-//                Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-//                startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
-//            }
-//          //   Intent discoverableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
-//            //startActivityForResult(discoverableBtIntent, REQUEST_DISCOVERABLE_BT );
-//                startActivity(new Intent(getBaseContext(), DeviceListActivity.class));
             redirectToDeviceList();
         } else if (id == R.id.searchFriends) {
             //pretrazivanje prijatelja
+
+
         } else {
             //back dugme
             finish();
@@ -190,13 +251,25 @@ public class Friends extends AppCompatActivity implements FriendsListAdapter.OnI
 
         if (!currentClientFriends.containsValue(friendId)) {
             ref.push().setValue(friendId);
-            Toast.makeText(Friends.this, "You got new friend!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(FriendsActivity.this, "You got new friend!", Toast.LENGTH_SHORT).show();
 
             //TODO: doda se novi prilatelj u listu i refresuje se adapter i recycleView
+            currentClientFriends.put(friendId, friendId);
+            for ( Client client : notFriends) {
+                if (client.getUID().equals(friendId))
+                {
+                    friends.add(client);
+                    notFriends.remove(client);
+                    adapter.notifyDataSetChanged();
+                    return;
+                }
+
+            }
+
         }
         else
         {
-            Toast.makeText(Friends.this, "You are already friends!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(FriendsActivity.this, "You are already friends!", Toast.LENGTH_SHORT).show();
         }
 
 
@@ -218,6 +291,9 @@ public class Friends extends AppCompatActivity implements FriendsListAdapter.OnI
                         adapter.add(client);
                         friends.add(client);
 
+                    }
+                    else {
+                        notFriends.add(client);
                     }
                 }
             }
@@ -250,7 +326,7 @@ public class Friends extends AppCompatActivity implements FriendsListAdapter.OnI
     {
         bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         if (bluetoothAdapter == null) {
-            Toast.makeText(Friends.this, "Bluetooth is not available", Toast.LENGTH_LONG).show();
+            Toast.makeText(FriendsActivity.this, "Bluetooth is not available", Toast.LENGTH_LONG).show();
             //finish();
             return;
         }
@@ -258,21 +334,7 @@ public class Friends extends AppCompatActivity implements FriendsListAdapter.OnI
     }
 
 
-    @Override
-    public void onClick(View v) {
-        if (v == btnAddFriend){
 
-            //  Snackbar.make(view, "Wait for incoming friend request or send one.", Snackbar.LENGTH_LONG).setAction("Action", null).show();
-
-            bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-            if (bluetoothAdapter == null) {
-                Toast.makeText(Friends.this, "Bluetooth is not available", Toast.LENGTH_LONG).show();
-                //finish();
-                return;
-            }
-            ensureDiscoverable(bluetoothAdapter);
-        }
-    }
     private void ensureDiscoverable(BluetoothAdapter bluetoothAdapter) {
 
         Intent discoverableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
@@ -324,7 +386,7 @@ public class Friends extends AppCompatActivity implements FriendsListAdapter.OnI
 
             @Override
             public void run() {
-                Intent serverIntent = new Intent(Friends.this, DeviceListActivity.class);
+                Intent serverIntent = new Intent(FriendsActivity.this, DeviceListActivity.class);
                 startActivityForResult(serverIntent, REQUEST_CONNECT_DEVICE_SECURE);
             }
         };
@@ -380,7 +442,7 @@ public class Friends extends AppCompatActivity implements FriendsListAdapter.OnI
 
                     runOnUiThread(new Runnable() {
                         public void run() {
-                            new AlertDialog.Builder(Friends.this)
+                            new AlertDialog.Builder(FriendsActivity.this)
                                     .setTitle("FRIEND REQUEST")
                                     .setMessage("Are you sure you want to become friends with a device " + connectedDeviceName + "?")
                                     .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
@@ -390,7 +452,7 @@ public class Friends extends AppCompatActivity implements FriendsListAdapter.OnI
                                             //Toast.makeText(FriendsActivity.this, "Your friend id: " + message, Toast.LENGTH_LONG).show();
                                             //allreadyFriends(idReceive);
                                             if(allreadyFriends(idReceive)){
-                                                Toast.makeText(Friends.this, "You are already friends", Toast.LENGTH_LONG).show();
+                                                Toast.makeText(FriendsActivity.this, "You are already friends", Toast.LENGTH_LONG).show();
                                             }
                                             else {
 
@@ -402,7 +464,7 @@ public class Friends extends AppCompatActivity implements FriendsListAdapter.OnI
                                     })
                                     .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
                                         public void onClick(DialogInterface dialog, int which) {
-                                            Toast.makeText(Friends.this, "You declined friend request", Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(FriendsActivity.this, "You declined friend request", Toast.LENGTH_SHORT).show();
                                         }
                                     })
                                     .setIcon(android.R.drawable.ic_dialog_alert)
@@ -505,4 +567,186 @@ public class Friends extends AppCompatActivity implements FriendsListAdapter.OnI
 
 
     }
+
+    private void setupUI(){
+        adapter = new FriendsListAdapter( this, currentClient.getLastKnownLat(),
+                currentClient.getLastKnownlongi());
+
+
+        //region Toolbar podesavanja
+        Toolbar toolbar = (Toolbar) findViewById(R.id.friendsToolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setTitle("");
+
+
+//endregion
+
+
+        recyclerView = (RecyclerView) findViewById(R.id.FriendsListRecycleView);
+        GridLayoutManager layoutManager = new GridLayoutManager(this, 1);
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setHasFixedSize(true);
+
+
+        ArrayList<String> spinnerItems = new  ArrayList<String>();
+        spinnerItems.add("Name ascending");
+        spinnerItems.add("Name descending");
+        spinnerItems.add("Points");
+        spinnerItems.add("Distance");
+
+
+        //region spinner
+        spinner = (Spinner) findViewById(R.id.sortBySpinner);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
+                android.R.layout.simple_spinner_dropdown_item,  spinnerItems);
+       // adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(adapter);
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                sortFriends(position);
+
+        }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+        spinner.setSelection(0);
+        //endregion
+
+
+
+    }
+
+    class LexicographicComparatorAsc implements Comparator<Client>
+    {
+
+        @Override
+        public int compare(Client o1, Client o2) {
+            return (o1.getFirstName() + " " + o1.getLastName())
+                    .compareToIgnoreCase(o2.getFirstName() + " " + o2.getLastName());
+        }
+    }
+
+    class  LexicofraphicComparatorDesc implements  Comparator<Client> {
+
+        @Override
+        public int compare(Client o1, Client o2) {
+            return -((o1.getFirstName() + " " + o1.getLastName())
+                    .compareToIgnoreCase(o2.getFirstName() + " " + o2.getLastName()));
+        }
+    }
+
+    class PointsComparator implements  Comparator<Client>{
+        @Override
+        public int compare(Client o1, Client o2) {
+            return -(o1.getReviewsCount()-o2.getReviewsCount());
+        }
+    }
+
+    class DistanceComparator implements  Comparator<Client>
+    {
+
+
+        @Override
+        public int compare(Client o1, Client o2) {
+
+            float distance1 [] = new float[1];
+            float distance2 [] = new float[1];
+
+            Location.distanceBetween(currentClient.getLastKnownLat(), currentClient.getLastKnownlongi(),
+            o1.getLastKnownLat(), o1.getLastKnownlongi(), distance1);
+            Location.distanceBetween(currentClient.getLastKnownLat(),
+                    currentClient.getLastKnownlongi(), o2.getLastKnownLat(), o2.getLastKnownlongi(), distance2);
+
+            return (distance1[0]-distance2[0]<0)? -1:1;
+        }
+    }
+
+
+    public ArrayList<Client> sortClientList(ArrayList<Client> listArg, Comparator<Client> comparator)
+    {
+        ArrayList<Client>  returnList = new ArrayList<Client>();
+        ArrayList<Client> list = (ArrayList<Client>) listArg.clone();
+        while (!list.isEmpty())
+        {
+            int itemPosition;
+            Client temp=list.get(0);
+            for (itemPosition=0; itemPosition<list.size()-1; itemPosition++)
+            {
+                if (comparator.compare(list.get(itemPosition), list.get(itemPosition+1))>0)
+                    temp = list.get(itemPosition+1);
+                else
+                    temp=list.get(itemPosition);
+            }
+            returnList.add(temp);
+            list.remove(temp);
+
+        }
+        return returnList;
+
+        }
+
+        public  void sortFriends(int spinnerOption)
+        {
+            searchFriendsSorted = new ArrayList<>();
+            if(searchView.getQuery().length()==0){
+            switch (spinnerOption)
+            {
+                case SORT_BY_NAME_ASCENDING:
+                    searchFriendsSorted = sortClientList(friends, new LexicographicComparatorAsc());
+                    break;
+                case SORT_BY_NAME_DESCENDING:
+                    searchFriendsSorted = sortClientList(friends, new LexicofraphicComparatorDesc());
+                    break;
+                case SORT_BY_POINTS:
+                    searchFriendsSorted = sortClientList(friends, new PointsComparator());
+                    break;
+                case SORT_BY_DISTANCE:
+                    searchFriendsSorted = sortClientList(friends, new DistanceComparator());
+                    break;
+                default: break;
+            }
+            adapter = new FriendsListAdapter(this, currentClient.getLastKnownLat(),
+                    currentClient.getLastKnownlongi());
+                for (Client c: searchFriendsSorted) {
+                    adapter.add(c);
+
+                }
+                recyclerView.setAdapter(adapter);
+        }
+        else
+            {
+                switch (spinnerOption)
+                {
+                    case SORT_BY_NAME_ASCENDING:
+                        searchFriendsSorted = sortClientList(searchFriendsFiltered, new LexicographicComparatorAsc());
+                        break;
+                    case SORT_BY_NAME_DESCENDING:
+                        searchFriendsSorted = sortClientList(searchFriendsFiltered, new LexicofraphicComparatorDesc());
+                        break;
+                    case SORT_BY_POINTS:
+                        searchFriendsSorted = sortClientList(searchFriendsFiltered, new PointsComparator());
+                        break;
+                    case SORT_BY_DISTANCE:
+                        searchFriendsSorted = sortClientList(searchFriendsFiltered, new DistanceComparator());
+                        break;
+                    default: break;
+                }
+                adapter = new FriendsListAdapter(this, currentClient.getLastKnownLat(),
+                        currentClient.getLastKnownlongi());
+                for (Client c: searchFriendsSorted) {
+                    adapter.add(c);
+
+                }
+                recyclerView.setAdapter(adapter);
+            }
+
+
+        }
+
 }

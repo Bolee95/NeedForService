@@ -46,7 +46,7 @@ import java.util.HashMap;
 
 import ynca.nfs.Activities.ServiceInfoActivity;
 import ynca.nfs.Activities.clientActivities.Client_Inbox_Activity;
-import ynca.nfs.Activities.clientActivities.Friends;
+import ynca.nfs.Activities.clientActivities.FriendsActivity;
 import ynca.nfs.Activities.clientActivities.addVehicleFormActivity;
 import ynca.nfs.Activities.clientActivities.clientInfoActivity;
 import ynca.nfs.Activities.clientActivities.NewMapActivity;
@@ -171,7 +171,7 @@ public class mainScreenClientActivity extends AppCompatActivity implements ItemL
         FriendsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(getBaseContext(), Friends.class));
+                startActivity(new Intent(getBaseContext(), FriendsActivity.class));
             }
         });
 

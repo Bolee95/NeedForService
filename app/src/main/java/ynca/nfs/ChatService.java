@@ -14,7 +14,8 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.UUID;
 
-import ynca.nfs.Activities.clientActivities.Friends;
+import ynca.nfs.Activities.clientActivities.FriendsActivity;
+
 
 public class ChatService {
 
@@ -57,7 +58,7 @@ public class ChatService {
         Log.d(TAG, "ChatService: setState started");
         this.state = state;
 
-        handler.obtainMessage(Friends.MESSAGE_STATE_CHANGE, state, -1).sendToTarget();
+        handler.obtainMessage(FriendsActivity.MESSAGE_STATE_CHANGE, state, -1).sendToTarget();
     }
 
     // get current connection state
@@ -145,9 +146,9 @@ public class ChatService {
         connectedThread.start();
 
         // Send the name of the connected device back to the UI Activity
-        Message msg = handler.obtainMessage(Friends.MESSAGE_DEVICE_NAME);
+        Message msg = handler.obtainMessage(FriendsActivity.MESSAGE_DEVICE_NAME);
         Bundle bundle = new Bundle();
-        bundle.putString(Friends.DEVICE_NAME, device.getName());
+        bundle.putString(FriendsActivity.DEVICE_NAME, device.getName());
         msg.setData(bundle);
         handler.sendMessage(msg);
 
@@ -192,9 +193,9 @@ public class ChatService {
 
     private void connectionFailed() {
         Log.d(TAG, "ChatService: connectionFailed started");
-        Message msg = handler.obtainMessage(Friends.MESSAGE_TOAST);
+        Message msg = handler.obtainMessage(FriendsActivity.MESSAGE_TOAST);
         Bundle bundle = new Bundle();
-        bundle.putString(Friends.TOAST, "Unable to connect device");
+        bundle.putString(FriendsActivity.TOAST, "Unable to connect device");
         msg.setData(bundle);
         handler.sendMessage(msg);
 
@@ -204,9 +205,9 @@ public class ChatService {
 
     private void connectionLost() {
         Log.d(TAG, "ChatService: connectionLost started");
-        Message msg = handler.obtainMessage(Friends.MESSAGE_TOAST);
+        Message msg = handler.obtainMessage(FriendsActivity.MESSAGE_TOAST);
         Bundle bundle = new Bundle();
-        bundle.putString(Friends.TOAST, "Device connection was lost");
+        bundle.putString(FriendsActivity.TOAST, "Device connection was lost");
         msg.setData(bundle);
         handler.sendMessage(msg);
 
@@ -380,7 +381,7 @@ public class ChatService {
                     bytes = inputStream.read(buffer);
 
                     // Send the obtained bytes to the UI Activity
-                    handler.obtainMessage(Friends.MESSAGE_READ, bytes, -1, buffer).sendToTarget();
+                    handler.obtainMessage(FriendsActivity.MESSAGE_READ, bytes, -1, buffer).sendToTarget();
                 } catch (IOException e) {
                     connectionLost();
                     // Start the service over to restart listening mode
@@ -395,7 +396,7 @@ public class ChatService {
             Log.d(TAG, "ChatService: ConnectedThread write");
             try {
                 outputStream.write(buffer);
-                handler.obtainMessage(Friends.MESSAGE_WRITE, -1, -1, buffer).sendToTarget();
+                handler.obtainMessage(FriendsActivity.MESSAGE_WRITE, -1, -1, buffer).sendToTarget();
             } catch (IOException e) {
             }
         }

@@ -101,6 +101,7 @@ public class Client {
         this.email = email;
     }
 
+    public  int getPoints() { return  reviewsCount*2 + servicesAdded*3; }
 
 
     public void dodajVozilo(String key, Vehicle temp)

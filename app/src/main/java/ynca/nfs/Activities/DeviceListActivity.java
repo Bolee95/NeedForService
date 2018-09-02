@@ -89,7 +89,7 @@ public class DeviceListActivity extends AppCompatActivity {
         btnDeviceListScan.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 startDiscovery();
-                btnDeviceListScan.setVisibility(View.GONE);
+               // btnDeviceListScan.setVisibility(View.GONE);
             }
         });
 
