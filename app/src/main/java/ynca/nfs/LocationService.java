@@ -12,6 +12,7 @@ import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
@@ -147,15 +148,23 @@ public class LocationService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         super.onStartCommand(intent, flags, startId);
 
-        try {
-            mLocationManager.requestLocationUpdates(
-                    LocationManager.GPS_PROVIDER, LOCATION_INTERVAL, LOCATION_DISTANCE,
-                    mLocationListener);
-        } catch (java.lang.SecurityException ex) {
-            //Log.i(TAG, "fail to request location update, ignore", ex);
-        } catch (IllegalArgumentException ex) {
-            //Log.d(TAG, "gps provider does not exist " + ex.getMessage());
-        }
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                Looper.prepare();
+                try {
+                    mLocationManager.requestLocationUpdates(
+                            LocationManager.GPS_PROVIDER, LOCATION_INTERVAL, LOCATION_DISTANCE,
+                            mLocationListener);
+                } catch (java.lang.SecurityException ex) {
+                    //Log.i(TAG, "fail to request location update, ignore", ex);
+                } catch (IllegalArgumentException ex) {
+                    //Log.d(TAG, "gps provider does not exist " + ex.getMessage());
+                }
+                Looper.loop();
+            }
+        }).start();
+
 
         return START_STICKY;
     }
