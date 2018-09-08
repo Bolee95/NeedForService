@@ -1,5 +1,6 @@
 package ynca.nfs;
 
+import android.app.IntentService;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
@@ -8,6 +9,7 @@ import android.content.SharedPreferences;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.annotation.NonNull;
@@ -37,7 +39,7 @@ import ynca.nfs.Models.VehicleService;
 
 public class LocationService extends Service {
 
-    //TODO gasenje servisa u opcijama i prilikom odjavljivanja?
+    //TODO gasenje servisa u opcijama
     //private static final String TAG = "Lokacija";
     private LocationManager mLocationManager = null;
     private static final int LOCATION_INTERVAL = 1000;
@@ -57,6 +59,7 @@ public class LocationService extends Service {
     private FirebaseDatabase mFirebaseDatabase;
     private DatabaseReference mDatabaseReference; //za klijente
     private DatabaseReference mDatabaseReference2; //za servise
+
 
 
     /*
@@ -156,6 +159,7 @@ public class LocationService extends Service {
 
         return START_STICKY;
     }
+
     @Override
     public void onCreate() {
         mLastClientLocation = new Location("");
@@ -173,9 +177,33 @@ public class LocationService extends Service {
         String json = shared.getString("currentClient","");
         currentClient = gson.fromJson(json, Client.class);
 
+
         mFirebaseDatabase = FirebaseDatabase.getInstance();
         mDatabaseReference = mFirebaseDatabase.getReference().child("Korisnik").child("Client");
         mDatabaseReference2 = mFirebaseDatabase.getReference().child("Korisnik").child("VehicleService");
+
+        //builder za notifikaciju
+        Intent intent = new Intent(getApplicationContext(), mainScreenClientActivity.class);
+        PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, intent, 0);
+
+        mBuilder = new NotificationCompat.Builder(getApplicationContext())
+                .setSmallIcon(R.drawable.sport_car_logos) //TODO potrebna je ikonica u samo beloj boji
+                .setContentText("Klikom na notifikaciju otvoricete aplikaciju.")
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
+                .setAutoCancel(true)
+                .setContentIntent(pendingIntent);
+
+        /*
+        try {
+            mLocationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, LOCATION_INTERVAL,
+                    LOCATION_DISTANCE, mLocationListeners[1]);
+        } catch (java.lang.SecurityException ex) {
+            Log.i(TAG, "fail to request location update, ignore", ex);
+        } catch (IllegalArgumentException ex) {
+            Log.d(TAG, "network provider does not exist, " + ex.getMessage());
+        }
+        */
 
         mChildEventListener = new ChildEventListener() {
             @Override
@@ -206,29 +234,6 @@ public class LocationService extends Service {
         };
 
         mDatabaseReference2.addChildEventListener(mChildEventListener);
-
-        //builder za notifikaciju
-        Intent intent = new Intent(getApplicationContext(), mainScreenClientActivity.class);
-        PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, intent, 0);
-
-        mBuilder = new NotificationCompat.Builder(getApplicationContext())
-                .setSmallIcon(R.drawable.sport_car_logos) //TODO potrebna je ikonica u samo beloj boji
-                .setContentText("Klikom na notifikaciju otvoricete aplikaciju.")
-                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-                .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
-                .setAutoCancel(true)
-                .setContentIntent(pendingIntent);
-
-        /*
-        try {
-            mLocationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, LOCATION_INTERVAL,
-                    LOCATION_DISTANCE, mLocationListeners[1]);
-        } catch (java.lang.SecurityException ex) {
-            Log.i(TAG, "fail to request location update, ignore", ex);
-        } catch (IllegalArgumentException ex) {
-            Log.d(TAG, "network provider does not exist, " + ex.getMessage());
-        }
-        */
     }
 
     @Override
@@ -242,6 +247,7 @@ public class LocationService extends Service {
             }
         }
         mDatabaseReference2.removeEventListener(mChildEventListener);
+        stopSelf();
     }
 
     private void initializeLocationManager() {

@@ -107,6 +107,7 @@ public class mainScreenClientActivity extends AppCompatActivity implements ItemL
     private RatingBar rating;
     private Intent userProfile;
     private boolean userFetched;
+    private boolean backgroundServiceStarted;
     //endregion
 
 
@@ -152,6 +153,7 @@ public class mainScreenClientActivity extends AppCompatActivity implements ItemL
 
         //Zbog promene lokacije, poziva se value listener cesto, ovo je fleg koji zaustavlja ponovno ucitavanje
         userFetched = false;
+        backgroundServiceStarted = false;
 
 
         adapter = new ItemListClientAdapter(BROJ_PRIKAZANIH_ELEMENATA, this);
@@ -211,6 +213,7 @@ public class mainScreenClientActivity extends AppCompatActivity implements ItemL
                 });
 
                 alertDialog.show();
+                stopService(new Intent(getApplicationContext(), LocationService.class));
 
 
             }
@@ -337,6 +340,12 @@ public class mainScreenClientActivity extends AppCompatActivity implements ItemL
                     recycler.setAdapter(adapter);
                     userFetched = true;
                 }
+
+                //startujemo servis ovde jer nam je potreban currentUser, a desava se da se ne ucita dovoljno brzo
+                if (currentUser != null && !backgroundServiceStarted) {
+                    startService(new Intent(getApplicationContext(), LocationService.class));
+                    backgroundServiceStarted = true;
+                }
             }
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
@@ -350,7 +359,7 @@ public class mainScreenClientActivity extends AppCompatActivity implements ItemL
         //endregion
 
         //servis u backgroundu za lokaciju
-        startService(new Intent(this, LocationService.class));
+
 
     }
         private void redirectToUserProfile()

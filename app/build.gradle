@@ -2,12 +2,12 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 27
+    compileSdkVersion 25
     buildToolsVersion '27.0.3'
     defaultConfig {
         applicationId "ynca.nfs"
-        minSdkVersion 21
-        targetSdkVersion 27
+        minSdkVersion 19
+        targetSdkVersion 25
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
