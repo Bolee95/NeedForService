@@ -5,11 +5,14 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.location.Address;
 import android.location.Geocoder;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.support.v4.content.ContextCompat;
@@ -84,6 +87,7 @@ public class clientInfoActivity  extends AppCompatActivity {
     private StorageReference mStorageReference;
 
     private Client currentClient;
+    private Bitmap image;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -269,23 +273,26 @@ public class clientInfoActivity  extends AppCompatActivity {
         //endregion
         StorageReference photoRef = mStorageReference.child("photos").child(currentClient.getUID());
         photoRef.getDownloadUrl().addOnSuccessListener(this, new OnSuccessListener<Uri>() {
-           @Override
-           public void onSuccess(Uri uri) {
-               if(uri != null) {
-                   //showProgressDialog();
-                   Glide.with(mProfilePicture.getContext())
-                           .load(uri).into(mProfilePicture);
-                   //hideProgressDialog();
-               }
-               else {
-                   mProfilePicture.setImageDrawable(getResources().getDrawable(R.drawable.sport_car_logos));
-               }
+            @Override
+            public void onSuccess(Uri uri) {
+                if(uri != null) {
+                    showProgressDialog();
+                    Glide.with(mProfilePicture.getContext())
+                            .load(uri).into(mProfilePicture);
+                    hideProgressDialog();
+                }
+                else {
+                    mProfilePicture.setImageDrawable(getResources().getDrawable(R.drawable.sport_car_logos));
+                }
 
-           }
+            }
         });
-
-        mProfilePicture.setImageDrawable(getResources().getDrawable(R.drawable.sport_car_logos));
-
+        photoRef.getDownloadUrl().addOnFailureListener(this, new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                mProfilePicture.setImageDrawable(getResources().getDrawable(R.drawable.sport_car_logos));
+            }
+        });
 
     }
 
@@ -309,11 +316,11 @@ public class clientInfoActivity  extends AppCompatActivity {
         try {
             address = mGeocoder.getFromLocation(currentClient.getLastKnownLat(), currentClient.getLastKnownlongi(), 1).get(0);
             lastKnownLocation.setText(address.getLocality() + "," + address.getCountryName());
-            }
-            catch (IOException e)
-            {
-                lastKnownLocation.setText("Unknown");
-            }
+        }
+        catch (IOException e)
+        {
+            lastKnownLocation.setText("Unknown");
+        }
     }
 
     @Override
@@ -356,6 +363,11 @@ public class clientInfoActivity  extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if(requestCode == PHOTO_PICKER && resultCode == RESULT_OK){
             Uri selectedImageUri = data.getData();
+            try {
+                image = MediaStore.Images.Media.getBitmap(this.getContentResolver(), selectedImageUri);
+            }
+            catch(IOException ex)
+            {}
             StorageReference photoRef = mStorageReference.child("photos").child(currentClient.getUID());
 
             showProgressDialog();
@@ -364,8 +376,9 @@ public class clientInfoActivity  extends AppCompatActivity {
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                     @SuppressWarnings("VisibleForTests")
                     Uri s = taskSnapshot.getUploadSessionUri();
-                    Glide.with(mProfilePicture.getContext())
-                            .load(s).into(mProfilePicture);
+                    mProfilePicture.setImageBitmap(image);
+                    //Glide.with(mProfilePicture.getContext())
+                    //        .load(s).into(mProfilePicture);
                     hideProgressDialog();
                 }
             });

@@ -64,6 +64,7 @@ public class SearchResultAdapter extends RecyclerView.Adapter<SearchResultAdapte
     public void onBindViewHolder(SearchResultAdapter.ViewHolder viewHolder, int i) {
 
         viewHolder.serviceName.setText(mFilteredList.get(i).getName());
+        viewHolder.serviceAddress.setText(mFilteredList.get(i).getAddress() + ", " + mFilteredList.get(i).getCity());
 
     }
 
@@ -110,7 +111,7 @@ public class SearchResultAdapter extends RecyclerView.Adapter<SearchResultAdapte
 
                     for (VehicleService service : mArrayList) {
 
-                        if (service.getName().toLowerCase().contains(charString)) {
+                        if (service.getName().toLowerCase().contains(charString) || service.getAddress().toLowerCase().contains(charString)) {
 
                             filteredList.add(service);
                         }
@@ -137,12 +138,14 @@ public class SearchResultAdapter extends RecyclerView.Adapter<SearchResultAdapte
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
         private TextView serviceName;
+        private TextView serviceAddress;
 
 
         public ViewHolder(View view) {
             super(view);
 
             serviceName = (TextView)view.findViewById(R.id.service_name);
+            serviceAddress = (TextView)view.findViewById(R.id.service_address);
             view.setOnClickListener(this);
 
 
