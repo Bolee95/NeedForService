@@ -18,8 +18,27 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_GPS" />
+    <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="true" />
+    <uses-feature
+        android:name="android.hardware.location"
+        android:required="true" />
+    <uses-feature
+        android:name="android.hardware.sensor.accelerometer"
+        android:required="true" />
+    <uses-feature
+        android:name="android.hardware.sensor.compass"
+        android:required="true" />
+    <uses-feature
+        android:glEsVersion="0x00020000"
+        android:required="true" />
 
     <application
         android:allowBackup="true"
@@ -125,7 +144,8 @@
         <activity android:name=".Activities.clientActivities.AddFriendActivity" />
         <activity android:name=".Activities.ServiceInfoActivity" />
         <activity android:name=".Activities.clientActivities.FriendsActivity" />
-        <activity android:name=".Activities.DeviceListActivity"></activity>
+        <activity android:name=".Activities.DeviceListActivity" />
+        <activity android:name=".Activities.clientActivities.ARActivity" android:configChanges="screenSize|orientation"></activity>
     </application>
 
 </manifest>

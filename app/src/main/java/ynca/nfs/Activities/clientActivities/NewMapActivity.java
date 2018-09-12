@@ -29,6 +29,7 @@ import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.Manifest;
 
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -245,6 +246,7 @@ public class NewMapActivity extends AppCompatActivity implements OnMapReadyCallb
             @Override
             public void onClick(View v) {
                 //Ovo dugme ce da vodi na augmented reality mod
+                startActivity(new Intent(getApplicationContext(), ARActivity.class));
             }
         });
         //region EventListeners
@@ -385,6 +387,14 @@ public class NewMapActivity extends AppCompatActivity implements OnMapReadyCallb
             }
         };
         mDatabaseReference1.addChildEventListener(clientChildrenUpdateListener);
+
+        //da bi ar radio mora imati permission za cameru i lokaciju
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
+                != PackageManager.PERMISSION_GRANTED)
+        {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA},
+                    11);
+        }
 
         //endregion
     }
