@@ -120,8 +120,8 @@
         <activity android:name=".Activities.clientActivities.AddFriendActivity" />
         <activity android:name=".Activities.ServiceInfoActivity" />
         <activity android:name=".Activities.clientActivities.FriendsActivity" />
-        <activity android:name=".Activities.clientActivities.DeviceListActivity"></activity>
         <activity android:name=".Activities.clientActivities.ARActivity" android:configChanges="screenSize|orientation"></activity>
+        <activity android:name=".Activities.clientActivities.DeviceListActivity"></activity>
     </application>
 
 </manifest>
