@@ -30,8 +30,6 @@ import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -43,21 +41,15 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 import com.google.gson.Gson;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
-import java.util.List;
-import java.util.UUID;
 
-import ynca.nfs.Activities.DeviceListActivity;
 import ynca.nfs.Adapter.FriendsListAdapter;
 import ynca.nfs.ChatService;
 import ynca.nfs.Models.Client;
-import ynca.nfs.Models.Friend;
 import ynca.nfs.R;
 
 public class FriendsActivity extends AppCompatActivity implements FriendsListAdapter.OnItemsClickListener {
@@ -107,26 +99,15 @@ public class FriendsActivity extends AppCompatActivity implements FriendsListAda
     private SearchView searchView;
     private Spinner spinner;
 
-
-
     //endregion
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.friends_list);
 
         currentClientFriends = new HashMap<String, String>();
-
-
         fetchCurrentClient();
-
         setupUI();
-
-
-
-
         firebaseAuth = FirebaseAuth.getInstance();
         user = firebaseAuth.getCurrentUser();
         idUser = user.getUid();
@@ -253,7 +234,6 @@ public class FriendsActivity extends AppCompatActivity implements FriendsListAda
             ref.push().setValue(friendId);
             Toast.makeText(FriendsActivity.this, "You got new friend!", Toast.LENGTH_SHORT).show();
 
-            //TODO: doda se novi prilatelj u listu i refresuje se adapter i recycleView
             currentClientFriends.put(friendId, friendId);
             for ( Client client : notFriends) {
                 if (client.getUID().equals(friendId))
@@ -271,10 +251,8 @@ public class FriendsActivity extends AppCompatActivity implements FriendsListAda
         {
             Toast.makeText(FriendsActivity.this, "You are already friends!", Toast.LENGTH_SHORT).show();
         }
-
-
-
     }
+
     private void getAllFriends() {
         friends.clear();
         databaseReference.addChildEventListener(new ChildEventListener() {
@@ -545,17 +523,22 @@ public class FriendsActivity extends AppCompatActivity implements FriendsListAda
 
     @Override
     public void OnItemClick(int clickItemIndex) {
-        final String friendUID = friends.get(clickItemIndex).getUID();
-        Intent intent = new Intent(getBaseContext(), FriendProfileActivity.class);
-        intent.putExtra("friendUID", friendUID);
-        startActivity(intent);
+
+        Intent clientIntent = new Intent(this, clientInfoActivity.class);
+        clientIntent.putExtra("editable", false);
+
+        SharedPreferences settings = getSharedPreferences("SharedData", MODE_PRIVATE);
+        SharedPreferences.Editor prefEditor = settings.edit();
+        Gson gson = new Gson();
+        String json = gson.toJson(friends.get(clickItemIndex));
+        prefEditor.putString("clientInfo", json);
+        prefEditor.commit();
+        startActivity(clientIntent);
 
     }
 
     private void fetchCurrentClient ()
     {
-
-
         SharedPreferences sharedPreferences = getSharedPreferences("SharedData", MODE_PRIVATE);
         String currentClientJson = sharedPreferences.getString("currentClient", "");
 
@@ -564,8 +547,6 @@ public class FriendsActivity extends AppCompatActivity implements FriendsListAda
             currentClient = gsonInstance.fromJson(currentClientJson, Client.class);
             currentClientFriends = currentClient.getListOfFriendsUIDs();
         }
-
-
     }
 
     private void setupUI(){

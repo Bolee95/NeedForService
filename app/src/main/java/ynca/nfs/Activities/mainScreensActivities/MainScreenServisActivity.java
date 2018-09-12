@@ -5,17 +5,12 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.RequiresApi;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -40,11 +35,9 @@ import ynca.nfs.Activities.ListaCenovnikUslugaActivity;
 import ynca.nfs.Activities.ListaZahtevaActivity;
 import ynca.nfs.Activities.Lista_Recenzija_Activity;
 import ynca.nfs.Activities.ServiceInfoActivity;
-import ynca.nfs.Activities.Servis_Inbox_Activity;
 import ynca.nfs.Activities.startActivities.LoginActivity;
 import ynca.nfs.Adapter.ListaVozilaNaServisuAdapter;
 import ynca.nfs.Models.Vehicle;
-import ynca.nfs.Models.Poruka;
 import ynca.nfs.R;
 import ynca.nfs.Models.VehicleService;
 
@@ -59,45 +52,36 @@ public class MainScreenServisActivity extends AppCompatActivity {
     private FirebaseUser user;
     private FirebaseAuth auth;
     private StorageReference mStorageReference;
-    private static VehicleService trenutniVehicleService;
+    private static VehicleService currentService;
 
     private ListaVozilaNaServisuAdapter theAdapter;
     private RecyclerView theRecyclerView;
-    private ArrayList<Vehicle> lista;
+    private ArrayList<Vehicle> listOfVehicles;
 
-
-
-
-    Button mCenovnikUsluga;
-    //Button mVozilaNaServisu;
-    Button mZahtevi;
-    Button mSanduce;
-    Button mRecenzije;
+    Button priceOfServiceButton;
+    Button requestsButton;
+    Button reviewsButton;
     private Button signOutBtn;
     private TextView NameOfService;
     private TextView Descript;
-    private ImageView slikaServisa;
-    private static int BROJ_NEPROCITANIH_PORUKA;
+    private ImageView serviceImage;
 
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_screen_servis);
 
-
         NameOfService = (TextView) findViewById(R.id.NameAndSurnameNavBarServis);
         Descript = (TextView) findViewById(R.id.DescriptionNavBarServis);
-        mCenovnikUsluga = (Button) findViewById(R.id.cenovnik_usluga_id);
-        mZahtevi = (Button) findViewById(R.id.zahtevi_id);
-        mSanduce = (Button) findViewById(R.id.sanduce_servis_id);
+        priceOfServiceButton = (Button) findViewById(R.id.cenovnik_usluga_id);
+        requestsButton = (Button) findViewById(R.id.zahtevi_id);
         signOutBtn = (Button) findViewById(R.id.SignOutBtn);
-        slikaServisa = (ImageView) findViewById(R.id.imageViewNavBarServis);
-        mRecenzije = (Button) findViewById(R.id.lista_recenzija_btn_id);
-        lista = new ArrayList<>();
+        serviceImage = (ImageView) findViewById(R.id.imageViewNavBarServis);
+        reviewsButton = (Button) findViewById(R.id.lista_recenzija_btn_id);
+        listOfVehicles = new ArrayList<>();
 
 
-        mCenovnikUsluga.setOnClickListener(new View.OnClickListener() {
+        priceOfServiceButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent= new Intent(getBaseContext(), ListaCenovnikUslugaActivity.class);
@@ -112,21 +96,15 @@ public class MainScreenServisActivity extends AppCompatActivity {
 //            }
 //        });
 
-        mZahtevi.setOnClickListener(new View.OnClickListener() {
+        requestsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(getBaseContext(), ListaZahtevaActivity.class));
             }
         });
 
-        mSanduce.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(getBaseContext(), Servis_Inbox_Activity.class));
-            }
-        });
 
-        slikaServisa.setOnClickListener(new View.OnClickListener() {
+        serviceImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(getBaseContext(), ServiceInfoActivity.class));
@@ -141,11 +119,11 @@ public class MainScreenServisActivity extends AppCompatActivity {
 
 
                 //brise podatke o trenutno ulogovanom servisu prilikom logout-a
-                trenutniVehicleService = null;
+                currentService = null;
                 SharedPreferences settings = getSharedPreferences("SharedData", MODE_PRIVATE);
                 SharedPreferences.Editor prefEditor = settings.edit();
                 Gson gson = new Gson();
-                String json = gson.toJson(trenutniVehicleService);
+                String json = gson.toJson(currentService);
                 prefEditor.putString("TrenutniServis", json);
                 prefEditor.commit();
 
@@ -180,11 +158,11 @@ public class MainScreenServisActivity extends AppCompatActivity {
 //                        Toast.LENGTH_SHORT).show();
 //
 //                //brise podatke o trenutno ulogovanom servisu prilikom logout-a
-//                trenutniVehicleService = null;
+//                currentService = null;
 //                SharedPreferences settings = getSharedPreferences("SharedData", MODE_PRIVATE);
 //                SharedPreferences.Editor prefEditor = settings.edit();
 //                Gson gson = new Gson();
-//                String json = gson.toJson(trenutniVehicleService);
+//                String json = gson.toJson(currentService);
 //                prefEditor.putString("TrenutniServis", json);
 //                prefEditor.commit();
 
@@ -193,7 +171,7 @@ public class MainScreenServisActivity extends AppCompatActivity {
             }
         });
 
-        mRecenzije.setOnClickListener(new View.OnClickListener() {
+        reviewsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(getBaseContext(), Lista_Recenzija_Activity.class));
@@ -305,8 +283,8 @@ public class MainScreenServisActivity extends AppCompatActivity {
             public void onSuccess(Uri uri) {
                 if(uri != null) {
                     //showProgressDialog();
-                    Glide.with(slikaServisa.getContext())
-                            .load(uri).into(slikaServisa);
+                    Glide.with(serviceImage.getContext())
+                            .load(uri).into(serviceImage);
                     //hideProgressDialog();
                 }
             }
@@ -318,52 +296,34 @@ public class MainScreenServisActivity extends AppCompatActivity {
 
                 VehicleService ser = dataSnapshot.getValue(VehicleService.class);
                 if(ser.getEmail() == null) return;
-                if(ser.getEmail().equals(user.getEmail()))
-                {
-                    trenutniVehicleService = ser;
-
-                    int broj = 0;
-
-                    if(ser.getPrimljenePoruke() != null) {
-                        ArrayList<Poruka> li = new ArrayList<Poruka>(trenutniVehicleService.getPrimljenePoruke().values());
-                        for (Poruka p : li) {
-                            if (!p.isProcitana())
-                                broj++;
-                        }
-                        BROJ_NEPROCITANIH_PORUKA = broj;
-
-                        if (BROJ_NEPROCITANIH_PORUKA > 0) {
-                            mSanduce.setText(getResources().getString(R.string.NavListInboxBtn) + "(" + Integer.toString(BROJ_NEPROCITANIH_PORUKA) + ")");
-                        } else
-                            mSanduce.setText(getResources().getString(R.string.NavListInboxBtn));
-                    } else {
-                        mSanduce.setText(getResources().getString(R.string.NavListInboxBtn));
-                    }
+                if(ser.getEmail().equals(user.getEmail())) {
+                    currentService = ser;
+                }
 
                     int br;
-                    if(trenutniVehicleService.getPrimljenePoruke() == null){
+                    if(currentService.getPrimljenePoruke() == null){
                         br =0;
                     }
                     else{
-                        br = trenutniVehicleService.getPrimljenePoruke().size();
+                        br = currentService.getPrimljenePoruke().size();
                     }
 
                     SharedPreferences settings = getSharedPreferences("SharedData", MODE_PRIVATE);
                     SharedPreferences.Editor prefEditor = settings.edit();
                     Gson gson = new Gson();
-                    String json = gson.toJson(trenutniVehicleService);
+                    String json = gson.toJson(currentService);
                     prefEditor.putInt("brojPoruka", br);
                     prefEditor.putString("TrenutniServis", json);
                     prefEditor.commit();
-                    NameOfService.setText(trenutniVehicleService.getName() );
-                    Descript.setText(trenutniVehicleService.getEmail());
+                    NameOfService.setText(currentService.getName() );
+                    Descript.setText(currentService.getEmail());
 
                 }
 //                Automobil a2 = dataSnapshot.getValue(Automobil.class);
 //                theAdapter.add(a2);
 //                theRecyclerView.setAdapter(theAdapter);
-//                lista.add(a2);
-            }
+//                listOfVehicles.add(a2);
+
 
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {

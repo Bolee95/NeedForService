@@ -1,4 +1,4 @@
-package ynca.nfs.Activities;
+package ynca.nfs.Activities.clientActivities;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;

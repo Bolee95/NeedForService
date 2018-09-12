@@ -138,8 +138,10 @@ public class clientInfoActivity  extends AppCompatActivity {
         //Toolbar podesavanja
         toolbar = (Toolbar) findViewById(R.id.userInfoToolbar);
         setSupportActionBar(toolbar);
+        //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        //getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.baseline_arrow_back_white_18dp);
         getSupportActionBar().setTitle("");
 
 
@@ -153,121 +155,6 @@ public class clientInfoActivity  extends AppCompatActivity {
         initFields();
 
         //region event Listeners
-
-        //region komentarisano
-
-        //SharedPreferences shared = getSharedPreferences("SharedData",MODE_PRIVATE);
-        //SharedPreferences.Editor editor = shared.edit();
-        //Gson gson = new Gson();
-        //String json = shared.getString("TrenutniKlijent","");
-        //Client trenutniKlijent = gson.fromJson(json, Client.class);
-
-        //User.setText(trenutniKlijent.getFirstName() + " " + trenutniKlijent.getFirstName());
-        //EmailClientET.setText(trenutniKlijent.getEmail());
-        //PhoneNum.setText(trenutniKlijent.getFirstName());
-
-
-        /*PhoneNum.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                PhoneNum.setText("");
-            }
-        });*/
-//        PhoneNum.addTextChangedListener(new TextWatcher() {
-//            @Override
-//            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-//
-//            }
-//
-//            @Override
-//            public void onTextChanged(CharSequence s, int start, int before, int count) {
-//                ChangeSaveButtonState();
-//                isNumberChanged = true;
-//            }
-//
-//            @Override
-//            public void afterTextChanged(Editable s) {
-//                if (PhoneNum.getText().equals(""))
-//                {
-//                    //Vrati na stare podatke
-//                    PhoneNum.setText("018/1234567");
-//                }
-//            }
-//        });
-
-        /*PasswordClient.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                PasswordClient.setText("");
-            }
-        });*/
-//        PasswordClient.addTextChangedListener(new TextWatcher() {
-//            @Override
-//            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-//
-//            }
-//
-//            @Override
-//            public void onTextChanged(CharSequence s, int start, int before, int count) {
-//                ChangeSaveButtonState();
-//                isPasswordChanged = true;
-//            }
-//
-//            @Override
-//            public void afterTextChanged(Editable s) {
-//                if (PasswordClient.getText().equals(""))
-//                {
-//                    //Vrati na stare podatke
-//                    PasswordClient.setText("password");
-//                }
-//
-//            }
-//        });
-        /*EmailClientET.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                EmailClientET.setText("");
-            }
-        });*/
-//        EmailClientET.addTextChangedListener(new TextWatcher() {
-//            @Override
-//            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-//
-//            }
-//
-//            @Override
-//            public void onTextChanged(CharSequence s, int start, int before, int count) {
-//                ChangeSaveButtonState();
-//                isEmailChanged = true;
-//            }
-//
-//            @Override
-//            public void afterTextChanged(Editable s) {
-//                if(EmailClientET.getText().equals(""))
-//                {
-//                    //Vrati stare podatke
-//                    EmailClientET.setText("stari podaci");
-//                }
-//            }
-//        });
-
-//            User.addTextChangedListener(new TextWatcher() {
-//            @Override
-//            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-//
-//            }
-//
-//            @Override
-//            public void onTextChanged(CharSequence s, int start, int before, int count) {
-//                ChangeSaveButtonState();
-//                isNameChanged = true;
-//            }
-//
-//            @Override
-//            public void afterTextChanged(Editable s) {
-//
-//            }
-//        });
 
         //provera da li vec ima postojeca slika
         //endregion
@@ -324,14 +211,10 @@ public class clientInfoActivity  extends AppCompatActivity {
     }
 
     @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-
-        startActivity(new Intent(clientInfoActivity.this, mainScreenClientActivity.class));
+    public boolean onSupportNavigateUp() {
+        finish();
+        return false;
     }
-
-
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu)
@@ -374,7 +257,7 @@ public class clientInfoActivity  extends AppCompatActivity {
             photoRef.putFile(selectedImageUri).addOnSuccessListener(this, new OnSuccessListener<UploadTask.TaskSnapshot>() {
                 @Override
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                    @SuppressWarnings("VisibleForTests")
+
                     Uri s = taskSnapshot.getUploadSessionUri();
                     mProfilePicture.setImageBitmap(image);
                     //Glide.with(mProfilePicture.getContext())

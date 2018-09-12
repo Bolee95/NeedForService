@@ -48,16 +48,6 @@
         android:background="@drawable/rounded_button"
         android:fontFamily="@font/roboto_regular"
         />
-    <Button
-        android:id="@+id/NavListInboxBTN"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/MessageBox"
-        android:textSize="18dp"
-        android:layout_marginTop="10dp"
-        android:background="@drawable/rounded_button"
-        android:fontFamily="@font/roboto_regular" />
-
         <Button
             android:id="@+id/NavListFriendsButton"
             android:layout_width="match_parent"
@@ -68,15 +58,23 @@
             android:textSize="18dp"
             android:fontFamily="@font/roboto_regular" />
 
+        <Switch
+            android:id="@+id/serviceSwitch"
+            android:paddingTop="25dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/serviceSwitch"
+            android:textSize="18dp"/>
+
         <Button
             android:id="@+id/SignOutBtn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="50dp"
             android:background="@drawable/rounded_transparent"
+            android:fontFamily="@font/roboto_regular"
             android:text="@string/SignOut"
-            android:textSize="18dp"
-            android:fontFamily="@font/roboto_regular" />
+            android:textSize="18dp" />
     </LinearLayout>
 
 </ScrollView>

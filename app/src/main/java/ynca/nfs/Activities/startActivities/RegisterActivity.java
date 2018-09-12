@@ -2,6 +2,7 @@ package ynca.nfs.Activities.startActivities;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
@@ -30,6 +31,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.gson.Gson;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -118,6 +120,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         mAuth = FirebaseAuth.getInstance();
 
         locations = new List<Address>() {
+
             //region podesavanje liste
             @Override
             public int size() {
@@ -403,6 +406,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                 mDatabase.child("Korisnik").child("Client").child(user.getUid()).setValue(client);
                 hideProgressDialog();
                 startActivity(new Intent(getBaseContext(), mainScreenClientActivity.class));
+                activateLocationService();
             }
         } else if(host.getCurrentTabTag().equals("Service")){
             if(user != null){
@@ -438,6 +442,13 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                 startActivity(new Intent(getBaseContext(), MainScreenServisActivity.class));
             }
         }
+    }
+    private void activateLocationService()
+    {
+        SharedPreferences settings = getSharedPreferences("SharedData", MODE_PRIVATE);
+        SharedPreferences.Editor prefEditor = settings.edit();
+        prefEditor.putBoolean("locationServiceStatus", true);
+        prefEditor.commit();
     }
 
     @Override

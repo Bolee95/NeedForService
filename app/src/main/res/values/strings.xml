@@ -54,6 +54,7 @@
 
     <!-- NavList stringovi-->
     <string name="NavListInboxBtn">Message Box</string>
+    <string name="serviceSwitch">Activate location service</string>
 
     <!--Stringovi u zahtev_za_servisisanje_form i dodaj_automobil_form-->
     <string name="tipUsluge">Tip usluge:</string>
@@ -210,8 +211,8 @@
     <string name="IsServiceDone">Is service for this car done?</string>
     <string name="succeed">Succeed!</string>
     <string name="empty_inbox">Sanduce je prazno</string>
-    <string name="warrning">Warning!</string>
-    <string name="areYouSure">Are you sure?</string>
+    <string name="warning">Warning!</string>
+    <string name="areYouSure">Are you sure you want to sign out?</string>
     <string name="areYouSure2">Are you sure?</string>
     <string name="Added_new_car">You have added new car!</string>
     <string name="zauzeti_serveri">Servers are busy.</string>

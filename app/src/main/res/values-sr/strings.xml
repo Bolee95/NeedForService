@@ -52,6 +52,7 @@
 
     <!-- NavList stringovi-->
     <string name="NavListInboxBtn">Sanduče</string>
+    <string name="serviceSwitch">Aktiviraj servis za lokaciju</string>
 
     <!--Stringovi u zahtev_za_servisisanje_form i dodaj_automobil_form-->
     <string name="tipUsluge">Tip usluge:</string>

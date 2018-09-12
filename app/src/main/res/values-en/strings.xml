@@ -32,7 +32,7 @@
     <string name="nameService">Name of your company...</string>
     <string name="nameServiceOwner">Name and surname of owner...</string>
     <string name="OK">OK</string>
-    <string name="Service">Service: </string>
+    <string name="Service">Service</string>
     <string name="password">Password...</string>
     <string name="submit">Submit</string>
 
@@ -54,6 +54,7 @@
 
     <!-- NavList stringovi-->
     <string name="NavListInboxBtn">Message Box</string>
+    <string name="serviceSwitch">Activate location service</string>
 
     <!--Stringovi u zahtev_za_servisisanje_form i dodaj_automobil_form-->
     <string name="tipUsluge">Tip usluge:</string>

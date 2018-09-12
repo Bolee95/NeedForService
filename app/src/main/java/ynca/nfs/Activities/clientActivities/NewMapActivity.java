@@ -1,6 +1,7 @@
 package ynca.nfs.Activities.clientActivities;
 
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -81,7 +82,6 @@ import ynca.nfs.Models.VehicleService;
 import ynca.nfs.R;
 import ynca.nfs.SQLiteHelper;
 
-//TODO: Prvi put kad se ukljuci aplikacija i kada se da dozvola za lokaciju, ne prikazuje trenutnu lokaciju
 public class NewMapActivity extends AppCompatActivity implements OnMapReadyCallback, SearchResultAdapter.OnItemsClickListener {
 
     //region properties
@@ -256,7 +256,6 @@ public class NewMapActivity extends AppCompatActivity implements OnMapReadyCallb
 
                 VehicleService temp = dataSnapshot.getValue(VehicleService.class);
                 services.add(temp);
-
                 mAdapter.add(temp);
 
                 Marker marker = mMap.addMarker(new MarkerOptions()
@@ -299,11 +298,11 @@ public class NewMapActivity extends AppCompatActivity implements OnMapReadyCallb
                 mRecyclerView.setAdapter(mAdapter);
 
 
-                Marker marker = mMap.addMarker(new MarkerOptions()
-                        .position(new LatLng(temp.getLat(), temp.getLongi()))
-                        .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)));
-                marker.setTag(temp);
-
+                //Marker marker = addServiceMarkerWithImage(temp);//mMap.addMarker(new MarkerOptions()
+                        //.position(new LatLng(temp.getLat(), temp.getLongi()))
+                        //.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)));
+                //marker.setTag(temp);
+                addServiceMarkerWithImage(temp);
             }
 
             @Override
@@ -399,6 +398,25 @@ public class NewMapActivity extends AppCompatActivity implements OnMapReadyCallb
         //endregion
     }
 
+
+    @SuppressLint("MissingPermission")
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION: {
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+                         mMap.setMyLocationEnabled(true);
+                } else {
+                    mMap.setMyLocationEnabled(false);
+                }
+                return;
+            }
+        }
+    }
+
     private Bitmap getRoundedCornerBitmap(Bitmap bitmap, int pixels) {
         Bitmap output = Bitmap.createBitmap(bitmap.getWidth(), bitmap
                 .getHeight(), Bitmap.Config.ARGB_8888);
@@ -454,15 +472,15 @@ public class NewMapActivity extends AppCompatActivity implements OnMapReadyCallb
                 } else {
                     Location.distanceBetween(currentClient.getLastKnownLat(), currentClient.getLastKnownlongi(), temp.getLat(), temp.getLongi(), results);
                     if (results[0] < radius) {
-                        mMap.addMarker(new MarkerOptions()
-                                .position(new LatLng(temp.getLat(), temp.getLongi()))
-                                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE))).setTag(temp);
+                        addServiceMarkerWithImage(temp);
+                        //mMap.addMarker(new MarkerOptions()
+                        //        .position(new LatLng(temp.getLat(), temp.getLongi()))
+                        //        .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE))).setTag(temp);
                     }
                 }
             }
 
         }
-
 
         if (showFriendsMarkers.isChecked()) {
             for (VehicleService temp :
@@ -471,10 +489,9 @@ public class NewMapActivity extends AppCompatActivity implements OnMapReadyCallb
                 if (results[0] < radius) {
                     //U zavisnosti da li li mogu da se prikazu servisi prijatelja
                     //friendsServices
-
                     mMap.addMarker(new MarkerOptions()
                             .position(new LatLng(temp.getLat(), temp.getLongi()))
-                            .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE))).setTag(temp);
+                            .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN))).setTag(temp);
                 }
             }
 
@@ -494,6 +511,58 @@ public class NewMapActivity extends AppCompatActivity implements OnMapReadyCallb
         }
 
 
+    }
+    private void addServiceMarkerWithImage(final VehicleService temp)
+    {
+        if (!cashe.imageExists(temp.getUID())) {
+            StorageReference photoRef = mStorageReference.child("photos").child(temp.getUID());
+            try {
+                final File localFile = File.createTempFile(temp.getUID(), "");
+                photoRef.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                        String filePath = localFile.getPath();
+                        Bitmap icon = BitmapFactory.decodeFile(filePath);
+
+                        // ubacivanje u sql bazu
+                        cashe.saveImage(temp.getUID(), icon);
+
+                        Bitmap thumbnail = getRoundedCornerBitmap(Bitmap.createScaledBitmap(icon, 120, 120, false), 50);
+
+                        Marker marker = mMap.addMarker(new MarkerOptions()
+                                .position(new LatLng(temp.getLat(), temp.getLongi()))
+                                .icon(BitmapDescriptorFactory.fromBitmap(thumbnail)));
+                        marker.setTag(temp);
+                    }
+                });
+
+                photoRef.getFile(localFile).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Bitmap icon = BitmapFactory.decodeResource(getResources(),
+                                R.drawable.sport_car_logos);
+
+                        Bitmap thumbnail = getRoundedCornerBitmap(Bitmap.createScaledBitmap(icon, 120, 120, false), 50);
+                        Marker marker = mMap.addMarker(new MarkerOptions()
+                                .position(new LatLng(temp.getLat(), temp.getLongi()))
+                                .icon(BitmapDescriptorFactory.fromBitmap(thumbnail)));
+                        marker.setTag(temp);
+                    }
+                });
+            } catch (IOException ex) {
+            }
+        } else
+
+        {
+            Bitmap cashedImage = cashe.getImage(temp.getUID());
+            if (cashedImage != null) {
+                Bitmap thumbnail = getRoundedCornerBitmap(Bitmap.createScaledBitmap(cashedImage, 120, 120, false), 50);
+                Marker marker = mMap.addMarker(new MarkerOptions()
+                        .position(new LatLng(temp.getLat(), temp.getLongi()))
+                        .icon(BitmapDescriptorFactory.fromBitmap(thumbnail)));
+                marker.setTag(temp);
+            }
+        }
     }
 
     private void addFriendsMarker(final Client temp) {
@@ -538,7 +607,6 @@ public class NewMapActivity extends AppCompatActivity implements OnMapReadyCallb
 
         {
             Bitmap cashedImage = cashe.getImage(temp.getUID());
-            //TODO: DA SE SREDI, VRACA NUL IZ SQLite
             if (cashedImage != null) {
                 Bitmap thumbnail = getRoundedCornerBitmap(Bitmap.createScaledBitmap(cashedImage, 120, 120, false), 50);
                 Marker marker = mMap.addMarker(new MarkerOptions()
@@ -564,9 +632,11 @@ public class NewMapActivity extends AppCompatActivity implements OnMapReadyCallb
                             .position(new LatLng(temp.getLat(), temp.getLongi()))
                             .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN))).setTag(temp);
                 } else {
-                    mMap.addMarker(new MarkerOptions()
-                            .position(new LatLng(temp.getLat(), temp.getLongi()))
-                            .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE))).setTag(temp);
+                    //add serviceMarkerWithImage
+                    addServiceMarkerWithImage(temp);
+                    //mMap.addMarker(new MarkerOptions()
+                    //        .position(new LatLng(temp.getLat(), temp.getLongi()))
+                    //        .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE))).setTag(temp);
                 }
             }
 
@@ -577,8 +647,6 @@ public class NewMapActivity extends AppCompatActivity implements OnMapReadyCallb
             for (VehicleService temp :
                     friendsServices) {
                 //U zavisnosti da li li mogu da se prikazu servisi prijatelja
-                //friendsServices
-                //HashMap<String,VehicleService> tempList = temp.getListOfAddedServices();
                 mMap.addMarker(new MarkerOptions()
                         .position(new LatLng(temp.getLat(), temp.getLongi()))
                         .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE))).setTag(temp);
@@ -774,6 +842,7 @@ public class NewMapActivity extends AppCompatActivity implements OnMapReadyCallb
         DecimalFormat df = new DecimalFormat("#.##");
         df.setRoundingMode(RoundingMode.CEILING);
         String result = String.valueOf(df.format(results[0]/1000));
+        serviceIntent.putExtra("addedByUser",service.getAddedByUser());
         serviceIntent.putExtra("distance",result);
         serviceIntent.putExtra("editable",false);
 

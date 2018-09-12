@@ -13,11 +13,8 @@ import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.location.Location;
-import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.RequiresApi;
 import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AlertDialog;
@@ -26,17 +23,14 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RatingBar;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
-import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -57,21 +51,17 @@ import java.io.IOException;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.HashMap;
 
 import ynca.nfs.Activities.ServiceInfoActivity;
-import ynca.nfs.Activities.clientActivities.Client_Inbox_Activity;
 import ynca.nfs.Activities.clientActivities.FriendsActivity;
 import ynca.nfs.Activities.clientActivities.addVehicleFormActivity;
 import ynca.nfs.Activities.clientActivities.clientInfoActivity;
 import ynca.nfs.Activities.clientActivities.NewMapActivity;
 import ynca.nfs.Activities.startActivities.LoginActivity;
-import ynca.nfs.Activities.ServiceRequestActivity;
+import ynca.nfs.Activities.clientActivities.ServiceRequestActivity;
 import ynca.nfs.Adapter.ItemListClientAdapter;
 import ynca.nfs.LocationService;
 import ynca.nfs.Models.Client;
-import ynca.nfs.Models.Poruka;
-import ynca.nfs.Models.Review;
 import ynca.nfs.R;
 import ynca.nfs.Models.VehicleService;
 import ynca.nfs.SQLiteHelper;
@@ -90,18 +80,9 @@ public class mainScreenClientActivity extends AppCompatActivity implements ItemL
 
     private FirebaseUser user;
     private FirebaseAuth auth;
-    private static Client trenutniKlijent;
-    private ArrayList<VehicleService> servisi;
+    private static Client currentClient;
+    private ArrayList<VehicleService> services;
 
-    private static HashMap<String, Poruka> poruke;
-    private static int BROJ_NEPROCITANIH_PORUKA = 0;
-    private ArrayList<Float> listaProsecnihOcena ;
-
-
-    private TextView DialogServiceName;
-    private TextView DialogAdress;
-    private TextView DialogEmail;
-    private TextView DialogNumber;
     private static final int BROJ_PRIKAZANIH_ELEMENATA = 6;
     private ItemListClientAdapter adapter;
     private RecyclerView recycler;
@@ -110,33 +91,23 @@ public class mainScreenClientActivity extends AppCompatActivity implements ItemL
     private NavigationView navBar;
     private TextView NameAndSurr;
     private TextView Descript;
+    private Switch serviceSwitch;
 
     //region NavBar Buttons Declarations
     private  Button NovoVozilo;
     private  Button testDugme;
-    private Button testMapa;
-    private ImageView slikaKlijent;
-    private Button InboxBtn;
-    private Button NikolaTest;
+    private Button mapView;
+    private ImageView clientImage;
     private Button FriendsButton;
     private Button signOutBtn;
-    private RatingBar rating;
-    private Intent userProfile;
     private boolean userFetched;
     private boolean backgroundServiceStarted;
     //endregion
 
-
     private Client currentUser;
-
     //DUGMICI U DIALOGU
     private SQLiteHelper cashe;
-    private  Button request;
-    private Button sendMsg;
-    private Button rateComm;
 
-
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -146,26 +117,20 @@ public class mainScreenClientActivity extends AppCompatActivity implements ItemL
         cashe = new SQLiteHelper(this);
 
         //region Views Initialization
-
         NovoVozilo = (Button) findViewById(R.id.NavListButton1);
-        slikaKlijent = (ImageView) findViewById(R.id.imageViewNavBarClient);
+        clientImage = (ImageView) findViewById(R.id.imageViewNavBarClient);
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerList = (LinearLayout) findViewById(R.id.headerView);
         navBar = (NavigationView) findViewById(R.id.nav_view);
-        // SOSCallClient = (Button) findViewById(R.id.NavListButton4);
         signOutBtn = (Button) findViewById(R.id.SignOutBtn);
         FriendsButton = (Button) findViewById(R.id.NavListFriendsButton);
-        userProfile = new Intent(this, clientInfoActivity.class);
+        serviceSwitch = (Switch) findViewById(R.id.serviceSwitch);
+
         //endregion
-
-
-        servisi = new ArrayList<>();
-        poruke = new HashMap<>();
-        listaProsecnihOcena = new ArrayList<Float>();
+        services = new ArrayList<>();
 
         mFirebaseStorage = FirebaseStorage.getInstance();
         mStorageReference = mFirebaseStorage.getReference();
-
 
         //deo sa recycleom
         recycler = (RecyclerView) findViewById((R.id.RecycleViewClient));
@@ -175,16 +140,17 @@ public class mainScreenClientActivity extends AppCompatActivity implements ItemL
 
         //Zbog promene lokacije, poziva se value listener cesto, ovo je fleg koji zaustavlja ponovno ucitavanje
         userFetched = false;
-        backgroundServiceStarted = false;
 
+        //provera da li je background servis ukljucen ili ne
+        backgroundServiceStarted = checkLocationServiceStatus();
+        serviceSwitch.setChecked(backgroundServiceStarted);
 
         adapter = new ItemListClientAdapter(BROJ_PRIKAZANIH_ELEMENATA, this);
-
         NameAndSurr = (TextView) findViewById(R.id.NameAndSurnameNavBarClient_);
         Descript = (TextView) findViewById(R.id.DescriptionNavBarClient);
 
         //region OnClick Listeners
-        slikaKlijent.setOnClickListener(new View.OnClickListener() {
+        clientImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 redirectToUserProfile();
@@ -199,21 +165,42 @@ public class mainScreenClientActivity extends AppCompatActivity implements ItemL
             }
         });
 
+        serviceSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                SharedPreferences settings = getSharedPreferences("SharedData", MODE_PRIVATE);
+                SharedPreferences.Editor prefEditor = settings.edit();
+                prefEditor.putBoolean("locationServiceStatus", b);
+                prefEditor.commit();
+
+                if(b)
+                {
+                    startService(new Intent(getApplicationContext(), LocationService.class));
+                    Toast.makeText(mainScreenClientActivity.this,"Location service activated!",Toast.LENGTH_SHORT).show();
+                }
+                else
+                {
+                    stopService(new Intent(getApplicationContext(), LocationService.class));
+                    Toast.makeText(mainScreenClientActivity.this,"Location service deactivated!",Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
         signOutBtn.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
 
                 //brise podatke o trenutno ulogovanom klijentu prilikom odjavljivanja
-                trenutniKlijent = null;
+                currentClient = null;
                 SharedPreferences settings = getSharedPreferences("SharedData", MODE_PRIVATE);
                 SharedPreferences.Editor prefEditor = settings.edit();
                 Gson gson = new Gson();
-                String json = gson.toJson(trenutniKlijent);
+                String json = gson.toJson(currentClient);
                 prefEditor.putString("currentClient", json);
                 prefEditor.commit();
 
                 final AlertDialog alertDialog = new AlertDialog.Builder(v.getContext()).create();
-                alertDialog.setTitle(v.getResources().getString(R.string.warrning));
+                //alertDialog.setTitle(v.getResources().getString(R.string.warrning));
                 alertDialog.setMessage(getString(R.string.areYouSure));
                 alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, v.getResources().getString(R.string.Yes),
                         new DialogInterface.OnClickListener() {
@@ -272,18 +259,11 @@ public class mainScreenClientActivity extends AppCompatActivity implements ItemL
                 startActivity(new Intent(getBaseContext(),addVehicleFormActivity.class));
             }
         });
-        testMapa = (Button) findViewById(R.id.NavListButton3);
-        testMapa.setOnClickListener(new View.OnClickListener() {
+        mapView = (Button) findViewById(R.id.NavListButton3);
+        mapView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(getBaseContext(),NewMapActivity.class));
-            }
-        });
-        InboxBtn = (Button) findViewById(R.id.NavListInboxBTN);
-        InboxBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public  void  onClick(View v){
-                startActivity(new Intent(getBaseContext(), Client_Inbox_Activity.class));
             }
         });
         //endregion
@@ -300,20 +280,7 @@ public class mainScreenClientActivity extends AppCompatActivity implements ItemL
                 //za slucaj da se ova lista ucita pre korisnika
                 if (currentUser != null)
                     recycler.setAdapter(adapter);
-                servisi.add(vehicleService);
-
-                if(vehicleService.getReviews() == null){
-                    listaProsecnihOcena.add((float)0);
-                    return;
-                }
-                ArrayList<Review> rec = new ArrayList<>(vehicleService.getReviews().values());
-                float fl = 0;
-                for(Review r: rec)
-                    fl+= r.getRate();
-
-                listaProsecnihOcena.add(fl/((float)rec.size()));
-
-
+                services.add(vehicleService);
 
             }
 
@@ -364,9 +331,9 @@ public class mainScreenClientActivity extends AppCompatActivity implements ItemL
                 }
 
                 //startujemo servis ovde jer nam je potreban currentUser, a desava se da se ne ucita dovoljno brzo
-                if (currentUser != null && !backgroundServiceStarted) {
+                if (currentUser != null && backgroundServiceStarted) {
                     startService(new Intent(getApplicationContext(), LocationService.class));
-                    backgroundServiceStarted = true;
+                    backgroundServiceStarted = false;
                 }
             }
             @Override
@@ -391,7 +358,7 @@ public class mainScreenClientActivity extends AppCompatActivity implements ItemL
 
                         Bitmap profileImage = getRoundedCornerBitmap(Bitmap.createScaledBitmap(image, 250, 250, false), 50);
 
-                        slikaKlijent.setImageBitmap(profileImage);
+                        clientImage.setImageBitmap(profileImage);
                     }
                 });
 
@@ -401,7 +368,7 @@ public class mainScreenClientActivity extends AppCompatActivity implements ItemL
                         Bitmap image = BitmapFactory.decodeResource(getResources(),
                                 R.drawable.sport_car_logos);
 
-                        slikaKlijent.setImageBitmap(image);
+                        clientImage.setImageBitmap(image);
 
                     }
                 });
@@ -410,9 +377,8 @@ public class mainScreenClientActivity extends AppCompatActivity implements ItemL
             }
         } else {
             Bitmap cashedImage = cashe.getImage(auth.getCurrentUser().getUid());
-            //TODO: VRACA ZA GAJU NULL
-            //Bitmap profileImage = getRoundedCornerBitmap(Bitmap.createScaledBitmap(cashedImage, 250, 250, false), 50);
-            slikaKlijent.setImageBitmap(cashedImage);
+            Bitmap profileImage = getRoundedCornerBitmap(Bitmap.createScaledBitmap(cashedImage, 250, 250, false), 50);
+            clientImage.setImageBitmap(profileImage);
         }
 
         //endregion
@@ -423,7 +389,7 @@ public class mainScreenClientActivity extends AppCompatActivity implements ItemL
     }
     private void redirectToUserProfile()
     {
-
+        Intent userProfile = new Intent(this, clientInfoActivity.class);
         userProfile.putExtra("editable", true);
 
         SharedPreferences settings = getSharedPreferences("SharedData", MODE_PRIVATE);
@@ -444,7 +410,7 @@ public class mainScreenClientActivity extends AppCompatActivity implements ItemL
     @Override
     public void OnItemClick(int clickItemIndex) {
         Intent serviceIntent = new Intent(this, ServiceInfoActivity.class);
-        VehicleService temp = servisi.get(clickItemIndex);
+        VehicleService temp = services.get(clickItemIndex);
 
 
         //udaljenost servisa od korisnika
@@ -467,49 +433,25 @@ public class mainScreenClientActivity extends AppCompatActivity implements ItemL
 
     }
 
-    @Override
-    public void onBackPressed() {
+    private boolean checkLocationServiceStatus()
+    {
 
-        //super.onBackPressed();
-
-        final AlertDialog alertDialog = new AlertDialog.Builder(this).create();
-        alertDialog.setTitle(getBaseContext().getResources().getString(R.string.warrning));
-        alertDialog.setMessage(getString(R.string.areYouSure));
-        alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getBaseContext().getResources().getString(R.string.Yes),
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-
-                        //this.finishAffinity();
-                        mainScreenClientActivity.this.finishAffinity();
-
-                        //System.exit(1);
-                    }
-                });
-        alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, getBaseContext().getResources().getString(R.string.No) , new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                alertDialog.dismiss();
-            }
-        });
-
-        alertDialog.show();
-
+        SharedPreferences shared = getSharedPreferences("SharedData",MODE_PRIVATE);
+        SharedPreferences.Editor editor = shared.edit();
+        return shared.getBoolean("locationServiceStatus",false);
     }
 
 
     @Override
     protected void onResume() {
-
         super.onResume();
-
     }
-
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
     }
-
+    //region roundedImage
     private Bitmap getRoundedCornerBitmap(Bitmap bitmap, int pixels) {
         Bitmap output = Bitmap.createBitmap(bitmap.getWidth(), bitmap
                 .getHeight(), Bitmap.Config.ARGB_8888);
@@ -531,4 +473,5 @@ public class mainScreenClientActivity extends AppCompatActivity implements ItemL
 
         return output;
     }
+    //endregion
 }

@@ -9,7 +9,6 @@ public class Vehicle implements Serializable{
     private int chassisNumber; //broj sasije
     private String fuelType;  //tip goriva
     private int yearOfProduction; //godina proizvodnje
-    private String dateOfLastService; //poslednji servis
     private String registyNumber; //registracioni broj
     private String model;  //model vozila
     private String manufacturer;  //proizvodjac
@@ -21,23 +20,22 @@ public class Vehicle implements Serializable{
     private boolean onService; //STATUS VOZILA, DA LI se trenutno servisira ili ne
 
 
-    public Vehicle(String reg, String _model, String _proizvodjac, int _predjeniPut,
-                   int nbrojSasije, String ntipGodiva, int ngodinaProizvodnje, String nposlednjiSer,
-                   String vlasnik, String vlasnikMail, String usluga )
+    public Vehicle(String regNumber, String model, String manufacturer, int mileage,
+                   int chassisNumber, String fuelType, int productionYear,
+                   String owner, String ownersEmail, String kindOfService )
     {
 
-        chassisNumber = nbrojSasije;
-        fuelType = ntipGodiva;
-        yearOfProduction = ngodinaProizvodnje;
-        dateOfLastService = nposlednjiSer;
-        registyNumber = reg;
-        model = _model;
-        manufacturer = _proizvodjac;
-        mileage = _predjeniPut;
+        this.chassisNumber = chassisNumber;
+        this.fuelType = fuelType;
+        yearOfProduction = productionYear;
+        registyNumber = regNumber;
+        this.model = model;
+        this.manufacturer = manufacturer;
+        this.mileage = mileage;
         vehicleID = "test";
-        ownerID = vlasnik;
-        ownersMail = vlasnikMail;
-        typeOfService = usluga;
+        ownerID = owner;
+        ownersMail = ownersEmail;
+        typeOfService = kindOfService;
         onService = false;
     }
     public Vehicle(){}
@@ -93,15 +91,6 @@ public class Vehicle implements Serializable{
     public void setYearOfProduction(int yearOfProduction) {
         this.yearOfProduction = yearOfProduction;
     }
-
-    public String getDateOfLastService() {
-        return dateOfLastService;
-    }
-
-    public void setDateOfLastService(String dateOfLastService) {
-        this.dateOfLastService = dateOfLastService;
-    }
-
 
     public String getRegistyNumber() {
         return registyNumber;

@@ -4,10 +4,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.support.annotation.NonNull;
-import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -25,13 +23,8 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.gson.Gson;
 
-import org.w3c.dom.Text;
-
-import java.util.ArrayList;
-
 import ynca.nfs.Activities.clientActivities.FeedbackActivity;
-import ynca.nfs.Activities.clientActivities.addNewServiceActivity;
-import ynca.nfs.Models.Client;
+import ynca.nfs.Activities.clientActivities.ServiceRequestActivity;
 import ynca.nfs.Models.Review;
 import ynca.nfs.Models.VehicleService;
 import ynca.nfs.R;
@@ -42,6 +35,7 @@ public class ServiceInfoActivity extends AppCompatActivity {
     private TextView serviceName;
     private TextView serviceLocation;
     private TextView serviceCity;
+    private TextView serviceNumber;
     private RatingBar serviceRating;
     private TextView numberOfReviews;
     private ImageButton toMapButton;
@@ -53,6 +47,7 @@ public class ServiceInfoActivity extends AppCompatActivity {
     private Intent currentIntent;
     private VehicleService currentService;
     private Boolean editable;
+    private Boolean addedByUser;
 
     private FirebaseStorage mFirebaseStorage;
     private StorageReference mStorageReference;
@@ -63,6 +58,7 @@ public class ServiceInfoActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_info_service);
 
+        serviceNumber = (TextView) findViewById(R.id.serviceNumber);
         serviceImage = (ImageView) findViewById(R.id.serviceImage);
         serviceName = (TextView) findViewById(R.id.nameOfService);
         serviceLocation = (TextView) findViewById(R.id.serviceLocation);
@@ -81,7 +77,7 @@ public class ServiceInfoActivity extends AppCompatActivity {
 
         currentIntent = getIntent();
         editable = currentIntent.getBooleanExtra("editable",false);
-
+        addedByUser = currentIntent.getBooleanExtra("addedByUser", false);
 
 
         //podesavanje toolbar
@@ -131,6 +127,15 @@ public class ServiceInfoActivity extends AppCompatActivity {
         serviceName.setText(currentService.getName());
         serviceCity.setText(currentService.getCity());
         serviceLocation.setText(currentService.getAddress());
+        serviceNumber.setText(currentService.getPhoneNumber());
+        if(addedByUser)
+        {
+            serviceRating.setEnabled(false);
+        }
+        else
+        {
+            serviceRating.setEnabled(false);
+        }
 
 
         //TODO: Napraviti da se automatski updateuje rating, postaviti listener na bazu

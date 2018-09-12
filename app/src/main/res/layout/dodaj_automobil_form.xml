@@ -5,6 +5,19 @@
     android:layout_height="match_parent"
     tools:context="ynca.nfs.Activities.clientActivities.addVehicleFormActivity"
     >
+    <android.support.design.widget.AppBarLayout
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        >
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/newCarToolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/background">
+
+        </android.support.v7.widget.Toolbar>
+    </android.support.design.widget.AppBarLayout>
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -14,14 +27,6 @@
             android:orientation="vertical"
             android:descendantFocusability="beforeDescendants"
             android:focusableInTouchMode="true">
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/insertInfo"
-        android:background="@color/colorAccent"
-        android:textAlignment="center"
-        android:textSize="20sp"/>
-
 <TextView
     android:layout_marginTop="5dp"
     android:layout_width="match_parent"
@@ -98,16 +103,6 @@
         android:id="@+id/predjeniKmEDIT"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/Serviced"
-                android:textSize="15sp"/>
-            <EditText
-                android:inputType="date"
-                android:id="@+id/servisiranEDIT"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
 
             <Button
                 android:id="@+id/DodajAutomobilBTN"

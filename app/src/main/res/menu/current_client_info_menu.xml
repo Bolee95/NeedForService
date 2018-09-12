@@ -8,4 +8,6 @@
         app:showAsAction="always"
         android:title="Edit client info"
         android:icon="@drawable/baseline_edit_white_18dp"/>
+
+
 </menu>

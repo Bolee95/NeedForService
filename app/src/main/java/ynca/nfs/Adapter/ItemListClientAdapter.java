@@ -155,7 +155,11 @@ public class ItemListClientAdapter extends RecyclerView.Adapter<ItemListClientAd
             df.setRoundingMode(RoundingMode.CEILING);
 
             String result = String.valueOf(df.format(results[0] / 1000));
-            distance.setText("It's " + result + " km away!");
+            if ((results[0] / 1000) < 500) {
+                distance.setText("It's " + result + " km away!");
+            }
+            else
+                distance.setText("");
 
         }
 

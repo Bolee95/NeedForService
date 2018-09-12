@@ -5,8 +5,21 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/Zahtev_Servisiranja_Layout"
-    tools:context="ynca.nfs.Activities.ServiceRequestActivity"
+    tools:context="ynca.nfs.Activities.clientActivities.ServiceRequestActivity"
    >
+    <android.support.design.widget.AppBarLayout
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        >
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/requestToolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/background">
+
+        </android.support.v7.widget.Toolbar>
+    </android.support.design.widget.AppBarLayout>
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -16,14 +29,6 @@
             android:orientation="vertical"
             android:descendantFocusability="beforeDescendants"
             android:focusableInTouchMode="true">
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/insertInfo"
-                android:background="@color/colorAccent"
-
-                android:textAlignment="center"
-                android:textSize="20sp"/>
 
 
             <TextView
@@ -102,14 +107,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-            <EditText
-                android:id="@+id/note_id"
-                android:inputType="text"
-                android:layout_width="match_parent"
-                android:minHeight="100dp"
-                android:layout_height="100dp"
+                <EditText
+                    android:id="@+id/note_id"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:inputType="text"
+                    android:minHeight="100dp"
 
-                />
+                    />
 
             </ScrollView>
 

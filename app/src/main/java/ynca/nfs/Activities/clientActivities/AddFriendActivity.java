@@ -245,27 +245,6 @@ public class AddFriendActivity extends AppCompatActivity {
                 addFriend(clickedDevice, info);
 
             }
-
-
-
-
-
-
-
-
-
-
-
-
-            // todo mislim da je ovaj deo u nasem slucaju nepotreban
-             //todo neka ga za sada
-
-
-            /*Intent intent = new Intent();
-            intent.putExtra(DEVICE_ADDRESS, address);
-
-            setResult(Activity.RESULT_OK, intent);
-            finish(); */
         }
     };
 

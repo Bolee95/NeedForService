@@ -77,7 +77,7 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".Activities.mainScreensActivities.mainScreenClientActivity" />
         </activity>
-        <activity android:name=".Activities.ServiceRequestActivity">
+        <activity android:name=".Activities.clientActivities.ServiceRequestActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".Activities.mainScreensActivities.mainScreenClientActivity" />
@@ -95,37 +95,14 @@
                 android:value=".Activities.clientActivities.clientInfoActivity" />
         </activity>
         <activity
-            android:name=".Activities.clientActivities.Client_Inbox_Activity"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".Activities.mainScreensActivities.mainScreenClientActivity" />
-        </activity>
-        <activity
             android:name=".Activities.clientActivities.carInfoActivity"
             android:theme="@style/AppTheme" />
 
-        <service android:name=".ConectionService" />
-
-        <activity android:name=".Activities.clientActivities.VoziloInfo" />
-
-        <receiver android:name=".CheckConnectivity">
-            <intent-filter>
-                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
-            </intent-filter>
-        </receiver>
-
         <activity android:name=".Activities.mainScreensActivities.MainScreenServisActivity" />
-        <activity android:name=".Activities.Poruka_tekst_activity" />
-        <activity
-            android:name=".Activities.Servis_Inbox_Activity"
-            android:screenOrientation="portrait" />
         <activity android:name=".Activities.ListaCenovnikUslugaActivity" />
         <activity android:name=".Activities.ListaVozilaNaServisuActivity" />
         <activity android:name=".Activities.ListaZahtevaActivity" />
         <activity android:name=".Activities.clientActivities.FeedbackActivity" />
-        <activity android:name=".Activities.clientActivities.Message_activity" />
         <activity android:name=".Activities.Lista_Recenzija_Activity" />
         <activity android:name=".Activities.NovaUslugaActivity" />
         <activity
@@ -140,11 +117,10 @@
             android:enabled="true"
             android:exported="true" />
 
-        <activity android:name=".Activities.clientActivities.FriendProfileActivity" />
         <activity android:name=".Activities.clientActivities.AddFriendActivity" />
         <activity android:name=".Activities.ServiceInfoActivity" />
         <activity android:name=".Activities.clientActivities.FriendsActivity" />
-        <activity android:name=".Activities.DeviceListActivity" />
+        <activity android:name=".Activities.clientActivities.DeviceListActivity"></activity>
         <activity android:name=".Activities.clientActivities.ARActivity" android:configChanges="screenSize|orientation"></activity>
     </application>
 
