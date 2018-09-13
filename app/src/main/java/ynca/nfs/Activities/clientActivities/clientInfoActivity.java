@@ -221,6 +221,14 @@ public class clientInfoActivity  extends AppCompatActivity {
     {
         getMenuInflater().inflate(R.menu.current_client_info_menu, menu);
         editButton = menu.findItem(R.id.editClientInfo);
+        editButton.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                Intent editProfile = new Intent(clientInfoActivity.this,editProfileActivity.class);
+                startActivityForResult(editProfile,4);
+                return  true;
+            }
+        });
         if (!isCurrentUser)
         {
             editButton.setVisible(false);
@@ -233,17 +241,11 @@ public class clientInfoActivity  extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item)
     {
-        Intent editProfile = new Intent(clientInfoActivity.this,editProfileActivity.class);
-        startActivityForResult(editProfile,4);
+
         //finish();
         return super.onOptionsItemSelected(item);
 
     }
-
-
-
-
-
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {

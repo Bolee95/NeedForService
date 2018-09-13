@@ -100,21 +100,21 @@ public class NewMapActivity extends AppCompatActivity implements OnMapReadyCallb
 
     private FirebaseDatabase mFirebaseDatabase;
 
-    private DatabaseReference mDatabaseReference;
-    private DatabaseReference mDatabaseReference1;
-    private ChildEventListener mChildEventListener2;
+    private DatabaseReference registeredServicesReference;
+    private DatabaseReference friendsReference;
+    private ChildEventListener ClientAddedServiceListener;
     private ChildEventListener servicesListener;
-    private DatabaseReference mDatabaseReference2;
+    private DatabaseReference clientAddedServicesReference;
     private ChildEventListener clientChildrenUpdateListener;
 
     private FirebaseStorage mFirebaseStorage;
     private StorageReference mStorageReference;
 
-    public static ArrayList<VehicleService> services;
+    public ArrayList<VehicleService> services;
+    public static ArrayList<VehicleService> ARservices;
     private CameraPosition mCameraPosition;
     private ArrayList<Client> listOfFriends;
-    private ArrayList<VehicleService> friendsServices;//postavi se listener na referencu na prijatelje trenutno ulogovanog korisnika
-    // i onda se dodaju na mapu i osluskuju se sa listenerom za promene
+    private ArrayList<VehicleService> friendsServices;
 
     private Location mLastKnownLocation;
     private LatLng mDefaultLocation;
@@ -160,7 +160,7 @@ public class NewMapActivity extends AppCompatActivity implements OnMapReadyCallb
         nightMode = false;
         listOfFriends = new ArrayList<Client>();
         friendsServices = new ArrayList<VehicleService>();
-
+        ARservices = new ArrayList<VehicleService>();
 
         initRecycler();
         //region menu filter buttons
@@ -220,15 +220,13 @@ public class NewMapActivity extends AppCompatActivity implements OnMapReadyCallb
         currentClient = gson.fromJson(json, Client.class);
 
         mFirebaseDatabase = FirebaseDatabase.getInstance();
-        mDatabaseReference = mFirebaseDatabase.getReference().child("Korisnik").child("VehicleService");
-        mDatabaseReference1 = mFirebaseDatabase.getReference().child("Korisnik").child("Client");
-        mDatabaseReference2 = mFirebaseDatabase.getReference().child("Korisnik").child("Client").child(currentClient.getUID()).child("listOfAddedServices");
+        registeredServicesReference = mFirebaseDatabase.getReference().child("Korisnik").child("VehicleService");
+        friendsReference = mFirebaseDatabase.getReference().child("Korisnik").child("Client");
+        clientAddedServicesReference = mFirebaseDatabase.getReference().child("Korisnik").child("Client").child(currentClient.getUID()).child("listOfAddedServices");
         mFirebaseStorage = FirebaseStorage.getInstance();
         mStorageReference = mFirebaseStorage.getReference();
 
-
         services = new ArrayList<VehicleService>();
-
 
         mDefaultLocation = new LatLng(currentClient.getLastKnownLat(), currentClient.getLastKnownlongi());
         mLastKnownLocation = new Location("");
@@ -251,11 +249,12 @@ public class NewMapActivity extends AppCompatActivity implements OnMapReadyCallb
             }
         });
         //region EventListeners
-        mChildEventListener2 = new ChildEventListener() {
+        ClientAddedServiceListener = new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
 
                 VehicleService temp = dataSnapshot.getValue(VehicleService.class);
+                //friendsServices.add(temp);
                 services.add(temp);
                 mAdapter.add(temp);
 
@@ -285,8 +284,7 @@ public class NewMapActivity extends AppCompatActivity implements OnMapReadyCallb
 
             }
         };
-
-        mDatabaseReference2.addChildEventListener(mChildEventListener2);
+        clientAddedServicesReference.addChildEventListener(ClientAddedServiceListener);
 
 
         servicesListener = new ChildEventListener() {
@@ -295,6 +293,7 @@ public class NewMapActivity extends AppCompatActivity implements OnMapReadyCallb
 
                 VehicleService temp = dataSnapshot.getValue(VehicleService.class);
                 services.add(temp);
+                ARservices.add(temp);
                 mAdapter.add(temp);
                 mRecyclerView.setAdapter(mAdapter);
 
@@ -327,7 +326,7 @@ public class NewMapActivity extends AppCompatActivity implements OnMapReadyCallb
             }
         };
 
-        mDatabaseReference.addChildEventListener(servicesListener);
+        registeredServicesReference.addChildEventListener(servicesListener);
 
 
         clientChildrenUpdateListener = new ChildEventListener() {
@@ -386,13 +385,13 @@ public class NewMapActivity extends AppCompatActivity implements OnMapReadyCallb
 
             }
         };
-        mDatabaseReference1.addChildEventListener(clientChildrenUpdateListener);
+        friendsReference.addChildEventListener(clientChildrenUpdateListener);
 
         //da bi ar radio mora imati permission za cameru i lokaciju
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
                 != PackageManager.PERMISSION_GRANTED)
         {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA},
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE},
                     11);
         }
 
@@ -466,6 +465,7 @@ public class NewMapActivity extends AppCompatActivity implements OnMapReadyCallb
                 if (temp.getAddedByUser() == true) {
                     Location.distanceBetween(currentClient.getLastKnownLat(), currentClient.getLastKnownlongi(), temp.getLat(), temp.getLongi(), results);
                     if (results[0] < radius) {
+
                         mMap.addMarker(new MarkerOptions()
                                 .position(new LatLng(temp.getLat(), temp.getLongi()))
                                 .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN))).setTag(temp);
@@ -579,13 +579,14 @@ public class NewMapActivity extends AppCompatActivity implements OnMapReadyCallb
 
                         // ubacivanje u sql bazu
                         cashe.saveImage(temp.getUID(), icon);
+                        if (icon != null) {
+                            Bitmap thumbnail = getRoundedCornerBitmap(Bitmap.createScaledBitmap(icon, 120, 120, false), 50);
 
-                        Bitmap thumbnail = getRoundedCornerBitmap(Bitmap.createScaledBitmap(icon, 120, 120, false), 50);
-
-                        Marker marker = mMap.addMarker(new MarkerOptions()
-                                .position(new LatLng(temp.getLastKnownLat(), temp.getLastKnownlongi()))
-                                .icon(BitmapDescriptorFactory.fromBitmap(thumbnail)));
-                        marker.setTag(temp);
+                            Marker marker = mMap.addMarker(new MarkerOptions()
+                                    .position(new LatLng(temp.getLastKnownLat(), temp.getLastKnownlongi()))
+                                    .icon(BitmapDescriptorFactory.fromBitmap(thumbnail)));
+                            marker.setTag(temp);
+                        }
                     }
                 });
 
@@ -778,9 +779,6 @@ public class NewMapActivity extends AppCompatActivity implements OnMapReadyCallb
         }
     }
 
-
-
-
     /**
      * Manipulates the map once available.
      * This callback is triggered when the map is ready to be used.
@@ -822,12 +820,11 @@ public class NewMapActivity extends AppCompatActivity implements OnMapReadyCallb
     {
         Intent clientIntent = new Intent(this, clientInfoActivity.class);
         clientIntent.putExtra("editable", false);
-
         SharedPreferences settings = getSharedPreferences("SharedData", MODE_PRIVATE);
         SharedPreferences.Editor prefEditor = settings.edit();
         Gson gson = new Gson();
         String json = gson.toJson(client);
-        prefEditor.putString("clientInfo", json);
+        prefEditor.putString("clientInfo",json);
         prefEditor.commit();
 
         startActivity(clientIntent);
@@ -873,9 +870,7 @@ public class NewMapActivity extends AppCompatActivity implements OnMapReadyCallb
             Map<String,Object> childUpdate = new HashMap<>();
             childUpdate.put("lastKnownLat",mLastKnownLocation.getLatitude());
             childUpdate.put("lastKnownlongi",mLastKnownLocation.getLongitude());
-            mDatabaseReference1.child(currentClient.getUID()).updateChildren(childUpdate);
-
-
+            friendsReference.child(currentClient.getUID()).updateChildren(childUpdate);
 
         }
 

@@ -18,31 +18,25 @@
 
     <TextView
         android:layout_width="wrap_content"
-
+        android:fontFamily="@font/roboto_regular"
         android:layout_height="wrap_content"
         android:text="@string/owner"
         android:textSize="20sp"
         />
 
-
-
-
     <TextView
         android:layout_width="match_parent"
-
+        android:fontFamily="@font/roboto_regular"
         android:layout_height="wrap_content"
-
         android:id="@+id/lista_vozila_na_servisu_vlas_id"
-
         android:textSize="20sp"
-
         />
 
     <View style="@style/Divider2"></View>
 
     <TextView
         android:layout_width="wrap_content"
-
+        android:fontFamily="@font/roboto_regular"
         android:layout_height="wrap_content"
         android:text="@string/RegNumber"
         android:textSize="20sp"
@@ -53,11 +47,9 @@
 
     <TextView
         android:layout_width="match_parent"
-
         android:layout_height="wrap_content"
-
         android:id="@+id/lista_vozila_na_servisu_item_id"
-
+        android:fontFamily="@font/roboto_regular"
         android:textSize="20sp"
 
         />
@@ -70,6 +62,7 @@
         android:layout_height="wrap_content"
         android:text="@string/producer"
         android:textSize="20sp"
+        android:fontFamily="@font/roboto_regular"
         />
 
 
@@ -78,6 +71,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/lista_vozila_na_servisu_proizvodjac_id"
         android:textSize="20sp"
+        android:fontFamily="@font/roboto_regular"
         />
     <View style="@style/Divider2"></View>
 
@@ -87,6 +81,7 @@
         android:layout_height="wrap_content"
         android:text="@string/Model"
         android:textSize="20sp"
+        android:fontFamily="@font/roboto_regular"
         />
 
 
@@ -95,6 +90,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/lista_vozila_na_servisu_model_id"
         android:textSize="20sp"
+        android:fontFamily="@font/roboto_regular"
         />
     <View style="@style/Divider2"></View>
 
@@ -102,6 +98,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/Production"
+        android:fontFamily="@font/roboto_regular"
         android:textSize="20sp"
         />
 
@@ -110,6 +107,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/lista_vozila_na_servisu_godina_id"
+        android:fontFamily="@font/roboto_regular"
         android:textSize="20sp"
         />
     <View style="@style/Divider2"></View>
@@ -119,12 +117,14 @@
         android:layout_height="wrap_content"
         android:text="@string/fuel1"
         android:textSize="20sp"
+        android:fontFamily="@font/roboto_regular"
         />
 
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:fontFamily="@font/roboto_regular"
         android:id="@+id/lista_vozila_na_servisu_tipgoriva_id"
         android:textSize="20sp"
         />
@@ -134,6 +134,7 @@
         android:layout_height="wrap_content"
         android:text="@string/usluga"
         android:textSize="20sp"
+        android:fontFamily="@font/roboto_regular"
         />
 
 
@@ -142,6 +143,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/lista_vozila_na_servisu_usluga_id"
         android:textSize="20sp"
+        android:fontFamily="@font/roboto_regular"
         />
     <View style="@style/Divider2"></View>
 
@@ -150,13 +152,13 @@
 
     <Button
         android:id="@+id/DugmeListaServisiranih"
-        android:layout_width="wrap_content"
+        android:layout_width="150dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
+        android:fontFamily="@font/roboto_regular"
         android:text="@string/MarkAsDone"
-        android:background="@color/colorAccent"
+        android:background="@drawable/rounded_button"
         />
-    <View style="@style/Divider2"></View>
 
     <View style="@style/Divider2"></View>
 

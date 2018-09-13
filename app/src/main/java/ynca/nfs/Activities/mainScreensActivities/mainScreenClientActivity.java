@@ -1,6 +1,7 @@
 package ynca.nfs.Activities.mainScreensActivities;
 
 
+import android.Manifest;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -16,6 +17,7 @@ import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -94,7 +96,7 @@ public class mainScreenClientActivity extends AppCompatActivity implements ItemL
     private Switch serviceSwitch;
 
     //region NavBar Buttons Declarations
-    private  Button NovoVozilo;
+    private  Button newCar;
     private  Button testDugme;
     private Button mapView;
     private ImageView clientImage;
@@ -117,7 +119,7 @@ public class mainScreenClientActivity extends AppCompatActivity implements ItemL
         cashe = new SQLiteHelper(this);
 
         //region Views Initialization
-        NovoVozilo = (Button) findViewById(R.id.NavListButton1);
+        newCar = (Button) findViewById(R.id.NavListButton1);
         clientImage = (ImageView) findViewById(R.id.imageViewNavBarClient);
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerList = (LinearLayout) findViewById(R.id.headerView);
@@ -131,6 +133,10 @@ public class mainScreenClientActivity extends AppCompatActivity implements ItemL
 
         mFirebaseStorage = FirebaseStorage.getInstance();
         mStorageReference = mFirebaseStorage.getReference();
+
+        //dozvola za lokaciju zbog servisa u pozadini
+        ActivityCompat.requestPermissions(mainScreenClientActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                1);
 
         //deo sa recycleom
         recycler = (RecyclerView) findViewById((R.id.RecycleViewClient));
@@ -239,9 +245,9 @@ public class mainScreenClientActivity extends AppCompatActivity implements ItemL
 
 
         //region dugmad za side meni
-        NovoVozilo = (Button) findViewById(R.id.NavListButton1);
+        newCar = (Button) findViewById(R.id.NavListButton1);
         testDugme = (Button) findViewById(R.id.NavListButton2);
-        NovoVozilo.setOnClickListener(new View.OnClickListener() {
+        newCar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(getBaseContext(), addVehicleFormActivity.class));
@@ -253,7 +259,7 @@ public class mainScreenClientActivity extends AppCompatActivity implements ItemL
                 startActivity(new Intent(getBaseContext(), ServiceRequestActivity.class));
             }
         });
-        NovoVozilo.setOnClickListener(new View.OnClickListener() {
+        newCar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(getBaseContext(),addVehicleFormActivity.class));
@@ -355,10 +361,11 @@ public class mainScreenClientActivity extends AppCompatActivity implements ItemL
                         String filePath = localFile.getPath();
                         Bitmap image = BitmapFactory.decodeFile(filePath);
                         cashe.saveImage(auth.getCurrentUser().getUid(), image);
+                        if (image != null) {
+                            Bitmap profileImage = getRoundedCornerBitmap(Bitmap.createScaledBitmap(image, 250, 250, false), 50);
 
-                        Bitmap profileImage = getRoundedCornerBitmap(Bitmap.createScaledBitmap(image, 250, 250, false), 50);
-
-                        clientImage.setImageBitmap(profileImage);
+                            clientImage.setImageBitmap(profileImage);
+                        }
                     }
                 });
 

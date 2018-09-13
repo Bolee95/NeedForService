@@ -39,8 +39,6 @@ import ynca.nfs.Models.Client;
 import ynca.nfs.Models.VehicleService;
 
 public class LocationService extends Service {
-
-    //TODO gasenje servisa u opcijama
     //private static final String TAG = "Lokacija";
     private LocationManager mLocationManager = null;
     private static final int LOCATION_INTERVAL = 1000;
@@ -264,4 +262,5 @@ public class LocationService extends Service {
             mLocationManager = (LocationManager) getApplicationContext().getSystemService(Context.LOCATION_SERVICE);
         }
     }
+
 }

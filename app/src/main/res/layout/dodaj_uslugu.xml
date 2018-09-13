@@ -11,14 +11,15 @@
     android:text="@string/InsertPrice"
     android:gravity="center"
     android:padding="16dp"
-    android:textColor="@color/Black"
+        android:fontFamily="@font/roboto_regular"
     android:textSize="16sp" />
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/cena_edit_text"
         android:inputType="number"
-        android:textColor="@color/Black"
+        android:fontFamily="@font/roboto_regular"
+        android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
         android:padding="20dp"/>
 
     <TextView
@@ -28,21 +29,22 @@
         android:text="@string/InsertDescript"
         android:gravity="center"
         android:padding="16dp"
-        android:textColor="@color/Black"
+        android:fontFamily="@font/roboto_regular"
         android:textSize="16sp" />
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/opis_text_edit"
         android:inputType="text"
-        android:textColor="@color/Black"
+        android:fontFamily="@font/roboto_regular"
+        android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
         android:padding="20dp"/>
 
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/usluga_submit_btn"
-        android:background="@color/colorAccent"
+        android:background="@drawable/rounded_button"
         android:text="@string/submit"/>
 
 </LinearLayout>

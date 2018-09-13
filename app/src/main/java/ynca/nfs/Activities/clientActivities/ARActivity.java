@@ -39,13 +39,13 @@ public class ARActivity extends AppCompatActivity {
         config.setFeatures(ArchitectStartupConfiguration.Features.Geo);
         config.setLicenseKey("qw+nF2XMhcBF45qQjEZBJ8fAgzEF2kuJbM0qiLu/dM5TatM9UywBQgm8C9tBtPV9Tm1gRMoGJyKXz2vS1ndneBV0caY6TcdpFU6yIW6ZLphTa93LeZjqF+/9r3+cJWvM1U0RIeoBWEKQIaxYXbEaSKAlLx6XXYgsfxSfgHc7uf5TYWx0ZWRfX0KOcN8rBQsTRKX78TCO0GVHXhaE8uddXl/+AMWA9HpHGzt1gXH2Pf6ZjKl04D6bcaErIsgTU0qJVnei53zaV/ibiDuN+MlPP2lzyfSYy+gwW8dIpBa1S2wbjpjDIbtaSrAWPFnayLSd3OW62szkCTKJFolbufMW/CiEBWjHlUSJBRkHNOTaRVqrwhY4+hpDnL1Ll0zZX57JTB7SvD1aBq0Lwre2ZraXl+jOGUyg2b248DfjiyEn39SGGkxBDc4DL5MxXzPe0TSAy+bs7Oul1X+lJ2hP1JdQnw5X3cQZNXjjOcXl5ij0Ve8OeWFnx+4dHcSb/Pj3NBuRzG8mh7mOXp+YM8/G2yPofdsYOIPmwHSHTD/luIR0sMidVcFQO58iA+LZKRLgQi68IR79qGFQvhCwSKAllww8qbYXGZn/bKjT4HuxOS/dI2Mxu3A1kclwT4zPC+x5EjbQRGHkNl5WMKOA9IqY96BaTx5vzjzSh4H+CMAsh3e24zB8XN/n8/2yCi7fFP78UVoo5TVEFSbX2QpWYcf+Czw8/w==");
 
-        this.architectView.onCreate( config );
+        this.architectView.onCreate(config);
 
         services = new ArrayList<>();
-        services = NewMapActivity.services;
-        final JSONArray jsonArray = generatePoiInformation(services);
-        //String test = jsonArray.toString();
+        services = NewMapActivity.ARservices;
 
+
+        final JSONArray jsonArray = generatePoiInformation(services);
         generateJsonLocationFile(jsonArray);
 
         locationProvider = new LocationProvider(this, new LocationListener() {
@@ -87,7 +87,7 @@ public class ARActivity extends AppCompatActivity {
             stream.flush();
             stream.close();
         } catch (IOException e) {
-            e.printStackTrace();
+            e.printStackTrace(System.out);
         }
     }
 

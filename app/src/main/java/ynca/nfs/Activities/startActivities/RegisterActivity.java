@@ -447,7 +447,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     {
         SharedPreferences settings = getSharedPreferences("SharedData", MODE_PRIVATE);
         SharedPreferences.Editor prefEditor = settings.edit();
-        prefEditor.putBoolean("locationServiceStatus", true);
+        prefEditor.putBoolean("locationServiceStatus", false);
         prefEditor.commit();
     }
 

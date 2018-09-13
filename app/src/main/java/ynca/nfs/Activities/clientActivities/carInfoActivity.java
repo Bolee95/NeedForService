@@ -77,19 +77,18 @@ public class carInfoActivity extends AppCompatActivity {
         vehicle = (Vehicle) getIntent().getSerializableExtra("vozilo");
 
         SharedPreferences settings = getSharedPreferences("SharedData", MODE_PRIVATE);
-
         Gson gson = new Gson();
         String json = settings.getString("currentClient","");
         Client obj = gson.fromJson(json, Client.class);
-        if (obj == null)
-        {Delete.setVisibility(View.INVISIBLE);}
+        //if (obj == null)
+        //{Delete.setVisibility(View.INVISIBLE);}
 
         Delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
                 final AlertDialog alertDialog = new AlertDialog.Builder(v.getContext()).create();
-                alertDialog.setTitle(v.getResources().getString(R.string.warrning));
+                //alertDialog.setTitle(v.getResources().getString(R.string.warrning));
                 alertDialog.setMessage(getString(R.string.areYouSure2));
                 alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, v.getResources().getString(R.string.Yes),
                         new DialogInterface.OnClickListener() {
@@ -97,7 +96,7 @@ public class carInfoActivity extends AppCompatActivity {
                                     mDatabaseReference.child("Korisnik").child("Client").child(mUser.getUid())
                                             .child("listaVozila").child(vehicle.getVehicleID()).removeValue();
                                     Toast.makeText(carInfoActivity.this, R.string.succeed, Toast.LENGTH_LONG).show();
-                                    startActivity(new Intent(carInfoActivity.this, ListaVozilaActivity.class));
+                                    finish();
 
                             }
                         });
@@ -113,28 +112,37 @@ public class carInfoActivity extends AppCompatActivity {
             }
         });
 
-        if(temp != null)
-        {
-            Iterator it = obj.getListOfCars().entrySet().iterator();
-            while (it.hasNext()) {
-                Map.Entry pair = (Map.Entry)it.next();
-                Object t =  pair.getKey();
-                Vehicle x = obj.getListOfCars().get(t);
-                if (x.getRegistyNumber().equals(temp))
-                {
-                    Manufact.setText(x.getManufacturer());
-                    Model.setText(x.getModel());
-                    Reg.setText(String.valueOf(x.getRegistyNumber()));
-                    Chass.setText(String.valueOf(x.getChassisNumber()));
-                    Fuel.setText(x.getFuelType());
-                    ProdYear.setText(String.valueOf(x.getYearOfProduction()));
-                    Milage.setText(String.valueOf(x.getMileage()));
-                    continue;
 
-                }
-                it.remove(); // avoids a ConcurrentModificationException
-            }
-        }
+        Manufact.setText(vehicle.getManufacturer());
+        Model.setText(vehicle.getModel());
+        Reg.setText(String.valueOf(vehicle.getRegistyNumber()));
+        Chass.setText(String.valueOf(vehicle.getChassisNumber()));
+        Fuel.setText(vehicle.getFuelType());
+        ProdYear.setText(String.valueOf(vehicle.getYearOfProduction()));
+        Milage.setText(String.valueOf(vehicle.getMileage()));
+
+//        if(temp != null)
+//        {
+//            Iterator it = obj.getListOfCars().entrySet().iterator();
+//            while (it.hasNext()) {
+//                Map.Entry pair = (Map.Entry)it.next();
+//                Object t =  pair.getKey();
+//                Vehicle x = obj.getListOfCars().get(t);
+//                if (x.getRegistyNumber().equals(temp))
+//                {
+//                    Manufact.setText(x.getManufacturer());
+//                    Model.setText(x.getModel());
+//                    Reg.setText(String.valueOf(x.getRegistyNumber()));
+//                    Chass.setText(String.valueOf(x.getChassisNumber()));
+//                    Fuel.setText(x.getFuelType());
+//                    ProdYear.setText(String.valueOf(x.getYearOfProduction()));
+//                    Milage.setText(String.valueOf(x.getMileage()));
+//                    continue;
+//
+//                }
+//                it.remove(); // avoids a ConcurrentModificationException
+//            }
+//        }
     }
 
     @Override

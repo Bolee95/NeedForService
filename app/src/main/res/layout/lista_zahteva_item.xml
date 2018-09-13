@@ -30,11 +30,13 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:fontFamily="@font/roboto_regular"
                     android:text="@string/from" />
 
                 <TextView
                     android:id="@+id/fromTV"
                     android:layout_width="290dp"
+                    android:fontFamily="@font/roboto_regular"
                     android:layout_height="wrap_content"
                     android:lines="1" />
 
@@ -50,12 +52,14 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:fontFamily="@font/roboto_regular"
                     android:text="@string/type_of_service" />
 
                 <TextView
                     android:id="@+id/typeOfServiceTV"
                     android:layout_width="280dp"
                     android:layout_height="wrap_content"
+                    android:fontFamily="@font/roboto_regular"
                     android:lines="1" />
 
             </LinearLayout>
@@ -70,12 +74,14 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:fontFamily="@font/roboto_regular"
                     android:text="@string/suggested_time" />
 
                 <TextView
                     android:id="@+id/suggestedTV"
                     android:layout_width="290dp"
                     android:layout_height="wrap_content"
+                    android:fontFamily="@font/roboto_regular"
                     android:lines="1" />
 
             </LinearLayout>
@@ -90,6 +96,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:fontFamily="@font/roboto_regular"
                     android:text="@string/note" />
 
                 <LinearLayout
@@ -122,6 +129,7 @@
                                 android:id="@+id/napomenaTV"
                                 android:layout_width="match_parent"
                                 android:layout_height="50dp"
+                                android:fontFamily="@font/roboto_regular"
                                 android:layout_gravity="center"
                                 android:maxHeight="50dp"
                                 android:minHeight="50dp" />
@@ -153,9 +161,11 @@
                 android:layout_width="85dp"
                 android:layout_height="40dp"
                 android:layout_gravity="bottom"
+                android:fontFamily="@font/roboto_regular"
                 android:layout_marginTop="5dp"
                 android:padding="0dp"
                 android:text="@string/accept"
+                android:background="@drawable/rounded_button"
                 android:textColor="@color/button_green"
 
                 />
@@ -164,12 +174,13 @@
 
                 android:id="@+id/zahtev_btn_decline"
                 android:layout_width="85dp"
-
+                android:fontFamily="@font/roboto_regular"
                 android:layout_height="40dp"
                 android:layout_gravity="bottom"
                 android:layout_marginTop="5dp"
                 android:padding="0dp"
                 android:text="@string/decline"
+                android:background="@drawable/rounded_button"
                 android:textColor="@color/Red" />
         </LinearLayout>
 

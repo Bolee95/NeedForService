@@ -49,26 +49,13 @@ public class ListaCenovnikUslugaActivity extends AppCompatActivity {
     private EditText vrstaUsuge;
     private EditText cenaUsluge;
 
-
-    private final static int BROJ_USLUGA = 3;
     ListaCenovnikUslugaAdapter adapter;
     private RecyclerView recyclerView;
 
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lista_cenovnik_usluga);
-
-
-        Window window = this.getWindow();
-        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-
-// add FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS flag to the window
-        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-
-// finally change the color
-        window.setStatusBarColor(ContextCompat.getColor(this,R.color.Black));
 
         mAuth = FirebaseAuth.getInstance();
         mUser = mAuth.getCurrentUser();
@@ -81,11 +68,6 @@ public class ListaCenovnikUslugaActivity extends AppCompatActivity {
         mFirebaseDatabase2 = FirebaseDatabase.getInstance();
         mDatabaseReference2 = mFirebaseDatabase2.getReference().child("Korisnik").child("VehicleService")
                 .child(mUser.getUid()).child("services");
-
-
-//        vrstaUsuge = (EditText) findViewById(R.id.opis_text_edit);
-//        cenaUsluge = (EditText) findViewById(R.id.cena_edit_text);
-//        submitBtn = (Button) findViewById(R.id.usluga_submit_btn);
 
 
         recyclerView = (RecyclerView) findViewById(R.id.lista_cenovnik_usluga_rv_id);
@@ -110,7 +92,7 @@ public class ListaCenovnikUslugaActivity extends AppCompatActivity {
             public void onClick( View v) {
 
                 final Dialog d = new Dialog(v.getContext());
-                d.setContentView(R.layout.dudaj_uslugu);
+                d.setContentView(R.layout.dodaj_uslugu);
                 d.setTitle(getResources().getString(R.string.NewService));
                 vrstaUsuge = (EditText) d.findViewById(R.id.opis_text_edit);
                 cenaUsluge = (EditText) d.findViewById(R.id.cena_edit_text);

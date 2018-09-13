@@ -1,8 +1,11 @@
 package ynca.nfs.Activities;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
 import android.net.Uri;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -21,7 +24,10 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 import com.google.gson.Gson;
+
+import java.io.IOException;
 
 import ynca.nfs.Activities.clientActivities.FeedbackActivity;
 import ynca.nfs.Activities.clientActivities.ServiceRequestActivity;
@@ -44,15 +50,21 @@ public class ServiceInfoActivity extends AppCompatActivity {
     private TextView distance;
     private MenuItem editButton;
 
+    private Bitmap TempImage;
+    private ProgressDialog mProgressDialog;
+
     private Intent currentIntent;
     private VehicleService currentService;
     private Boolean editable;
     private Boolean addedByUser;
+    private Boolean enableImage;
     private float distanceRedirected;
     private boolean hideButtons;
 
     private FirebaseStorage mFirebaseStorage;
     private StorageReference mStorageReference;
+
+    private static final int PHOTO_PICKER =  2;
 
 
     @Override
@@ -82,6 +94,7 @@ public class ServiceInfoActivity extends AppCompatActivity {
         addedByUser = currentIntent.getBooleanExtra("addedByUser", false);
         distanceRedirected = currentIntent.getFloatExtra("distance", 0);
         hideButtons = currentIntent.getBooleanExtra("hideButton", false);
+        enableImage = currentIntent.getBooleanExtra("enableImage",false);
 
         //podesavanje toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.serviceInfoToolbar);
@@ -129,6 +142,18 @@ public class ServiceInfoActivity extends AppCompatActivity {
                 startActivity(toServiceIntent);
             }
         });
+
+
+        if(enableImage)
+        {
+            serviceImage.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent galleryIntent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                    startActivityForResult(galleryIntent, PHOTO_PICKER);
+                }
+            });
+        }
     }
 
 
@@ -228,19 +253,58 @@ public class ServiceInfoActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item)
     {
-
         int id = item.getItemId();
 
         if (id == R.id.editClientInfo)
-        {
-
-        }
+        { }
         else
         {
             finish();
         }
-
-
         return super.onOptionsItemSelected(item);
+    }
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if(requestCode == PHOTO_PICKER && resultCode == RESULT_OK){
+            Uri selectedImageUri = data.getData();
+            try {
+                TempImage = MediaStore.Images.Media.getBitmap(this.getContentResolver(), selectedImageUri);
+            }
+            catch(IOException ex)
+            {}
+            StorageReference photoRef = mStorageReference.child("photos").child(currentService.getUID());
+
+            showProgressDialog();
+            photoRef.putFile(selectedImageUri).addOnSuccessListener(this, new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+
+                    Uri s = taskSnapshot.getUploadSessionUri();
+                    serviceImage.setImageBitmap(TempImage);
+                    //Glide.with(mProfilePicture.getContext())
+                    //        .load(s).into(mProfilePicture);
+                    hideProgressDialog();
+                }
+            });
+        }
+    }
+    public void showProgressDialog() {
+        if (mProgressDialog == null) {
+            mProgressDialog = new ProgressDialog(this);
+            mProgressDialog.setMessage(getString(R.string.loading));
+            mProgressDialog.setIndeterminate(true);
+        }
+
+        mProgressDialog.show();
+    }
+
+    public void hideProgressDialog() {
+        if (mProgressDialog != null && mProgressDialog.isShowing()) {
+            mProgressDialog.dismiss();
+        }
     }
 }

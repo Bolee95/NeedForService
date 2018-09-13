@@ -114,6 +114,7 @@ public class MainScreenServisActivity extends AppCompatActivity {
                 //toServiceInfo.putExtra("distance",result);
                 toServiceInfo.putExtra("editable",false);
                 toServiceInfo.putExtra("hideButton",true);
+                toServiceInfo.putExtra("enableImage",true);
                 startActivity(toServiceInfo);
             }
         });

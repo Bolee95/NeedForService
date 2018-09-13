@@ -42,12 +42,14 @@ public class SQLiteHelper extends SQLiteOpenHelper {
 
     public void saveImage(String id, Bitmap image)
     {
-        SQLiteDatabase db = this.getWritableDatabase();
-        byte[] data = getBytes(image);
-        ContentValues contentValues = new ContentValues();
-        contentValues.put(ID,id);
-        contentValues.put(IMAGE,data);
-        db.insert(TABLE_NAME,null,contentValues);
+        if (image != null) {
+            SQLiteDatabase db = this.getWritableDatabase();
+            byte[] data = getBytes(image);
+            ContentValues contentValues = new ContentValues();
+            contentValues.put(ID, id);
+            contentValues.put(IMAGE, data);
+            db.insert(TABLE_NAME, null, contentValues);
+        }
 
     }
 
@@ -92,9 +94,13 @@ public class SQLiteHelper extends SQLiteOpenHelper {
 
 
     public static byte[] getBytes(Bitmap bitmap) {
-        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.PNG, 10, stream);
-        return stream.toByteArray();
+        if (bitmap != null) {
+            ByteArrayOutputStream stream = new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.PNG, 10, stream);
+            return stream.toByteArray();
+        }
+        else
+            return null;
     }
 
 

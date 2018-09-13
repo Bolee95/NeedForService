@@ -44,6 +44,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 
@@ -66,8 +67,8 @@ public class FriendsActivity extends AppCompatActivity implements FriendsListAda
 
     private static Client currentClient;
     private HashMap<String, String> currentClientFriends;
-    private ArrayList<Client> friends = new ArrayList<Client>();
-    private ArrayList<Client> notFriends = new ArrayList<>();
+    public static ArrayList<Client> friends;// = new ArrayList<Client>();
+    public static ArrayList<Client> notFriends;// = new ArrayList<>();
     private ArrayList<Client> searchFriendsUnfiltered;
     private ArrayList<Client> searchFriendsFiltered;
     private ArrayList<Client> searchFriendsSorted;
@@ -89,6 +90,7 @@ public class FriendsActivity extends AppCompatActivity implements FriendsListAda
     private FirebaseAuth firebaseAuth;
     private FirebaseUser user;
     private DatabaseReference databaseReference;
+    private DatabaseReference databaseReferenceListOfFriends;
 
 
 
@@ -106,6 +108,9 @@ public class FriendsActivity extends AppCompatActivity implements FriendsListAda
         setContentView(R.layout.friends_list);
 
         currentClientFriends = new HashMap<String, String>();
+        friends = new ArrayList<Client>();
+        notFriends = new ArrayList<>();
+        //currentClientFriends = new HashMap<String, String>();
         fetchCurrentClient();
         setupUI();
         firebaseAuth = FirebaseAuth.getInstance();
@@ -115,8 +120,10 @@ public class FriendsActivity extends AppCompatActivity implements FriendsListAda
 
 
         databaseReference = FirebaseDatabase.getInstance().getReference("Korisnik").child("Client");
+        databaseReferenceListOfFriends = databaseReference.child(user.getUid()).child("listOfFriendsUIDs");
 
         getAllFriends();
+        setUpListeners();
 
     }
 
@@ -180,17 +187,12 @@ public class FriendsActivity extends AppCompatActivity implements FriendsListAda
                 recyclerView.setAdapter(filteredAdapter);
                 filteredAdapter.notifyDataSetChanged();
 
-                                }
+                }
                 else
                 {
                     recyclerView.setAdapter(FriendsActivity.this.adapter);
                     FriendsActivity.this.adapter.notifyDataSetChanged();
                 }
-
-
-
-
-
                 return true;
             }
         });
@@ -200,14 +202,10 @@ public class FriendsActivity extends AppCompatActivity implements FriendsListAda
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-
         if (id == R.id.addFriends) {
-
             redirectToDeviceList();
         } else if (id == R.id.searchFriends) {
             //pretrazivanje prijatelja
-
-
         } else {
             //back dugme
             finish();
@@ -240,11 +238,14 @@ public class FriendsActivity extends AppCompatActivity implements FriendsListAda
                 {
                     friends.add(client);
                     notFriends.remove(client);
-                    adapter.notifyDataSetChanged();
+                    adapter.add(client);
+                    recyclerView.getAdapter().notifyDataSetChanged();
                     return;
                 }
 
             }
+            //sortFriends(spinner.getSelectedItemPosition());
+
 
         }
         else
@@ -268,18 +269,21 @@ public class FriendsActivity extends AppCompatActivity implements FriendsListAda
                         recyclerView.setAdapter(adapter);
                         adapter.add(client);
                         friends.add(client);
+                        adapter.notifyDataSetChanged();
+                        //recyclerView.getAdapter().notifyDataSetChanged();
 
                     }
                     else {
                         notFriends.add(client);
                     }
                 }
+                else
+                    notFriends.add(client);
             }
 
 
             @Override
             public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
 
             }
 
@@ -298,6 +302,10 @@ public class FriendsActivity extends AppCompatActivity implements FriendsListAda
 
             }
         });
+
+
+
+
     }
 
     public void redirectToDeviceList()
@@ -475,7 +483,7 @@ public class FriendsActivity extends AppCompatActivity implements FriendsListAda
         return yes;
     }
 
-    // BITNO!!!
+
     private void sendFriendRequest() {
         String message = idUser.toString();
         Log.d(TAG, "MainActivity: addNewFriend sendingMessage:" + message);
@@ -510,11 +518,8 @@ public class FriendsActivity extends AppCompatActivity implements FriendsListAda
 
     private boolean setupChat() {
         Log.d(TAG, "MainActivity: setupChat started");
-
         chatService = new ChatService(this, handler);
-
         outStringBuffer = new StringBuffer("");
-
         if (chatService.getState() == ChatService.STATE_NONE) {
             chatService.start();
         }
@@ -546,6 +551,7 @@ public class FriendsActivity extends AppCompatActivity implements FriendsListAda
             Gson gsonInstance = new Gson();
             currentClient = gsonInstance.fromJson(currentClientJson, Client.class);
             currentClientFriends = currentClient.getListOfFriendsUIDs();
+
         }
     }
 
@@ -625,7 +631,7 @@ public class FriendsActivity extends AppCompatActivity implements FriendsListAda
     class PointsComparator implements  Comparator<Client>{
         @Override
         public int compare(Client o1, Client o2) {
-            return -(o1.getReviewsCount()-o2.getReviewsCount());
+            return -(o1.getPoints()-o2.getPoints());
         }
     }
 
@@ -651,9 +657,10 @@ public class FriendsActivity extends AppCompatActivity implements FriendsListAda
 
     public ArrayList<Client> sortClientList(ArrayList<Client> listArg, Comparator<Client> comparator)
     {
-        ArrayList<Client>  returnList = new ArrayList<Client>();
-        ArrayList<Client> list = (ArrayList<Client>) listArg.clone();
-        while (!list.isEmpty())
+        ArrayList<Client>  returnList = (ArrayList<Client>) listArg.clone();
+        Collections.sort(returnList,comparator);
+        /*
+       while (!list.isEmpty())
         {
             int itemPosition;
             Client temp=list.get(0);
@@ -668,8 +675,13 @@ public class FriendsActivity extends AppCompatActivity implements FriendsListAda
             list.remove(temp);
 
         }
+        */
         return returnList;
 
+        }
+
+        public  void setUpListeners()
+        {
         }
 
         public  void sortFriends(int spinnerOption)
@@ -728,6 +740,17 @@ public class FriendsActivity extends AppCompatActivity implements FriendsListAda
             }
 
 
+
+            recyclerView.getAdapter().notifyDataSetChanged();
         }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+    }
 }
