@@ -18,7 +18,7 @@
         android:paddingTop="5dp"
         android:paddingLeft="10dp"
         android:layout_gravity="center"
-        android:src="@android:drawable/sym_def_app_icon"
+        android:src="@drawable/sport_car_logos"
         />
     <TextView
         android:id="@+id/NameAndSurnameNavBarClient."

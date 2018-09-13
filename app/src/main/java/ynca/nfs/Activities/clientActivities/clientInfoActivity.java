@@ -233,11 +233,15 @@ public class clientInfoActivity  extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item)
     {
-        int id = item.getItemId();
-        finish();
+        Intent editProfile = new Intent(clientInfoActivity.this,editProfileActivity.class);
+        startActivityForResult(editProfile,4);
+        //finish();
         return super.onOptionsItemSelected(item);
 
     }
+
+
+
 
 
 

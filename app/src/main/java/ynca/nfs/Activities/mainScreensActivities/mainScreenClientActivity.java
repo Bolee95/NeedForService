@@ -400,8 +400,6 @@ public class mainScreenClientActivity extends AppCompatActivity implements ItemL
         prefEditor.commit();
 
         startActivity(userProfile);
-
-
     }
 
 

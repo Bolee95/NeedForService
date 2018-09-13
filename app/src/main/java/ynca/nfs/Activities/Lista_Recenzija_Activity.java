@@ -38,24 +38,10 @@ public class Lista_Recenzija_Activity extends AppCompatActivity {
 
     ArrayList<Review> recenzije;
 
-
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lista__recenzija_);
-
-
-        Window window = this.getWindow();
-        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-
-// add FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS flag to the window
-        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-
-// finally change the color
-        window.setStatusBarColor(ContextCompat.getColor(this,R.color.Black));
-
-
 
         recyclerView = (RecyclerView) findViewById(R.id.lista_recenzija_rv_id);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);

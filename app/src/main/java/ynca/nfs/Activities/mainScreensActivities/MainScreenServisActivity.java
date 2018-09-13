@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -25,6 +26,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.gson.Gson;
@@ -45,7 +47,7 @@ public class MainScreenServisActivity extends AppCompatActivity {
 
     private FirebaseDatabase mFirebaseDatabase;
     private DatabaseReference mDatabaseReference;
-    private ChildEventListener mChildEventListener;
+    private ValueEventListener mChildEventListener;
     private FirebaseDatabase mFirebaseDatabase2;
     private DatabaseReference mDatabaseReference2;
     private ChildEventListener mChildEventListener2;
@@ -84,7 +86,7 @@ public class MainScreenServisActivity extends AppCompatActivity {
         priceOfServiceButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent= new Intent(getBaseContext(), ListaCenovnikUslugaActivity.class);
+                Intent intent = new Intent(getBaseContext(), ListaCenovnikUslugaActivity.class);
                 startActivity(new Intent(intent));
             }
         });
@@ -107,11 +109,16 @@ public class MainScreenServisActivity extends AppCompatActivity {
         serviceImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(getBaseContext(), ServiceInfoActivity.class));
+                Intent toServiceInfo = new Intent(MainScreenServisActivity.this,ServiceInfoActivity.class);
+                //toServiceInfo.putExtra("addedByUser",false);
+                //toServiceInfo.putExtra("distance",result);
+                toServiceInfo.putExtra("editable",false);
+                toServiceInfo.putExtra("hideButton",true);
+                startActivity(toServiceInfo);
             }
         });
 
-        signOutBtn.setOnClickListener(new View.OnClickListener(){
+        signOutBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
@@ -124,18 +131,18 @@ public class MainScreenServisActivity extends AppCompatActivity {
                 SharedPreferences.Editor prefEditor = settings.edit();
                 Gson gson = new Gson();
                 String json = gson.toJson(currentService);
-                prefEditor.putString("TrenutniServis", json);
+                prefEditor.putString("infoService", json);
                 prefEditor.commit();
 
 
                 final AlertDialog alertDialog = new AlertDialog.Builder(v.getContext()).create();
-                alertDialog.setTitle(v.getResources().getString(R.string.warrning));
+                //alertDialog.setTitle(v.getResources().getString(R.string.warrning));
                 alertDialog.setMessage(getString(R.string.areYouSure));
                 alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, v.getResources().getString(R.string.Yes),
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
 
-                                Toast.makeText(MainScreenServisActivity.this,  getResources().getString(R.string.Signout),
+                                Toast.makeText(MainScreenServisActivity.this, getResources().getString(R.string.Signout),
                                         Toast.LENGTH_SHORT).show();
 
                                 finishAffinity();
@@ -143,7 +150,7 @@ public class MainScreenServisActivity extends AppCompatActivity {
 
                             }
                         });
-                alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, v.getResources().getString(R.string.No) , new DialogInterface.OnClickListener() {
+                alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, v.getResources().getString(R.string.No), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         alertDialog.dismiss();
@@ -154,7 +161,7 @@ public class MainScreenServisActivity extends AppCompatActivity {
 
 
 //                FirebaseAuth.getInstance().signOut();
-//                Toast.makeText(MainScreenServisActivity.this,  getResources().getString(R.string.Signout),
+//                Toast.makeText(MainScreenServisActivity.this, getResources().getString(R.string.Signout),
 //                        Toast.LENGTH_SHORT).show();
 //
 //                //brise podatke o trenutno ulogovanom servisu prilikom logout-a
@@ -165,8 +172,7 @@ public class MainScreenServisActivity extends AppCompatActivity {
 //                String json = gson.toJson(currentService);
 //                prefEditor.putString("TrenutniServis", json);
 //                prefEditor.commit();
-
-
+//
 
             }
         });
@@ -190,7 +196,7 @@ public class MainScreenServisActivity extends AppCompatActivity {
         });
 
         mFirebaseDatabase = FirebaseDatabase.getInstance();
-        mDatabaseReference = mFirebaseDatabase.getReference().child("Korisnik").child("VehicleService");
+        mDatabaseReference = mFirebaseDatabase.getReference().child("Korisnik").child("VehicleService").child(user.getUid());
 
         mFirebaseDatabase2 = FirebaseDatabase.getInstance();
         mDatabaseReference2 = mFirebaseDatabase2.getReference().child("Korisnik").child("VehicleService")
@@ -201,6 +207,36 @@ public class MainScreenServisActivity extends AppCompatActivity {
         LinearLayoutManager llm = new LinearLayoutManager(this);
         theRecyclerView.setLayoutManager(llm);
         theRecyclerView.setHasFixedSize(true);
+
+
+        mChildEventListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                VehicleService ser = dataSnapshot.getValue(VehicleService.class);
+                if (ser.getEmail() == null) return;
+                if (ser.getEmail().equals(user.getEmail())) {
+                    currentService = ser;
+                }
+
+                SharedPreferences settings = getSharedPreferences("SharedData", MODE_PRIVATE);
+                SharedPreferences.Editor prefEditor = settings.edit();
+                Gson gson = new Gson();
+                String json = gson.toJson(currentService);
+                prefEditor.putString("infoService", json);
+                prefEditor.commit();
+                NameOfService.setText(currentService.getName());
+                Descript.setText(currentService.getEmail());
+
+            }
+
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        };
+
+        mDatabaseReference.addValueEventListener(mChildEventListener);
 
 
 
@@ -242,36 +278,6 @@ public class MainScreenServisActivity extends AppCompatActivity {
     }
 
 
-
-    @Override
-    public void onBackPressed() {
-
-        //super.onBackPressed();
-
-        final AlertDialog alertDialog = new AlertDialog.Builder(this).create();
-        alertDialog.setTitle(getBaseContext().getResources().getString(R.string.warrning));
-        alertDialog.setMessage(getString(R.string.areYouSure));
-        alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getBaseContext().getResources().getString(R.string.Yes),
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-
-                        //this.finishAffinity();
-                        MainScreenServisActivity.this.finishAffinity();
-
-                        //System.exit(1);
-                    }
-                });
-        alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, getBaseContext().getResources().getString(R.string.No) , new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                alertDialog.dismiss();
-            }
-        });
-
-        alertDialog.show();
-
-    }
-
     @Override
     protected void onResume() {
         super.onResume();
@@ -282,94 +288,13 @@ public class MainScreenServisActivity extends AppCompatActivity {
             @Override
             public void onSuccess(Uri uri) {
                 if(uri != null) {
-                    //showProgressDialog();
                     Glide.with(serviceImage.getContext())
                             .load(uri).into(serviceImage);
-                    //hideProgressDialog();
                 }
             }
         });
-
-        mChildEventListener = new ChildEventListener() {
-            @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-
-                VehicleService ser = dataSnapshot.getValue(VehicleService.class);
-                if(ser.getEmail() == null) return;
-                if(ser.getEmail().equals(user.getEmail())) {
-                    currentService = ser;
-                }
-
-                    int br;
-                    if(currentService.getPrimljenePoruke() == null){
-                        br =0;
-                    }
-                    else{
-                        br = currentService.getPrimljenePoruke().size();
-                    }
-
-                    SharedPreferences settings = getSharedPreferences("SharedData", MODE_PRIVATE);
-                    SharedPreferences.Editor prefEditor = settings.edit();
-                    Gson gson = new Gson();
-                    String json = gson.toJson(currentService);
-                    prefEditor.putInt("brojPoruka", br);
-                    prefEditor.putString("TrenutniServis", json);
-                    prefEditor.commit();
-                    NameOfService.setText(currentService.getName() );
-                    Descript.setText(currentService.getEmail());
-
-                }
-//                Automobil a2 = dataSnapshot.getValue(Automobil.class);
-//                theAdapter.add(a2);
-//                theRecyclerView.setAdapter(theAdapter);
-//                listOfVehicles.add(a2);
+        }
 
 
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-
-            }
-
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        };
-
-        mDatabaseReference.addChildEventListener(mChildEventListener);
     }
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 

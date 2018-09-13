@@ -21,8 +21,9 @@
             android:text="@string/Price"
             android:textSize="20dp"
             android:textStyle="bold"
+            android:fontFamily="@font/roboto_regular"
             android:layout_marginTop="10dp"
-            android:background="@color/colorAccent"
+            android:background="@drawable/rounded_button"
 
             />
         <Button
@@ -32,18 +33,11 @@
             android:text="@string/ServiceRequest"
             android:textSize="20sp"
             android:textStyle="bold"
+            android:fontFamily="@font/roboto_regular"
             android:layout_marginTop="10dp"
-            android:background="@color/colorAccent"
+            android:background="@drawable/rounded_button"
             />
-        <Button
-            android:id="@+id/sanduce_servis_id"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:text="@string/MessageBox"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            android:layout_marginTop="10dp"
-            android:background="@color/colorAccent"/>
+
         <Button
             android:id="@+id/lista_recenzija_btn_id"
             android:layout_width="match_parent"
@@ -51,8 +45,9 @@
             android:text="@string/Feedbacks"
             android:textSize="20sp"
             android:textStyle="bold"
+            android:fontFamily="@font/roboto_regular"
             android:layout_marginTop="10dp"
-            android:background="@color/colorAccent"/>
+            android:background="@drawable/rounded_button"/>
         <Button
             android:id="@+id/SignOutBtn"
             android:layout_width="match_parent"
@@ -61,7 +56,8 @@
             android:textSize="20dp"
             android:textStyle="bold"
             android:layout_marginTop="50dp"
-            android:background="@color/Red"/>
+            android:fontFamily="@font/roboto_regular"
+            android:background="@drawable/rounded_transparent"/>
 
 
     </LinearLayout>

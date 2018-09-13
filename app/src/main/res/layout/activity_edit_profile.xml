@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".Activities.clientActivities.editProfileActivity">
+
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/appBarLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/editProfileToolbar"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/background">
+
+        </android.support.v7.widget.Toolbar>
+    </android.support.design.widget.AppBarLayout>
+
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TableRow>
+
+            <EditText
+                android:id="@+id/editName"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/name"
+                android:inputType="textPersonName"
+                android:padding="20dp"
+                android:textColor="@color/White" />
+        </TableRow>
+
+        <TableRow>
+
+            <EditText
+                android:id="@+id/EditSurname"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/surname"
+                android:inputType="textPersonName"
+                android:padding="20dp"
+                android:textColor="@color/White" />
+        </TableRow>
+
+        <TableRow>
+
+            <EditText
+                android:id="@+id/EditNumber"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/number"
+                android:inputType="number"
+                android:padding="20dp"
+                android:textColor="@color/White" />
+        </TableRow>
+
+        <TableRow>
+
+            <EditText
+                android:id="@+id/EditEmail"
+                android:layout_width="363dp"
+                android:layout_height="wrap_content"
+                android:hint="@string/email"
+                android:inputType="textEmailAddress"
+                android:padding="20dp"
+                android:textColor="@color/White" />
+        </TableRow>
+
+        <TableRow>
+
+            <EditText
+                android:id="@+id/EditPassword"
+                android:layout_width="393dp"
+                android:layout_height="wrap_content"
+                android:hint="@string/password"
+                android:inputType="textPassword"
+                android:padding="20dp"
+                android:textColor="@color/White" />
+        </TableRow>
+
+        <TableRow>
+
+            <Button
+                android:id="@+id/ButtonEditSubmit"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/rounded_button"
+                android:text="@string/submit" />
+        </TableRow>
+    </TableLayout>
+
+</LinearLayout>

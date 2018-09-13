@@ -48,6 +48,8 @@ public class ServiceInfoActivity extends AppCompatActivity {
     private VehicleService currentService;
     private Boolean editable;
     private Boolean addedByUser;
+    private float distanceRedirected;
+    private boolean hideButtons;
 
     private FirebaseStorage mFirebaseStorage;
     private StorageReference mStorageReference;
@@ -78,7 +80,8 @@ public class ServiceInfoActivity extends AppCompatActivity {
         currentIntent = getIntent();
         editable = currentIntent.getBooleanExtra("editable",false);
         addedByUser = currentIntent.getBooleanExtra("addedByUser", false);
-
+        distanceRedirected = currentIntent.getFloatExtra("distance", 0);
+        hideButtons = currentIntent.getBooleanExtra("hideButton", false);
 
         //podesavanje toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.serviceInfoToolbar);
@@ -89,6 +92,13 @@ public class ServiceInfoActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
 
+        if(hideButtons)
+        {
+            reviewService.setVisibility(View.INVISIBLE);
+            requestService.setVisibility(View.INVISIBLE);
+            toMapButton.setVisibility(View.INVISIBLE);
+            //numberOfReviews.setVisibility(View.INVISIBLE);
+        }
 
 
         //Uzima is Shared servis koji treba da se prikaze
@@ -130,11 +140,11 @@ public class ServiceInfoActivity extends AppCompatActivity {
         serviceNumber.setText(currentService.getPhoneNumber());
         if(addedByUser)
         {
-            serviceRating.setEnabled(false);
+            serviceRating.setVisibility(View.INVISIBLE);
         }
         else
         {
-            serviceRating.setEnabled(false);
+            serviceRating.setVisibility(View.VISIBLE);
         }
 
 
@@ -158,13 +168,21 @@ public class ServiceInfoActivity extends AppCompatActivity {
             serviceRating.setRating(0);
 
         }
-        distance.setText(currentIntent.getStringExtra("distance") + " away!");
+
+        if (distanceRedirected != 0)
+        {
+            distance.setText(distanceRedirected + " away!");
+        }
+        else
+        {
+            distance.setText("");
+        }
 
         if (currentService.getAddedByUser())
         {
             requestService.setVisibility(View.INVISIBLE);
-            //TODO: Dodati da se moze review za servise dodate od strane korisnika
             reviewService.setVisibility(View.INVISIBLE);
+            serviceRating.setVisibility(View.INVISIBLE);
         }
 
 
