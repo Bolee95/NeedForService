@@ -246,7 +246,8 @@ public class NewMapActivity extends AppCompatActivity implements OnMapReadyCallb
             @Override
             public void onClick(View v) {
                 //Ovo dugme ce da vodi na augmented reality mod
-                startActivity(new Intent(getApplicationContext(), ARActivity.class));
+                Intent ARIntent = new Intent(getApplicationContext(), ARActivity.class);
+                startActivity(ARIntent);
             }
         });
         //region EventListeners

@@ -1,6 +1,5 @@
 // implementation of AR-Experience (aka "World")
 var World = {
-	// you may request new data from server periodically, however: in this sample data is only requested once
 	isRequestingData: false,
 
 	// true once data was fetched
@@ -35,8 +34,11 @@ var World = {
 				"latitude": parseFloat(poiData[currentPlaceNr].latitude),
 				"longitude": parseFloat(poiData[currentPlaceNr].longitude),
 				"altitude": parseFloat(poiData[currentPlaceNr].altitude),
-				"title": poiData[currentPlaceNr].name,
-				"description": poiData[currentPlaceNr].number
+				"name": poiData[currentPlaceNr].name,
+				"address": poiData[currentPlaceNr].address,
+				"ownersName": poiData[currentPlaceNr].ownersName,
+				"number": poiData[currentPlaceNr].number,
+				"email": poiData[currentPlaceNr].email
 			};
 
 			World.markerList.push(new Marker(singlePoi));
@@ -75,7 +77,7 @@ var World = {
 
 		// request data if not already present
 		if (!World.initiallyLoadedData) {
-			World.requestDataFromServer(lat, lon);
+			World.requestDataFromLocal(lat, lon);
 			World.initiallyLoadedData = true;
 		}
 	},
@@ -85,8 +87,11 @@ var World = {
 		World.currentMarker = marker;
 
 		// update panel values
-		$("#poi-detail-title").html(marker.poiData.title);
-		$("#poi-detail-description").html(marker.poiData.description);
+		$("#poi-detail-name").html(marker.poiData.name);
+		$("#poi-detail-address").html(marker.poiData.address);
+		$("#poi-detail-number").html(marker.poiData.number);
+		$("#poi-detail-email").html(marker.poiData.email);
+		$("#poi-detail-owners-name").html(marker.poiData.ownersName);
 
 		
 		// It's ok for AR.Location subclass objects to return a distance of `undefined`. In case such a distance was calculated when all distances were queried in `updateDistanceToUserValues`, we recalculate this specific distance before we update the UI.
@@ -94,7 +99,7 @@ var World = {
 			marker.distanceToUser = marker.markerObject.locations[0].distanceToUser();
 		}
 
-		// distance and altitude are measured in meters by the SDK. You may convert them to miles / feet if required.
+		// distance and altitude are measured in meters by the SDK
 		var distanceToUserValue = (marker.distanceToUser > 999) ? ((marker.distanceToUser / 1000).toFixed(2) + " km") : (Math.round(marker.distanceToUser) + " m");
 
 		$("#poi-detail-distance").html(distanceToUserValue);
@@ -139,7 +144,7 @@ var World = {
 	*/
 
 	// request POI data
-	requestDataFromServer: function requestDataFromServerFn(lat, lon) {
+	requestDataFromLocal: function requestDataFromLocalFn(lat, lon) {
 		World.loadPoisFromJsonData(myJsonData);
 	},
 

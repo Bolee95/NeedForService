@@ -41,14 +41,12 @@ public class ARActivity extends AppCompatActivity {
 
         this.architectView.onCreate( config );
 
-
         services = new ArrayList<>();
-        //TODO servisi
-        final JSONArray jsonArray = generatePoiInformation();
-        String test = jsonArray.toString();
+        services = NewMapActivity.services;
+        final JSONArray jsonArray = generatePoiInformation(services);
+        //String test = jsonArray.toString();
 
-
-        //generateJsonLocationFile(test);
+        generateJsonLocationFile(jsonArray);
 
         locationProvider = new LocationProvider(this, new LocationListener() {
             @Override
@@ -80,8 +78,8 @@ public class ARActivity extends AppCompatActivity {
         } catch (Exception ex) {}
     }
 
-    public void generateJsonLocationFile(String t) {
-        String fileContents = "var myJsonData = " + t + ";";
+    public void generateJsonLocationFile(JSONArray json) {
+        String fileContents = "var myJsonData = " + json.toString() + ";";
         try {
             File dataFile = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), "myjsondata.js");
             FileOutputStream stream = new FileOutputStream(dataFile, false);
@@ -93,26 +91,32 @@ public class ARActivity extends AppCompatActivity {
         }
     }
 
-    private static JSONArray generatePoiInformation() {
+    private static JSONArray generatePoiInformation(ArrayList<VehicleService> lista) {
 
         final JSONArray pois = new JSONArray();
 
         final String ATTR_ID = "id";
         final String ATTR_NAME = "name";
+        final String ATTR_OWNERS_NAME = "ownersName";
         final String ATTR_NUMBER = "number";
+        final String ATTR_EMAIL = "email";
+        final String ATTR_ADDRESS = "address";
         final String ATTR_LATITUDE = "latitude";
         final String ATTR_LONGITUDE = "longitude";
         final String ATTR_ALTITUDE = "altitude";
         final float UNKNOWN_ALTITUDE = -32768f; // equals "AR.CONST.UNKNOWN_ALTITUDE" in JavaScript (compare AR.GeoLocation specification)
 
-        for (int i = 0; i < services.size(); i++)
+        for (int i = 0; i < lista.size(); i++)
         {
             final HashMap<String, String> poiInformation = new HashMap<String, String>();
-            poiInformation.put(ATTR_ID, services.get(i).getUID());
-            poiInformation.put(ATTR_NAME, services.get(i).getName());
-            poiInformation.put(ATTR_NUMBER, services.get(i).getPhoneNumber());
-            poiInformation.put(ATTR_LATITUDE, String.valueOf(services.get(i).getLat()));
-            poiInformation.put(ATTR_LONGITUDE, String.valueOf(services.get(i).getLongi()));
+            poiInformation.put(ATTR_ID, lista.get(i).getUID());
+            poiInformation.put(ATTR_NAME, lista.get(i).getName());
+            poiInformation.put(ATTR_NUMBER, lista.get(i).getPhoneNumber());
+            poiInformation.put(ATTR_OWNERS_NAME, lista.get(i).getOwnersName());
+            poiInformation.put(ATTR_EMAIL, lista.get(i).getEmail());
+            poiInformation.put(ATTR_ADDRESS, lista.get(i).getAddress());
+            poiInformation.put(ATTR_LATITUDE, String.valueOf(lista.get(i).getLat()));
+            poiInformation.put(ATTR_LONGITUDE, String.valueOf(lista.get(i).getLongi()));
             poiInformation.put(ATTR_ALTITUDE, String.valueOf(UNKNOWN_ALTITUDE));
 
             pois.put(new JSONObject(poiInformation));
