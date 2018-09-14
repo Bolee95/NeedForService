@@ -121,28 +121,6 @@ public class carInfoActivity extends AppCompatActivity {
         ProdYear.setText(String.valueOf(vehicle.getYearOfProduction()));
         Milage.setText(String.valueOf(vehicle.getMileage()));
 
-//        if(temp != null)
-//        {
-//            Iterator it = obj.getListOfCars().entrySet().iterator();
-//            while (it.hasNext()) {
-//                Map.Entry pair = (Map.Entry)it.next();
-//                Object t =  pair.getKey();
-//                Vehicle x = obj.getListOfCars().get(t);
-//                if (x.getRegistyNumber().equals(temp))
-//                {
-//                    Manufact.setText(x.getManufacturer());
-//                    Model.setText(x.getModel());
-//                    Reg.setText(String.valueOf(x.getRegistyNumber()));
-//                    Chass.setText(String.valueOf(x.getChassisNumber()));
-//                    Fuel.setText(x.getFuelType());
-//                    ProdYear.setText(String.valueOf(x.getYearOfProduction()));
-//                    Milage.setText(String.valueOf(x.getMileage()));
-//                    continue;
-//
-//                }
-//                it.remove(); // avoids a ConcurrentModificationException
-//            }
-//        }
     }
 
     @Override

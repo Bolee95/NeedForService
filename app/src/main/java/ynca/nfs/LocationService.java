@@ -60,33 +60,6 @@ public class LocationService extends Service {
     private DatabaseReference mDatabaseReference2; //za servise
 
 
-
-    /*
-    private class LocationListener implements android.location.LocationListener {
-        public LocationListener(String provider) {
-            mLastLocation = new Location(provider);
-        }
-        @Override
-        public void onLocationChanged(Location location) {
-            mLastLocation.set(location);
-        }
-        @Override
-        public void onStatusChanged(String provider, int status, Bundle extras) {
-        }
-        @Override
-        public void onProviderEnabled(String provider) {
-        }
-        @Override
-        public void onProviderDisabled(String provider) {
-        }
-    }
-
-    LocationListener[] mLocationListeners = new LocationListener[]{
-            new LocationListener(LocationManager.GPS_PROVIDER),
-            new LocationListener(LocationManager.NETWORK_PROVIDER)
-    };
-    */
-
     private final LocationListener mLocationListener = new LocationListener() {
         @Override
         public void onLocationChanged(Location location) {
@@ -194,23 +167,13 @@ public class LocationService extends Service {
         PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, intent, 0);
 
         mBuilder = new NotificationCompat.Builder(getApplicationContext())
-                .setSmallIcon(R.drawable.sport_car_logos) //TODO potrebna je ikonica u samo beloj boji
+                .setSmallIcon(R.drawable.sport_car_logos)
                 .setContentText("Klikom na notifikaciju otvoricete aplikaciju.")
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)
                 .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
                 .setAutoCancel(true)
                 .setContentIntent(pendingIntent);
 
-        /*
-        try {
-            mLocationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, LOCATION_INTERVAL,
-                    LOCATION_DISTANCE, mLocationListeners[1]);
-        } catch (java.lang.SecurityException ex) {
-            Log.i(TAG, "fail to request location update, ignore", ex);
-        } catch (IllegalArgumentException ex) {
-            Log.d(TAG, "network provider does not exist, " + ex.getMessage());
-        }
-        */
 
         mChildEventListener = new ChildEventListener() {
             @Override

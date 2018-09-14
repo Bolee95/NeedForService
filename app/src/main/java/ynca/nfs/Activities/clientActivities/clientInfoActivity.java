@@ -55,6 +55,7 @@ import com.google.gson.Gson;
 
 import org.w3c.dom.Text;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.regex.Pattern;
 
@@ -120,8 +121,9 @@ public class clientInfoActivity  extends AppCompatActivity {
             public void onClick(View v) {
                 if (isCurrentUser) {
 
-                    Intent galleryIntent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                    startActivityForResult(galleryIntent, PHOTO_PICKER);
+                    //Intent galleryIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);//new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                    //startActivityForResult(galleryIntent, PHOTO_PICKER);
+                    showPictureDialog();
 
                 }
             }
@@ -237,6 +239,37 @@ public class clientInfoActivity  extends AppCompatActivity {
         return true;
     }
 
+    private void showPictureDialog(){
+        AlertDialog.Builder pictureDialog = new AlertDialog.Builder(this);
+        pictureDialog.setTitle("Select Action");
+        String[] pictureDialogItems = {
+                "Select photo from gallery",
+                "Capture photo from camera" };
+        pictureDialog.setItems(pictureDialogItems,
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        switch (which) {
+                            case 0:
+
+                                Intent galleryIntent = new Intent(Intent.ACTION_PICK,
+                                        android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+
+                                startActivityForResult(galleryIntent, 1);
+
+                                break;
+                            case 1:
+
+                                Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+                                startActivityForResult(intent, 2);
+
+                                break;
+                        }
+                    }
+                });
+        pictureDialog.show();
+    }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item)
@@ -248,31 +281,54 @@ public class clientInfoActivity  extends AppCompatActivity {
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == PHOTO_PICKER && resultCode == RESULT_OK){
-            Uri selectedImageUri = data.getData();
-            try {
-                image = MediaStore.Images.Media.getBitmap(this.getContentResolver(), selectedImageUri);
-            }
-            catch(IOException ex)
-            {}
-            StorageReference photoRef = mStorageReference.child("photos").child(currentClient.getUID());
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
 
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == this.RESULT_CANCELED) {
+            return;
+        }
+        if (requestCode == 1) {
+            if (data != null) {
+                Uri contentURI = data.getData();
+                try {
+                    Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), contentURI);
+                    //String path = saveImage(bitmap);
+                    mProfilePicture.setImageBitmap(bitmap);
+                    Toast.makeText(clientInfoActivity.this, "Image Saved!", Toast.LENGTH_SHORT).show();
+                    image = bitmap;
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    Toast.makeText(clientInfoActivity.this, "Failed!", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+        } else if (requestCode == 2) {
+            final Bitmap thumbnail = (Bitmap) data.getExtras().get("data");
+            mProfilePicture.setImageBitmap(thumbnail);
+            //Glide.with(mProfilePicture.getContext())
+//               .load(thumbnail).into(mProfilePicture);
+
+            StorageReference photoRef = mStorageReference.child("photos").child(currentClient.getUID());
             showProgressDialog();
-            photoRef.putFile(selectedImageUri).addOnSuccessListener(this, new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            photoRef.putBytes(getBytes(thumbnail)).addOnSuccessListener(this, new OnSuccessListener<UploadTask.TaskSnapshot>() {
                 @Override
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
 
                     Uri s = taskSnapshot.getUploadSessionUri();
-                    mProfilePicture.setImageBitmap(image);
+                    mProfilePicture.setImageBitmap(thumbnail);
                     //Glide.with(mProfilePicture.getContext())
                     //        .load(s).into(mProfilePicture);
                     hideProgressDialog();
                 }
             });
         }
-    }
+            Toast.makeText(clientInfoActivity.this, "Image Saved!", Toast.LENGTH_SHORT).show();
+        }
+
+
+
+
 
     public void showProgressDialog() {
         if (mProgressDialog == null) {
@@ -288,5 +344,15 @@ public class clientInfoActivity  extends AppCompatActivity {
         if (mProgressDialog != null && mProgressDialog.isShowing()) {
             mProgressDialog.dismiss();
         }
+    }
+
+    public static byte[] getBytes(Bitmap bitmap) {
+        if (bitmap != null) {
+            ByteArrayOutputStream stream = new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.PNG, 10, stream);
+            return stream.toByteArray();
+        }
+        else
+            return null;
     }
 }
