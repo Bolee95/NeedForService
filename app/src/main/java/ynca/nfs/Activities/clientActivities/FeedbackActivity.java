@@ -65,7 +65,7 @@ public class FeedbackActivity extends AppCompatActivity {
                 Review review = new Review(mUser.getEmail(), commentary, rate);
                 mDatabaseReference.child(uidOfReviewedService).child("reviews")
                         .push().setValue(review);
-                Toast.makeText(FeedbackActivity.this, "Succeed!", Toast.LENGTH_SHORT);
+                Toast.makeText(FeedbackActivity.this, "Succeed!", Toast.LENGTH_LONG);
                 finish();
             }
         });

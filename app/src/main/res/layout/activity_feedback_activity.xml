@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
 
-    tools:context="ynca.nfs.Activities.clientActivities.Feedback_activity">
+  >
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -31,7 +31,7 @@
             android:layout_marginTop="10dp"
             android:id="@+id/recenzijaEDIT"
 
-            android:background="#2a6051">
+            android:background="@drawable/rounded_button">
 
 
         </EditText>
@@ -54,7 +54,7 @@
             android:text="@string/submit"
             android:textAlignment="center"
             android:id="@+id/recenzijaSUBMIT"
-            android:background="@color/colorAccent"
+            android:background="@drawable/rounded_button"
             />
     </LinearLayout>
 </ScrollView>

@@ -338,6 +338,13 @@ public class NewMapActivity extends AppCompatActivity implements OnMapReadyCallb
                     if (currentClient.getListOfFriendsUIDs().containsValue(temp.getUID())) {
                         listOfFriends.add(temp);
                         addFriendsMarker(temp);
+                        if (temp.getListOfAddedServices() != null)
+                        for (VehicleService tempSer : temp.getListOfAddedServices().values())
+                        {
+                            mMap.addMarker(new MarkerOptions()
+                                    .position(new LatLng(tempSer.getLat(), tempSer.getLongi()))
+                                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE))).setTag(temp); //clientAdded
+                        }
 
                     }
                 }
@@ -484,15 +491,17 @@ public class NewMapActivity extends AppCompatActivity implements OnMapReadyCallb
         }
 
         if (showFriendsMarkers.isChecked()) {
-            for (VehicleService temp :
-                    friendsServices) {
-                Location.distanceBetween(currentClient.getLastKnownLat(), currentClient.getLastKnownlongi(), temp.getLat(), temp.getLongi(), results);
-                if (results[0] < radius) {
-                    //U zavisnosti da li li mogu da se prikazu servisi prijatelja
-                    //friendsServices
-                    mMap.addMarker(new MarkerOptions()
-                            .position(new LatLng(temp.getLat(), temp.getLongi()))
-                            .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN))).setTag(temp);
+            for (Client friend : listOfFriends) {
+                for (VehicleService temp :
+                        friend.getListOfAddedServices().values()) {
+                    Location.distanceBetween(currentClient.getLastKnownLat(), currentClient.getLastKnownlongi(), temp.getLat(), temp.getLongi(), results);
+                    if (results[0] < radius) {
+                        //U zavisnosti da li li mogu da se prikazu servisi prijatelja
+                        //friendsServices
+                        mMap.addMarker(new MarkerOptions()
+                                .position(new LatLng(temp.getLat(), temp.getLongi()))
+                                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN))).setTag(temp);
+                    }
                 }
             }
 
@@ -646,14 +655,18 @@ public class NewMapActivity extends AppCompatActivity implements OnMapReadyCallb
 
 
         if (showFriendsMarkers.isChecked()) {
-            for (VehicleService temp :
-                    friendsServices) {
-                //U zavisnosti da li li mogu da se prikazu servisi prijatelja
-                mMap.addMarker(new MarkerOptions()
-                        .position(new LatLng(temp.getLat(), temp.getLongi()))
-                        .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE))).setTag(temp);
-            }
+            for (Client friend : listOfFriends) {
+                if (friend.getListOfAddedServices() != null) {
+                    for (VehicleService temp :
+                            friend.getListOfAddedServices().values()) {
+                        //U zavisnosti da li li mogu da se prikazu servisi prijatelja
+                        mMap.addMarker(new MarkerOptions()
+                                .position(new LatLng(temp.getLat(), temp.getLongi()))
+                                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE))).setTag(temp);
+                    }
 
+                }
+            }
         }
 
         if (showFriends.isChecked())

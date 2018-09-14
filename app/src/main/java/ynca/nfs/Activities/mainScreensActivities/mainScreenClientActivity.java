@@ -384,8 +384,9 @@ public class mainScreenClientActivity extends AppCompatActivity implements ItemL
             }
         } else {
             Bitmap cashedImage = cashe.getImage(auth.getCurrentUser().getUid());
-            Bitmap profileImage = getRoundedCornerBitmap(Bitmap.createScaledBitmap(cashedImage, 250, 250, false), 50);
-            clientImage.setImageBitmap(profileImage);
+                Bitmap profileImage = getRoundedCornerBitmap(Bitmap.createScaledBitmap(cashedImage, 250, 250, false), 50);
+                clientImage.setImageBitmap(profileImage);
+                clientImage.setImageBitmap(cashedImage);
         }
 
         //endregion
